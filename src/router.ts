@@ -8,13 +8,14 @@ const routes = (): RouteConfig[] => {
     {
       path: "/error/404",
       component: () => import("@/views/error/NotFoundPage.vue"),
-      meta: {
-        layout: "error",
-      },
     },
   ];
 
   return [
+    {
+      path: "/",
+      component: () => import("@/views/HomePage.vue"),
+    },
     ...error,
     {
       path: "*",
@@ -24,5 +25,6 @@ const routes = (): RouteConfig[] => {
 };
 export default new VueRouter({
   mode: "history",
+  base: import.meta.env.BASE_URL,
   routes: routes(),
 });
