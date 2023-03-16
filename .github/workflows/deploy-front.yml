@@ -45,3 +45,26 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         if: always()
+
+      - name: Send URL
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              attachments: [
+                {
+                  text: "프론트 배포가 완료되었습니다!",
+                  actions: [
+                    {
+                      type: "button",
+                      text: "Go to mobile-kiosk",
+                      url: "https://mobile-kiosk.link"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SUCCESS_WEBHOOK_URL }}
+        if: success()
