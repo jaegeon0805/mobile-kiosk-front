@@ -10,8 +10,6 @@
         "prettier",
         "plugin:prettier/recommended"
     ],
-    "overrides": [
-    ],
     "parser": "vue-eslint-parser",
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -26,13 +24,12 @@
         "prettier/prettier": [
             "error",
             {
-                "arrowParens": "avoid",
+                "trailingComma": "es5",
                 "bracketSpacing": true,
-                "endOfLine": "auto",
                 "printWidth": 80,
-                "semi": true,
                 "tabWidth": 2,
-                "trailingComma": "all",
+                "semi": true,
+                "endOfLine": "lf",
                 "useTabs": false
             }
         ],
@@ -49,7 +46,8 @@
             "always"
         ],
         "indent": "off",
-        "comma-dangle": "off",
+        "@typescript-eslint/indent": ["error", 2],
+        "comma-dangle": ["error", "only-multiline"],
         "no-cond-assign": ["error", "always"],
         "space-before-function-paren": "off",
         "lines-between-class-members": "off",

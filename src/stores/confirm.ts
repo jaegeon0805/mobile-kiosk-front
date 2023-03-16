@@ -22,7 +22,7 @@ export const useConfirmStore = defineStore("confirm", {
       callbackConfirm: CallableFunction,
       width = "450px",
       confirmButtonTitle = "확인",
-      cancelButtonTitle = "취소",
+      cancelButtonTitle = "취소"
     ) {
       this.pushConfirmWithCallbackCancel(
         content,
@@ -30,7 +30,7 @@ export const useConfirmStore = defineStore("confirm", {
         undefined,
         width,
         confirmButtonTitle,
-        cancelButtonTitle,
+        cancelButtonTitle
       );
     },
     pushConfirmWithCallbackCancel(
@@ -39,7 +39,7 @@ export const useConfirmStore = defineStore("confirm", {
       callbackCancel?: CallableFunction,
       width = "450px",
       confirmButtonTitle = "확인",
-      cancelButtonTitle = "취소",
+      cancelButtonTitle = "취소"
     ) {
       this.$state.items = [
         ...this.$state.items,

@@ -35,7 +35,7 @@ withDefaults(
     cancelButtonTitle: "취소",
     confirmButtonTitle: "확인",
     width: "450px",
-  },
+  }
 );
 
 const emits = defineEmits<{
