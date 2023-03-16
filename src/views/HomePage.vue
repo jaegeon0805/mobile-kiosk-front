@@ -12,9 +12,9 @@ import { onMounted, ref } from "vue";
 const profile = ref("");
 
 onMounted(async () => {
-  const response = await getApi<string>("profile");
+  const response = await getApi<string>("profile/test");
   if (response.success) {
-    profile.value = response.data;
+    profile.value = response.result;
   }
 });
 </script>
