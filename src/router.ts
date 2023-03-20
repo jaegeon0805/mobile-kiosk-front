@@ -31,6 +31,24 @@ const routes = (): RouteConfig[] => {
       component: () => import("@/views/error/NotFoundPage.vue"),
     },
   ];
+  const sign: RouteConfig[] = [
+    {
+      path: "/sign-in",
+      beforeEnter: requiredUnauthenticated(),
+      component: () => import("@/views/sign/SignIn.vue"),
+      meta: {
+        layout: "auth",
+      },
+    },
+    {
+      path: "/sign-up",
+      beforeEnter: requiredUnauthenticated(),
+      component: () => import("@/views/sign/SignUp.vue"),
+      meta: {
+        layout: "auth",
+      },
+    },
+  ];
 
   return [
     {
@@ -41,14 +59,7 @@ const routes = (): RouteConfig[] => {
         requiresAuth: "true",
       },
     },
-    {
-      path: "/sign-in",
-      beforeEnter: requiredUnauthenticated(),
-      component: () => import("@/views/sign/SignIn.vue"),
-      meta: {
-        layout: "auth",
-      },
-    },
+    ...sign,
     ...error,
     {
       path: "*",
