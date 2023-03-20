@@ -1,7 +1,8 @@
 <template>
   <div>
-    <template v-for="(item, _index) in items" :key="_index">
+    <template v-for="(item, _index) in items">
       <DialogConfirm
+        :key="_index"
         :content="item.content"
         :width="item.width"
         :confirm-button-title="item.confirmButtonTitle"
