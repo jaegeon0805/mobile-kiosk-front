@@ -3,12 +3,15 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "alwaysStrict": true,
     "strict": true,
+    "alwaysStrict": true,
     "jsx": "preserve",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "noImplicitReturns": false,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "types": ["vuetify"],
@@ -16,7 +19,7 @@
     "baseUrl" : ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }],
