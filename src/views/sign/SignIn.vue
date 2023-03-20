@@ -53,13 +53,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { postApi } from "@/utils/apis";
 import { Token } from "@/definitions/types";
 import { useMemberStore } from "@/stores/member";
 import { routerReplace } from "@/utils/utils";
 
-const { isSignedIn, saveToken } = useMemberStore();
+const { saveToken } = useMemberStore();
 
 const email = ref("");
 const password = ref("");
@@ -83,13 +83,6 @@ async function submit(): Promise<void> {
   }
   loading.value = false;
 }
-
-onMounted(async () => {
-  if (isSignedIn) {
-    await routerReplace("/");
-    return;
-  }
-});
 
 const observer = ref();
 </script>
