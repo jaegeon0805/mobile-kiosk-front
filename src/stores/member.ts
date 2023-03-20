@@ -26,6 +26,11 @@ export const useMemberStore = defineStore("member", {
       window.localStorage.setItem("accessToken", tokens.accessToken);
       window.localStorage.setItem("refreshToken", tokens.refreshToken);
     },
+    clear() {
+      this.$reset();
+      window.localStorage.removeItem("accessToken");
+      window.localStorage.removeItem("refreshToken");
+    },
   },
   persist: true,
 });
