@@ -3,15 +3,17 @@
     <v-card-text>
       <h4 class="text-center">계정에 로그인하세요.</h4>
       <h6 class="text-center grey--text">
-        아직 회원이 아니시라면 회원가입을 클릭해 주세요.
+        아직 회원이 아니시라면
+        <router-link class="primary--text" to="sign-up">회원가입</router-link>을
+        클릭해 주세요.
       </h6>
 
-      <v-card-text class="pa-0 mt-10">
+      <v-card-text class="pa-0 mt-6">
         <v-form>
           <validation-observer ref="observer">
             <validation-provider
               v-slot="{ errors, valid }"
-              name="Email"
+              name="이메일"
               rules="required|email"
             >
               <v-text-field
@@ -22,12 +24,13 @@
                 :error-messages="errors"
                 :success="valid"
                 autocomplete="false"
-                prepend-inner-icon="mdi-account-outline"
+                clearable
+                prepend-inner-icon="mdi-email-outline"
               />
             </validation-provider>
             <validation-provider
               v-slot="{ errors, valid }"
-              name="Password"
+              name="비밀번호"
               rules="required"
             >
               <v-text-field
@@ -39,9 +42,17 @@
                 :error-messages="errors"
                 :success="valid"
                 autocomplete="false"
+                clearable
                 prepend-inner-icon="mdi-lock-outline"
               />
             </validation-provider>
+            <span
+              v-if="errorMessage"
+              class="d-flex text-left error-message mb-2"
+            >
+              이메일 또는 비밀번호를 잘못 입력했습니다.<br />입력하신 내용을
+              다시 확인해주세요.
+            </span>
             <v-btn color="primary" block :loading="loading" @click="submit"
               >로그인</v-btn
             >
@@ -64,6 +75,7 @@ const { saveToken } = useMemberStore();
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
+const errorMessage = ref(false);
 
 async function submit(): Promise<void> {
   const inValid = await observer.value?.validate();
@@ -80,6 +92,8 @@ async function submit(): Promise<void> {
   if (response.success && response.result) {
     saveToken(response.result);
     await routerReplace("/");
+  } else {
+    errorMessage.value = true;
   }
   loading.value = false;
 }
