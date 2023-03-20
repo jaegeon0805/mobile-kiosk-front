@@ -46,13 +46,14 @@
             "always"
         ],
         "indent": "off",
-        "@typescript-eslint/indent": ["error", 2],
+        "@typescript-eslint/indent": "off",
         "comma-dangle": ["error", "only-multiline"],
         "no-cond-assign": ["error", "always"],
         "space-before-function-paren": "off",
         "lines-between-class-members": "off",
         "vue/no-v-text-v-html-on-component": "off",
         "vue/max-attributes-per-line": "off",
-        "vue/singleline-html-element-content-newline": "off"
+        "vue/singleline-html-element-content-newline": "off",
+        "vue/no-v-for-template-key-on-child": "off"
     }
 }
