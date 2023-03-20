@@ -20,8 +20,9 @@ const layouts = {
   default: DefaultLayout,
   auth: AuthLayout,
 };
-
 const currentLayout = computed(
-  () => layouts[router.app.$route.meta?.layout || "default"]
+  () =>
+    router.app.$route.name !== null &&
+    layouts[router.app.$route.meta?.layout || "default"]
 );
 </script>
