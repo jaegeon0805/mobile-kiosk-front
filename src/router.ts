@@ -18,9 +18,10 @@ const requiredAuthenticated =
 const requiredUnauthenticated =
   () => async (to: Route, from: Route, next: NavigationGuardNext) => {
     const { isSignedIn } = useMemberStore(store);
-    if (!isSignedIn) {
-      return routeSignInPage();
+    if (isSignedIn) {
+      return;
     }
+    next();
   };
 
 const routes = (): RouteConfig[] => {
