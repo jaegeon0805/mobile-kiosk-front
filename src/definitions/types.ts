@@ -13,3 +13,8 @@ export interface Confirm {
   callbackConfirm: CallableFunction;
   callbackCancel?: CallableFunction;
 }
+
+export interface Token {
+  accessToken: string;
+  refreshToken: string;
+}
