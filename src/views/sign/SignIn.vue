@@ -88,6 +88,7 @@ async function submit(): Promise<void> {
     email: email.value,
     password: password.value,
   });
+  loading.value = false;
 
   if (response.success && response.result) {
     saveToken(response.result);
@@ -95,7 +96,6 @@ async function submit(): Promise<void> {
   } else {
     errorMessage.value = true;
   }
-  loading.value = false;
 }
 
 const observer = ref();
