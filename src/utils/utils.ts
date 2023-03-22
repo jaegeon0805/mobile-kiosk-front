@@ -19,8 +19,10 @@ export async function routerPush(path: string): Promise<void> {
 }
 
 export async function routeSignInPage(): Promise<void> {
-  clear();
-  await routerReplace("/sign-in");
+  if (!["/sign-in", "/sign-up"].includes(router.currentRoute.path)) {
+    clear();
+    await routerReplace("/sign-in");
+  }
 }
 
 export async function getAccessToken(): Promise<string> {
