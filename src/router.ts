@@ -19,7 +19,7 @@ const requiredUnauthenticated =
   () => async (to: Route, from: Route, next: NavigationGuardNext) => {
     const { isSignedIn } = useMemberStore(store);
     if (isSignedIn) {
-      return next(from.path);
+      return next(from.path ? from.path : "/");
     }
     return next();
   };
