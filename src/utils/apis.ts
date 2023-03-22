@@ -1,10 +1,12 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import envs from "@/constants/envs";
-import { routeSignInPage } from "@/utils/utils";
+import { getAccessToken, routeSignInPage } from "@/utils/utils";
 import { useAlertStore } from "@/stores/alert";
 import store from "@/stores";
+import { useMemberStore } from "@/stores/member";
 
 const { toastError } = useAlertStore(store);
+const { reissueToken } = useMemberStore(store);
 export const axiosInstance = createAxiosInstance();
 
 function createAxiosInstance() {
@@ -16,7 +18,8 @@ function createAxiosInstance() {
   });
 
   instance.interceptors.request.use(
-    function (config) {
+    async function (config) {
+      await setAuthorization(config);
       return config;
     },
     function (error) {
@@ -38,17 +41,25 @@ function createAxiosInstance() {
         return;
       }
 
-      if (400 === error.response.status) {
+      if ([400, 403, 404, 500].includes(error.response.status)) {
         return returnErrorResponse();
-      } else if ([401].includes(error.response.status)) {
-        await routeSignInPage();
-        return;
+      } else if (401 === error.response.status) {
+        if (error.response.headers["access-token"] === "expired") {
+          return (await reissueToken()) && instance(error.config);
+        } else {
+          await routeSignInPage();
+          return Promise.reject(error);
+        }
       }
       return Promise.reject(error);
     }
   );
 
   return instance;
+}
+
+async function setAuthorization(config: InternalAxiosRequestConfig) {
+  config.headers["Authorization"] = await getAccessToken();
 }
 
 function returnErrorResponse() {
@@ -75,7 +86,7 @@ export async function getApi<T = never, R = T>(
       `api/v1/${url}`
     );
 
-    if (response.data) {
+    if (response?.data) {
       return response.data;
     } else {
       throw new Error("No Data Return");
@@ -96,7 +107,7 @@ export async function postApi<T = never, R = T>(
       data
     );
 
-    if (response.data) {
+    if (response?.data) {
       return response.data;
     } else {
       throw new Error("No Data Return");
