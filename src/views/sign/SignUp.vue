@@ -29,6 +29,7 @@
                 :loading="emailChecking"
                 clearable
                 @input="checkEmail"
+                @keyup.enter="submit"
               />
             </validation-provider>
             <validation-provider
@@ -48,6 +49,7 @@
                 autocomplete="false"
                 clearable
                 prepend-inner-icon="mdi-lock-outline"
+                @keyup.enter="submit"
               />
             </validation-provider>
             <validation-provider
@@ -66,6 +68,7 @@
                 autocomplete="false"
                 clearable
                 prepend-inner-icon="mdi-lock-check-outline"
+                @keyup.enter="submit"
               />
             </validation-provider>
             <validation-provider
@@ -83,6 +86,7 @@
                 autocomplete="false"
                 clearable
                 prepend-inner-icon="mdi-account-outline"
+                @keyup.enter="submit"
               />
             </validation-provider>
             <v-btn color="primary" block :loading="loading" @click="submit"

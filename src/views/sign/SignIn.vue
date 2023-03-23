@@ -26,6 +26,7 @@
                 autocomplete="false"
                 clearable
                 prepend-inner-icon="mdi-email-outline"
+                @keyup.enter="submit"
               />
             </validation-provider>
             <validation-provider
@@ -44,6 +45,7 @@
                 autocomplete="false"
                 clearable
                 prepend-inner-icon="mdi-lock-outline"
+                @keyup.enter="submit"
               />
             </validation-provider>
             <span
