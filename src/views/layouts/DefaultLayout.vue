@@ -1,11 +1,19 @@
 <template>
   <div>
-    <v-navigation-drawer app v-model="navigation">
+    <v-navigation-drawer app v-model="navigation" color="#101827">
       <!-- Add your navigation drawer content here -->
     </v-navigation-drawer>
 
-    <v-app-bar app>
-      <v-app-bar-nav-icon @click.stop="navigation = !navigation" />
+    <v-app-bar app flat>
+      <v-card
+        flat
+        rounded="lg"
+        class="d-flex flex-grow-1 align-center pl-2 pr-4 py-3 mt-8"
+      >
+        <v-app-bar-nav-icon @click.stop="navigation = !navigation" />
+        <v-spacer />
+        <ProfileMenu />
+      </v-card>
     </v-app-bar>
 
     <v-main>
@@ -25,6 +33,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import ProfileMenu from "@/views/components/toolbar/AppBarMenu.vue";
 
 const navigation = ref(true);
 </script>
