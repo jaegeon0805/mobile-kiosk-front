@@ -71,8 +71,10 @@ import { postApi } from "@/utils/apis";
 import { Token } from "@/definitions/types";
 import { useMemberStore } from "@/stores/member";
 import { routerReplace } from "@/utils/utils";
+import { useAlertStore } from "@/stores/alert";
 
 const { saveToken } = useMemberStore();
+const { toastClose } = useAlertStore();
 
 const email = ref("");
 const password = ref("");
@@ -85,18 +87,22 @@ async function submit(): Promise<void> {
     return;
   }
 
-  loading.value = true;
-  const response = await postApi<Token>("sign-in", {
-    email: email.value,
-    password: password.value,
-  });
-  loading.value = false;
+  try {
+    loading.value = true;
+    const response = await postApi<Token>("sign-in", {
+      email: email.value,
+      password: password.value,
+    });
 
-  if (response.success && response.result) {
-    saveToken(response.result);
-    await routerReplace("/");
-  } else {
-    errorMessage.value = true;
+    if (response.success && response.result) {
+      saveToken(response.result);
+      toastClose();
+      await routerReplace("/");
+    } else {
+      errorMessage.value = true;
+    }
+  } finally {
+    loading.value = false;
   }
 }
 
