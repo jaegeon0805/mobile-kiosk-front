@@ -1,6 +1,7 @@
 import router from "@/router";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
+import { postApi } from "@/utils/apis";
 
 const { clear, isTokenExpired, reissueToken } = useMemberStore(store);
 
@@ -38,4 +39,9 @@ export async function getAccessToken(): Promise<string> {
   }
 
   return accessToken || "";
+}
+
+export async function signOut(): Promise<void> {
+  await postApi("sign-out", null);
+  await routeSignInPage();
 }

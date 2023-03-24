@@ -8,7 +8,7 @@
       <v-card
         flat
         rounded="lg"
-        class="d-flex flex-grow-1 align-center pl-2 pr-4 py-3 mt-8"
+        class="d-flex flex-grow-1 align-center pl-2 pr-4 py-3 mt-10"
       >
         <v-app-bar-nav-icon @click.stop="navigation = !navigation" />
         <v-spacer />
