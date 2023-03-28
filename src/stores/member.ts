@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 import { Token } from "@/definitions/types";
 import jwtDecode from "jwt-decode";
-import axios from "axios";
-import envs from "@/constants/envs";
-import { ApiResponse } from "@/utils/apis";
-import router from "@/router";
+import { reissue, routeSignInPage } from "@/utils/utils";
 
 export const useMemberStore = defineStore("member", {
   state: () => ({
     uuid: "",
+    name: "",
+    email: "",
+    role: "",
   }),
   getters: {
     isSignedIn(): boolean {
@@ -20,30 +20,20 @@ export const useMemberStore = defineStore("member", {
     },
   },
   actions: {
-    saveToken(tokens: Token): void {
+    async saveToken(tokens: Token): Promise<void> {
       this.uuid = jwtDecode<{ sub: string }>(tokens.accessToken).sub;
       window.localStorage.setItem("accessToken", tokens.accessToken);
       window.localStorage.setItem("refreshToken", tokens.refreshToken);
     },
-    async reissueToken(): Promise<Token | null> {
+    async reissueToken(): Promise<void> {
       const refreshToken = window.localStorage.getItem("refreshToken");
       if (this.isTokenExpired(refreshToken)) {
-        this.clear();
-        await router.push("sign-in");
-        return null;
+        await routeSignInPage();
+        return;
       }
 
-      const response = await axios
-        .create({
-          baseURL: envs.API_HOST,
-          headers: {
-            contentType: "application/json",
-            refreshToken: refreshToken,
-          },
-        })
-        .get<ApiResponse<Token>>("/api/v1/reissue-token");
-      this.saveToken(response.data.result);
-      return response.data.result;
+      const token = await reissue();
+      await this.saveToken(token);
     },
     isTokenExpired(token): boolean {
       try {

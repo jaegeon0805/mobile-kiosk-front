@@ -1,7 +1,10 @@
 import router from "@/router";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
-import { postApi } from "@/utils/apis";
+import { ApiResponse, axiosInstance, postApi } from "@/utils/apis";
+import axios from "axios";
+import envs from "@/constants/envs";
+import { Token } from "@/definitions/types";
 
 const { clear, isTokenExpired, reissueToken } = useMemberStore(store);
 
@@ -41,7 +44,28 @@ export async function getAccessToken(): Promise<string> {
   return accessToken || "";
 }
 
+export async function reissue(): Promise<Token> {
+  const refreshToken = window.localStorage.getItem("refreshToken");
+
+  const response = await axios
+    .create({
+      baseURL: envs.API_HOST,
+      headers: {
+        contentType: "application/json",
+        refreshToken: refreshToken,
+      },
+    })
+    .get<ApiResponse<Token>>("/api/v1/reissue-token");
+
+  return response.data.result;
+}
+
 export async function signOut(): Promise<void> {
   await postApi("sign-out", null);
   await routeSignInPage();
+}
+
+export async function getMemberInfo(): Promise<void> {
+  const response = await axiosInstance.get("members");
+  console.log(response.data);
 }
