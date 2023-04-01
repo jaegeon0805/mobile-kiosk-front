@@ -5,7 +5,7 @@ import { useAlertStore } from "@/stores/alert";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
 
-const { toastError } = useAlertStore(store);
+const { toastError, toastSuccess } = useAlertStore(store);
 const { reissueToken } = useMemberStore(store);
 export const axiosInstance = createAxiosInstance();
 
@@ -42,10 +42,14 @@ function createAxiosInstance() {
       }
 
       if ([400, 403, 404, 500].includes(error.response.status)) {
+        if (error.response.data) {
+          return error.response;
+        }
         return returnErrorResponse();
       } else if (401 === error.response.status) {
         if (error.response.headers["access-token"] === "expired") {
-          return (await reissueToken()) && instance(error.config);
+          await reissueToken();
+          return instance(error.config);
         } else {
           await routeSignInPage();
           return Promise.reject(error);
@@ -81,39 +85,67 @@ export interface ApiResponse<T = unknown> {
 export async function getApi<T = never, R = T>(
   url: string
 ): Promise<ApiResponse<R>> {
-  try {
-    const response = await axiosInstance.get<T, AxiosResponse<ApiResponse<R>>>(
-      `api/v1/${url}`
-    );
+  const response = await axiosInstance.get<T, AxiosResponse<ApiResponse<R>>>(
+    `api/v1/${url}`
+  );
 
-    if (response?.data) {
-      return response.data;
-    } else {
-      throw new Error("No Data Return");
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
+  if (response?.data && !response.data.success) {
+    alert(response.data);
   }
+
+  return response.data;
 }
 
 export async function postApi<T = never, R = T>(
   url: string,
-  data: any
+  data: any,
+  sendAlert = true
 ): Promise<ApiResponse<R>> {
-  try {
-    const response = await axiosInstance.post<T, AxiosResponse<ApiResponse<R>>>(
-      `api/v1/${url}`,
-      data
-    );
+  const response = await axiosInstance.post<T, AxiosResponse<ApiResponse<R>>>(
+    `api/v1/${url}`,
+    data
+  );
 
-    if (response?.data) {
-      return response.data;
-    } else {
-      throw new Error("No Data Return");
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
+  if (sendAlert) {
+    alert(response.data);
+  }
+  return response.data;
+}
+
+export async function patchApi<T = never, R = T>(
+  url: string,
+  data: any,
+  sendAlert = true
+): Promise<ApiResponse<R>> {
+  const response = await axiosInstance.patch<T, AxiosResponse<ApiResponse<R>>>(
+    `api/v1/${url}`,
+    data
+  );
+
+  if (sendAlert) {
+    alert(response.data);
+  }
+  return response.data;
+}
+
+export async function deleteApi<T = never, R = T>(
+  url: string,
+  sendAlert = true
+): Promise<ApiResponse<R>> {
+  const response = await axiosInstance.delete<T, AxiosResponse<ApiResponse<R>>>(
+    `api/v1/${url}`
+  );
+
+  if (sendAlert) {
+    alert(response.data);
+  }
+  return response.data;
+}
+
+function alert(data: ApiResponse<unknown>): void {
+  if (data.success) {
+    toastSuccess(data.message);
+  } else {
+    data.message && toastError(data.message);
   }
 }
