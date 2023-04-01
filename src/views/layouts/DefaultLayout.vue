@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-flex flex-grow-1">
     <v-navigation-drawer app v-model="navigation" color="#101827">
       <!-- Add your navigation drawer content here -->
     </v-navigation-drawer>
@@ -16,8 +16,8 @@
       </v-card>
     </v-app-bar>
 
-    <v-main>
-      <v-container fluid>
+    <v-main class="mt-10">
+      <v-container class="pa-4" fluid>
         <slot />
       </v-container>
     </v-main>
