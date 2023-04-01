@@ -3,8 +3,8 @@
     <component :is="currentLayout">
       <router-view />
     </component>
-    <GlobalSnackbarAlert />
-    <GlobalDialogConfirm />
+    <GlobalAlert />
+    <GlobalConfirm />
   </v-app>
 </template>
 
@@ -13,8 +13,8 @@ import DefaultLayout from "@/views/layouts/DefaultLayout.vue";
 import { computed } from "vue";
 import AuthLayout from "@/views/layouts/AuthLayout.vue";
 import router from "@/router";
-import GlobalSnackbarAlert from "@/views/components/dialog/GlobalSnackbarAlert.vue";
-import GlobalDialogConfirm from "@/views/components/dialog/GlobalDialogConfirm.vue";
+import GlobalAlert from "@/views/components/dialog/GlobalAlert.vue";
+import GlobalConfirm from "@/views/components/dialog/GlobalConfirm.vue";
 
 const layouts = {
   default: DefaultLayout,

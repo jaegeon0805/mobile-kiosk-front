@@ -9,30 +9,27 @@ export const useAlertStore = defineStore("alert", {
     };
   },
   actions: {
-    toastSuccess(message: string, timer = 2_000) {
-      this.alert(message, timer, "#10D052", "mdi-check-circle");
-    },
-    toastError(message: string, timer = 60_000) {
-      this.alert(message, timer, "#E5CF0D", "mdi-alert-circle");
-    },
-    toastInfo(message: string, timer = 30_000) {
-      this.alert(message, timer, "#2196F3", "mdi-information");
+    toastSuccess(message: string, timer = 3_000) {
+      this.alert(message, timer, "#009688", "mdi-check-circle");
     },
     toastWarning(message: string, timer = 10_000) {
-      this.alert(message, timer, "#E50D0D", "mdi-alert");
+      this.alert(message, timer, "#ffca28", "mdi-alert");
+    },
+    toastError(message: string, timer = 30_000) {
+      this.alert(message, timer, "#d32f2f", "mdi-alert-circle");
     },
     alert(message: string, timer: number, color: string, icon: string) {
       this.$state.item = {
-        message: message,
-        timer: timer,
-        color: color,
-        icon: icon,
+        message,
+        timer,
+        color,
+        icon,
       };
       this.$state.openAlert = true;
     },
     toastClose() {
       this.$state.openAlert = false;
+      this.$state.item = {} as Alert;
     },
   },
-  persist: true,
 });

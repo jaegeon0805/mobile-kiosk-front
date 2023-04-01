@@ -4,27 +4,28 @@ import type { Confirm } from "@/definitions/types";
 export const useConfirmStore = defineStore("confirm", {
   state: () => {
     return {
-      items: [] as Confirm[],
+      item: {} as Confirm,
+      openConfirm: false,
     };
   },
   actions: {
     confirmCreate(callbackConfirm: CallableFunction) {
-      this.pushConfirm("등록하시겠습니까?", callbackConfirm);
+      this.confirm("등록하시겠습니까?", callbackConfirm);
     },
     confirmUpdate(callbackConfirm: CallableFunction) {
-      this.pushConfirm("수정하시겠습니까?", callbackConfirm);
+      this.confirm("수정하시겠습니까?", callbackConfirm);
     },
     confirmDelete(callbackConfirm: CallableFunction) {
-      this.pushConfirm("삭제하시겠습니까?", callbackConfirm);
+      this.confirm("삭제하시겠습니까?", callbackConfirm);
     },
-    pushConfirm(
+    confirm(
       content: string,
       callbackConfirm: CallableFunction,
       width = "450px",
       confirmButtonTitle = "확인",
       cancelButtonTitle = "취소"
     ) {
-      this.pushConfirmWithCallbackCancel(
+      this.confirmWithCallbackCancel(
         content,
         callbackConfirm,
         undefined,
@@ -33,7 +34,7 @@ export const useConfirmStore = defineStore("confirm", {
         cancelButtonTitle
       );
     },
-    pushConfirmWithCallbackCancel(
+    confirmWithCallbackCancel(
       content: string,
       callbackConfirm: CallableFunction,
       callbackCancel?: CallableFunction,
@@ -41,27 +42,25 @@ export const useConfirmStore = defineStore("confirm", {
       confirmButtonTitle = "확인",
       cancelButtonTitle = "취소"
     ) {
-      this.$state.items = [
-        ...this.$state.items,
-        {
-          content,
-          width,
-          cancelButtonTitle,
-          confirmButtonTitle,
-          callbackConfirm,
-          callbackCancel,
-        },
-      ];
+      this.$state.item = {
+        content,
+        width,
+        cancelButtonTitle,
+        confirmButtonTitle,
+        callbackConfirm,
+        callbackCancel,
+      };
+      this.$state.openConfirm = true;
     },
     okConfirm() {
-      const item = this.$state.items.shift();
-      item?.callbackConfirm && item.callbackConfirm();
-      this.$state.items.splice(0, 1);
+      this.$state.item?.callbackConfirm && this.$state.item.callbackConfirm();
+      this.$state.item = {} as Confirm;
+      this.openConfirm = false;
     },
     closeConfirm() {
-      const item = this.$state.items.shift();
-      item?.callbackCancel && item.callbackCancel();
-      this.$state.items.splice(0, 1);
+      this.$state.item?.callbackCancel && this.$state.item.callbackCancel();
+      this.$state.item = {} as Confirm;
+      this.openConfirm = false;
     },
   },
 });
