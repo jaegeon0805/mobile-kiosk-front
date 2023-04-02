@@ -82,21 +82,25 @@ const loading = ref(false);
 const errorMessage = ref(false);
 
 async function submit(): Promise<void> {
-  const inValid = await observer.value?.validate();
-  if (!inValid) {
+  const isValid = await observer.value?.validate();
+  if (!isValid) {
     return;
   }
 
   try {
     loading.value = true;
-    const response = await postApi<Token>("sign-in", {
-      email: email.value,
-      password: password.value,
-    });
+    const response = await postApi<Token>(
+      "sign-in",
+      {
+        email: email.value,
+        password: password.value,
+      },
+      false
+    );
 
     if (response.success && response.result) {
-      saveToken(response.result);
       toastClose();
+      await saveToken(response.result);
       await routerReplace("/");
     } else {
       errorMessage.value = true;
