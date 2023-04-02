@@ -1,10 +1,11 @@
 import router from "@/router";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
-import { ApiResponse, axiosInstance, postApi } from "@/utils/apis";
+import { ApiResponse, getApi, postApi } from "@/utils/apis";
 import axios from "axios";
 import envs from "@/constants/envs";
-import { Token } from "@/definitions/types";
+import { Member, Token } from "@/definitions/types";
+import { defaultMember } from "@/definitions/defaults";
 
 const { clear, isTokenExpired, reissueToken } = useMemberStore(store);
 
@@ -65,7 +66,11 @@ export async function signOut(): Promise<void> {
   await routeSignInPage();
 }
 
-export async function getMemberInfo(): Promise<void> {
-  const response = await axiosInstance.get("members");
-  console.log(response.data);
+export async function getMyProfile(): Promise<Member> {
+  const response = await getApi<Member>("my-profile");
+
+  if (response.success) {
+    return response.result;
+  }
+  return defaultMember();
 }

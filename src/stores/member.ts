@@ -1,14 +1,13 @@
 import { defineStore } from "pinia";
 import { Token } from "@/definitions/types";
 import jwtDecode from "jwt-decode";
-import { reissue, routeSignInPage } from "@/utils/utils";
+import { getMyProfile, reissue, routeSignInPage } from "@/utils/utils";
+import { defaultMember } from "@/definitions/defaults";
 
 export const useMemberStore = defineStore("member", {
   state: () => ({
     uuid: "",
-    name: "",
-    email: "",
-    role: "",
+    member: defaultMember(),
   }),
   getters: {
     isSignedIn(): boolean {
@@ -24,6 +23,8 @@ export const useMemberStore = defineStore("member", {
       this.uuid = jwtDecode<{ sub: string }>(tokens.accessToken).sub;
       window.localStorage.setItem("accessToken", tokens.accessToken);
       window.localStorage.setItem("refreshToken", tokens.refreshToken);
+
+      await this.saveMyProfile();
     },
     async reissueToken(): Promise<void> {
       const refreshToken = window.localStorage.getItem("refreshToken");
@@ -44,6 +45,9 @@ export const useMemberStore = defineStore("member", {
       } catch {
         return true;
       }
+    },
+    async saveMyProfile(): Promise<void> {
+      this.member = await getMyProfile();
     },
     clear() {
       this.$reset();
