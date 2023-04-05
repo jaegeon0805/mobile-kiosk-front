@@ -4,10 +4,13 @@ import { useMemberStore } from "@/stores/member";
 import { ApiResponse, getApi, postApi } from "@/utils/apis";
 import axios from "axios";
 import envs from "@/constants/envs";
-import { Member, Token } from "@/definitions/types";
+import { Token } from "@/definitions/types";
 import { defaultMember } from "@/definitions/defaults";
+import { Member, Store } from "@/definitions/entities";
+import { useStoreStore } from "@/stores/store";
 
-const { clear, isTokenExpired, reissueToken } = useMemberStore(store);
+const { memberClear, isTokenExpired, reissueToken } = useMemberStore(store);
+const { storeClear } = useStoreStore(store);
 
 // 히스토리에 남지 않음, 뒤로가기로 돌아갈 수 없음
 export async function routerReplace(path: string): Promise<void> {
@@ -25,7 +28,8 @@ export async function routerPush(path: string): Promise<void> {
 
 export async function routeSignInPage(): Promise<void> {
   if (!["/sign-in", "/sign-up"].includes(router.currentRoute.path)) {
-    clear();
+    memberClear();
+    storeClear();
     await routerReplace("/sign-in");
   }
 }
@@ -73,4 +77,18 @@ export async function getMyProfile(): Promise<Member> {
     return response.result;
   }
   return defaultMember();
+}
+
+export async function getStoreList(
+  memberId: number | undefined
+): Promise<Store[]> {
+  if (!memberId) {
+    return [];
+  }
+
+  const response = await getApi<Store[]>(`members/${memberId}/stores`);
+  if (response.success) {
+    return response.result;
+  }
+  return [];
 }

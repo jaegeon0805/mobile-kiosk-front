@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-grow-1">
     <v-navigation-drawer app v-model="navigation" color="#101827">
-      <!-- Add your navigation drawer content here -->
+      <StoreSelectMenu />
     </v-navigation-drawer>
 
     <v-app-bar app flat>
@@ -33,7 +33,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import ProfileMenu from "@/views/components/toolbar/AppBarMenu.vue";
+import ProfileMenu from "@/components/layout/AppBarMenu.vue";
+import StoreSelectMenu from "@/components/layout/StoreSelectMenu.vue";
 
 const navigation = ref(true);
 </script>

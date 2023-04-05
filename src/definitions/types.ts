@@ -18,9 +18,3 @@ export interface Token {
   accessToken: string;
   refreshToken: string;
 }
-
-export interface Member {
-  email: string;
-  name: string;
-  role: "ROLE_ADMIN" | "ROLE_USER";
-}

@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter, { NavigationGuardNext, Route, RouteConfig } from "vue-router";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
-import { routeSignInPage } from "@/utils/utils";
+import { routeSignInPage } from "@/utils/commands";
 
 Vue.use(VueRouter);
 

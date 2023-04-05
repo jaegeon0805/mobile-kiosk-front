@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Token } from "@/definitions/types";
 import jwtDecode from "jwt-decode";
-import { getMyProfile, reissue, routeSignInPage } from "@/utils/utils";
+import { getMyProfile, reissue, routeSignInPage } from "@/utils/commands";
 import { defaultMember } from "@/definitions/defaults";
 
 export const useMemberStore = defineStore("member", {
@@ -49,7 +49,7 @@ export const useMemberStore = defineStore("member", {
     async saveMyProfile(): Promise<void> {
       this.member = await getMyProfile();
     },
-    clear() {
+    memberClear() {
       this.$reset();
       window.localStorage.removeItem("accessToken");
       window.localStorage.removeItem("refreshToken");

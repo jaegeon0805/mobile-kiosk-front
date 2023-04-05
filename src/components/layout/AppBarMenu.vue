@@ -15,10 +15,10 @@
       </template>
 
       <v-list dense class="d-flex flex-column align-center">
-        <v-list-item @click="profileDialog = true">
+        <v-list-item @click="openProfileSheet = true">
           <v-list-item-title>프로필</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="passwordDialog = true">
+        <v-list-item @click="openPasswordSheet = true">
           <v-list-item-title>비밀번호 변경</v-list-item-title>
         </v-list-item>
         <v-list-item @click="signOut">
@@ -27,13 +27,16 @@
       </v-list>
     </v-menu>
 
-    <ProfileEditSheet v-if="profileDialog" :sheet.sync="profileDialog" />
-    <PasswordEditSheet v-if="passwordDialog" :sheet.sync="passwordDialog" />
+    <ProfileEditSheet v-if="openProfileSheet" :sheet.sync="openProfileSheet" />
+    <PasswordEditSheet
+      v-if="openPasswordSheet"
+      :sheet.sync="openPasswordSheet"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { signOut } from "@/utils/utils";
+import { signOut } from "@/utils/commands";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
@@ -41,6 +44,7 @@ import ProfileEditSheet from "@/views/components/sheet/ProfileEditSheet.vue";
 import PasswordEditSheet from "@/views/components/sheet/PasswordEditSheet.vue";
 
 const { member } = storeToRefs(useMemberStore());
-const profileDialog = ref(false);
-const passwordDialog = ref(false);
+
+const openProfileSheet = ref(false);
+const openPasswordSheet = ref(false);
 </script>

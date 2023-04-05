@@ -80,7 +80,7 @@ import { useVModels } from "@vueuse/core";
 import { ref } from "vue";
 import { patchApi } from "@/utils/apis";
 import { useConfirmStore } from "@/stores/confirm";
-import SheetButton from "@/views/components/sheet/SheetButton.vue";
+import SheetButton from "@/components/sheet/SheetButton.vue";
 
 const { confirmUpdate } = useConfirmStore();
 

@@ -62,15 +62,15 @@
 <script setup lang="ts">
 import { useVModels } from "@vueuse/core";
 import { onBeforeMount, ref } from "vue";
-import { Member } from "@/definitions/types";
+import { Member } from "@/definitions/entities";
 import { defaultMember } from "@/definitions/defaults";
-import TagChip from "@/views/components/TagChip.vue";
+import TagChip from "@/components/button/TagChip.vue";
 import { deleteApi, patchApi } from "@/utils/apis";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { useConfirmStore } from "@/stores/confirm";
-import { routeSignInPage } from "@/utils/utils";
-import SheetButton from "@/views/components/sheet/SheetButton.vue";
+import { routeSignInPage } from "@/utils/commands";
+import SheetButton from "@/components/sheet/SheetButton.vue";
 
 const { saveMyProfile } = useMemberStore();
 const { confirmDelete, confirmUpdate } = useConfirmStore();

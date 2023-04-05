@@ -70,10 +70,12 @@ import { ref } from "vue";
 import { postApi } from "@/utils/apis";
 import { Token } from "@/definitions/types";
 import { useMemberStore } from "@/stores/member";
-import { routerReplace } from "@/utils/utils";
+import { routerReplace } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
+import { useStoreStore } from "@/stores/store";
 
 const { saveToken } = useMemberStore();
+const { fetchStoreList } = useStoreStore();
 const { toastClose } = useAlertStore();
 
 const email = ref("");
@@ -101,6 +103,7 @@ async function submit(): Promise<void> {
     if (response.success && response.result) {
       toastClose();
       await saveToken(response.result);
+      await fetchStoreList();
       await routerReplace("/");
     } else {
       errorMessage.value = true;

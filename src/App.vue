@@ -13,8 +13,8 @@ import DefaultLayout from "@/views/layouts/DefaultLayout.vue";
 import { computed } from "vue";
 import AuthLayout from "@/views/layouts/AuthLayout.vue";
 import router from "@/router";
-import GlobalAlert from "@/views/components/dialog/GlobalAlert.vue";
-import GlobalConfirm from "@/views/components/dialog/GlobalConfirm.vue";
+import GlobalAlert from "@/components/dialog/GlobalAlert.vue";
+import GlobalConfirm from "@/components/dialog/GlobalConfirm.vue";
 
 const layouts = {
   default: DefaultLayout,

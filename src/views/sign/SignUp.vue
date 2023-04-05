@@ -104,7 +104,7 @@ import { computed, ref } from "vue";
 import { getApi, postApi } from "@/utils/apis";
 import { Token } from "@/definitions/types";
 import { useMemberStore } from "@/stores/member";
-import { routerPush, routerReplace } from "@/utils/utils";
+import { routerPush, routerReplace } from "@/utils/commands";
 import validator from "validator";
 import { useDebounceFn } from "@vueuse/core";
 

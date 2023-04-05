@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import envs from "@/constants/envs";
-import { getAccessToken, routeSignInPage } from "@/utils/utils";
+import { getAccessToken, routeSignInPage } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
@@ -102,6 +102,22 @@ export async function postApi<T = never, R = T>(
   sendAlert = true
 ): Promise<ApiResponse<R>> {
   const response = await axiosInstance.post<T, AxiosResponse<ApiResponse<R>>>(
+    `api/v1/${url}`,
+    data
+  );
+
+  if (sendAlert) {
+    alert(response.data);
+  }
+  return response.data;
+}
+
+export async function putApi<T = never, R = T>(
+  url: string,
+  data: any,
+  sendAlert = true
+): Promise<ApiResponse<R>> {
+  const response = await axiosInstance.put<T, AxiosResponse<ApiResponse<R>>>(
     `api/v1/${url}`,
     data
   );
