@@ -22,15 +22,22 @@ export const useStoreStore = defineStore("store", {
       const { member } = useMemberStore();
 
       this.$state.storeList = await getStoreList(member.id);
+      this.updateSelectedStore();
+    },
+    updateSelectedStore(): void {
+      this.$state.selectedStore =
+        this.$state.storeList.find((item) => {
+          return item.id === this.$state.selectedStore.id;
+        }) || defaultStore();
 
-      if (!this.isSelectedStore && !this.isStoreEmpty) {
+      if (!this.isStoreEmpty && !this.isSelectedStore) {
         this.$state.selectedStore = this.$state.storeList[0];
       }
     },
-    selectStore(store: Store) {
+    selectStore(store: Store): void {
       this.$state.selectedStore = store;
     },
-    storeClear() {
+    storeClear(): void {
       this.$reset();
     },
   },
