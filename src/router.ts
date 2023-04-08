@@ -25,6 +25,13 @@ const requiredUnauthenticated =
   };
 
 const routes = (): RouteConfig[] => {
+  const management: RouteConfig[] = [
+    {
+      path: "/management/store",
+      beforeEnter: requiredAuthenticated(),
+      component: () => import("@/views/management/store/StorePage.vue"),
+    },
+  ];
   const error: RouteConfig[] = [
     {
       path: "/error/404",
@@ -59,6 +66,7 @@ const routes = (): RouteConfig[] => {
       beforeEnter: requiredAuthenticated(),
       component: () => import("@/views/HomePage.vue"),
     },
+    ...management,
     ...sign,
     ...error,
     {

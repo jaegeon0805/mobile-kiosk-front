@@ -1,6 +1,6 @@
 <template>
   <v-list class="ma-4">
-    <v-menu offset-y transition="slide-y">
+    <v-menu offset-y transition="slide-y-transition" max-height="30%">
       <template v-slot:activator="{ on }">
         <div
           class="menu-color pa-3 rounded-lg white--text d-flex justify-space-between align-center"
@@ -18,7 +18,12 @@
         </div>
       </template>
 
-      <v-list dense class="d-flex flex-column align-center">
+      <v-list
+        dense
+        class="d-flex flex-column align-center"
+        dark
+        color="#252939"
+      >
         <v-list-item v-if="isStoreEmpty" @click="openCreateSheet">
           <v-list-item-title class="primary--text"
             >지점 생성하기</v-list-item-title

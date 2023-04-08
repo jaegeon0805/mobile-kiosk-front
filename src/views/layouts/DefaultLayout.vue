@@ -2,6 +2,8 @@
   <div class="d-flex flex-grow-1">
     <v-navigation-drawer app v-model="navigation" color="#101827">
       <StoreSelectMenu />
+      <v-divider class="menu-color" />
+      <NavMenu />
     </v-navigation-drawer>
 
     <v-app-bar app flat>
@@ -17,8 +19,10 @@
     </v-app-bar>
 
     <v-main class="mt-10">
-      <v-container class="pa-4" fluid>
-        <slot />
+      <v-container class="pa-4 fill-height" fluid>
+        <v-card class="fill-height pa-2" flat style="width: 100%">
+          <slot />
+        </v-card>
       </v-container>
     </v-main>
 
@@ -35,6 +39,13 @@
 import { ref } from "vue";
 import ProfileMenu from "@/components/layout/AppBarMenu.vue";
 import StoreSelectMenu from "@/components/layout/StoreSelectMenu.vue";
+import NavMenu from "@/components/layout/NavMenu.vue";
 
 const navigation = ref(true);
 </script>
+
+<style scoped>
+.menu-color {
+  background-color: #292f3d;
+}
+</style>

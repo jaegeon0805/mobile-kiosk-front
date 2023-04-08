@@ -10,5 +10,5 @@ export interface Member extends Id {
 
 export interface Store extends Id {
   name: string;
-  state: "OPEN" | "CLOSE";
+  availableFlag: boolean;
 }

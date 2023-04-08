@@ -57,12 +57,14 @@ const props = defineProps<{
 const emits = defineEmits<{
   (e: "input", v: Store): void;
   (e: "update:sheet", v: boolean): void;
+  (e: "created"): void;
+  (e: "updated"): void;
 }>();
 
 const { value, sheet, loading, isNew } = useEdit<Store>(props, emits);
 
 async function save() {
-  const isValid = observer.value?.validate();
+  const isValid = await observer.value?.validate();
   if (!isValid) {
     return;
   }
@@ -86,13 +88,14 @@ async function create(): Promise<void> {
     if (response.success) {
       await fetchStoreList();
       sheet.value = false;
+      emits("created");
     }
   });
 }
 
 async function update(): Promise<void> {
-  loading.value = true;
   confirmUpdate(async () => {
+    loading.value = true;
     const response = await putApi(`stores/${value.value.id}`, {
       name: value.value.name,
     });
@@ -101,6 +104,7 @@ async function update(): Promise<void> {
     if (response.success) {
       await fetchStoreList();
       sheet.value = false;
+      emits("updated");
     }
   });
 }

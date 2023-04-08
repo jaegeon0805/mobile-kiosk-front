@@ -4,10 +4,11 @@ import { useMemberStore } from "@/stores/member";
 import { ApiResponse, getApi, postApi } from "@/utils/apis";
 import axios from "axios";
 import envs from "@/constants/envs";
-import { Token } from "@/definitions/types";
-import { defaultMember } from "@/definitions/defaults";
+import { PageResponse, Token } from "@/definitions/types";
+import { defaultMember, defaultPagination } from "@/definitions/defaults";
 import { Member, Store } from "@/definitions/entities";
 import { useStoreStore } from "@/stores/store";
+import { stringify } from "qs";
 
 const { memberClear, isTokenExpired, reissueToken } = useMemberStore(store);
 const { storeClear } = useStoreStore(store);
@@ -86,9 +87,13 @@ export async function getStoreList(
     return [];
   }
 
-  const response = await getApi<Store[]>(`members/${memberId}/stores`);
-  if (response.success) {
-    return response.result;
+  const queryString = stringify(defaultPagination(), { arrayFormat: "comma" });
+
+  const response = await getApi<PageResponse<Store>>(
+    `members/${memberId}/stores?${queryString}`
+  );
+  if (response.success && response.result) {
+    return response.result.content || [];
   }
   return [];
 }
