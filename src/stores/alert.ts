@@ -10,7 +10,7 @@ export const useAlertStore = defineStore("alert", {
   },
   actions: {
     toastSuccess(message: string, timer = 3_000) {
-      this.alert(message, timer, "#009688", "mdi-check-circle");
+      this.alert(message, timer, "#1876D2", "mdi-check-circle");
     },
     toastWarning(message: string, timer = 10_000) {
       this.alert(message, timer, "#ffca28", "mdi-alert");

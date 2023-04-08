@@ -59,11 +59,11 @@ const { openConfirm, item } = storeToRefs(useConfirmStore());
   font-size: 16px;
   font-weight: 700;
   color: #ffffff;
-  background-color: #009688;
+  background-color: #2196f3;
   transition: background-color 0.3s ease;
 }
 
 .confirm-button:hover {
-  background-color: #007d69;
+  background-color: #1976d2;
 }
 </style>
