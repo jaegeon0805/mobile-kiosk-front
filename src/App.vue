@@ -15,10 +15,12 @@ import AuthLayout from "@/views/layouts/AuthLayout.vue";
 import router from "@/router";
 import GlobalAlert from "@/components/dialog/GlobalAlert.vue";
 import GlobalConfirm from "@/components/dialog/GlobalConfirm.vue";
+import ErrorLayout from "@/views/layouts/ErrorLayout.vue";
 
 const layouts = {
   default: DefaultLayout,
   auth: AuthLayout,
+  error: ErrorLayout,
 };
 const currentLayout = computed(
   () =>

@@ -29,6 +29,9 @@ const routes = (): RouteConfig[] => {
     {
       path: "/error/404",
       component: () => import("@/views/error/NotFoundPage.vue"),
+      meta: {
+        layout: "error",
+      },
     },
   ];
   const sign: RouteConfig[] = [
@@ -55,9 +58,6 @@ const routes = (): RouteConfig[] => {
       path: "/",
       beforeEnter: requiredAuthenticated(),
       component: () => import("@/views/HomePage.vue"),
-      meta: {
-        requiresAuth: "true",
-      },
     },
     ...sign,
     ...error,
