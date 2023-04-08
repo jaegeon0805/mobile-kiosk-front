@@ -1,0 +1,25 @@
+.v-data-table {
+  table {
+    tbody {
+      tr {
+
+        a {
+          color: rgba(0, 0, 0, 0.87);
+          text-decoration: none;
+        }
+
+        &:hover {
+          background-color: rgba(33, 150, 243, 0.1) !important;
+
+          a {
+            color: #1876D2 !important;
+          }
+
+          a:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
