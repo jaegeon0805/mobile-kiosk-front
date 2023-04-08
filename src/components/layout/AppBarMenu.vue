@@ -2,7 +2,7 @@
   <div>
     <v-menu offset-y transition="slide-y-transition">
       <template v-slot:activator="{ on }">
-        <v-chip class="py-0" large color="background" v-on="on">
+        <v-chip class="py-0" large color="white" v-on="on">
           <span class="d-inline-block text-truncate" style="max-width: 6rem">{{
             member.name
           }}</span>
