@@ -79,8 +79,7 @@ async function save() {
 async function create(): Promise<void> {
   confirmCreate(async () => {
     loading.value = true;
-    const response = await postApi("stores", {
-      member: member.value,
+    const response = await postApi(`stores?memberId=${member.value.id}`, {
       name: value.value.name,
     });
     loading.value = false;
