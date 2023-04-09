@@ -2,29 +2,54 @@
   <div>
     <v-bottom-sheet v-model="sheet" inset>
       <v-card>
-        <SheetTitle title="지점" :is-new="isNew" />
+        <SheetTitle title="점포" :is-new="isNew" />
         <v-card-text>
           <v-form>
             <validation-observer ref="observer">
               <v-row dense>
                 <v-col cols="12">
                   <validation-provider
-                    v-slot="{ errors, valid }"
-                    name="지점 이름"
+                    v-slot="{ errors }"
+                    name="점포명"
                     rules="required|max:20"
                   >
                     <v-text-field
                       v-model="value.name"
-                      label="지점 이름"
+                      label="점포명"
                       :error-messages="errors"
                       :success="valid"
                       autocomplete="false"
+                      counter="20"
+                      clearable
+                    />
+                  </validation-provider>
+                </v-col>
+                <v-col cols="12">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="점포 설명"
+                    rules="max:255"
+                  >
+                    <v-textarea
+                      v-model="value.description"
+                      label="점포 설명"
+                      :error-messages="errors"
+                      autocomplete="false"
+                      counter="255"
                       clearable
                     />
                   </validation-provider>
                 </v-col>
               </v-row>
             </validation-observer>
+            <v-row class="px-3">
+              <v-checkbox
+                v-model="value.availableFlag"
+                label="오픈"
+                class="font-weight-black"
+                dense
+              />
+            </v-row>
           </v-form>
         </v-card-text>
         <SheetButton :sheet.sync="sheet" :loading="loading" @save="save" />
@@ -79,9 +104,10 @@ async function save() {
 async function create(): Promise<void> {
   confirmCreate(async () => {
     loading.value = true;
-    const response = await postApi(`stores?memberId=${member.value.id}`, {
-      name: value.value.name,
-    });
+    const response = await postApi(
+      `stores?memberId=${member.value.id}`,
+      value.value
+    );
     loading.value = false;
 
     if (response.success) {
@@ -95,9 +121,7 @@ async function create(): Promise<void> {
 async function update(): Promise<void> {
   confirmUpdate(async () => {
     loading.value = true;
-    const response = await putApi(`stores/${value.value.id}`, {
-      name: value.value.name,
-    });
+    const response = await putApi(`stores/${value.value.id}`, value.value);
     loading.value = false;
 
     if (response.success) {

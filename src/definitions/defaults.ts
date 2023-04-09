@@ -22,6 +22,7 @@ export function defaultStore(): Store {
   return {
     id: undefined,
     name: "",
+    description: "",
     availableFlag: false,
   };
 }

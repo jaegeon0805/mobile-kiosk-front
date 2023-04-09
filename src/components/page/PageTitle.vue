@@ -14,7 +14,7 @@ withDefaults(
     title: string;
     buttonTitle?: string;
   }>(),
-  { buttonTitle: "등록" }
+  { buttonTitle: "생성" }
 );
 
 const emits = defineEmits<{

@@ -10,7 +10,17 @@
         :loading="loading"
       >
         <template #[`item.name`]="{ item }">
-          <a @click="openUpdateSheet(item)" v-text="item.name" />
+          <a
+            class="d-inline-block text-truncate"
+            style="width: 15rem"
+            @click="openUpdateSheet(item)"
+            v-text="item.name"
+          />
+        </template>
+        <template #[`item.description`]="{ item }">
+          <span class="d-inline-block text-truncate" style="width: 25rem">
+            {{ item.description }}
+          </span>
         </template>
         <template #[`item.availableFlag`]="{ item }">
           <div class="d-flex justify-center">
@@ -32,6 +42,7 @@
     </v-card-text>
 
     <StoreEditSheet
+      v-if="sheet"
       v-model="editItem"
       :sheet.sync="sheet"
       @created="fetchList"
@@ -76,14 +87,20 @@ const headers: DataTableHeader[] = [
     text: "점포명",
     align: "start",
     value: "name",
-    width: "20rem",
+    width: "15rem",
+    sortable: true,
+  },
+  {
+    text: "점포 설명",
+    align: "start",
+    value: "description",
     sortable: true,
   },
   {
     text: "OPEN / CLOSE",
     align: "center",
     value: "availableFlag",
-    width: "4rem",
+    width: "8rem",
     sortable: true,
   },
   {

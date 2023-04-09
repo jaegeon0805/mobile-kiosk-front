@@ -10,5 +10,6 @@ export interface Member extends Id {
 
 export interface Store extends Id {
   name: string;
+  description: string;
   availableFlag: boolean;
 }
