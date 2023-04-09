@@ -101,7 +101,7 @@ async function fetchList(): Promise<void> {
 
   loading.value = true;
   const response = await getApi<PageResponse<Store>>(
-    `members/${member.id}/stores?${queryString.value}`
+    `stores?memberId=${member.id}&${queryString.value}`
   );
   loading.value = false;
 

@@ -90,7 +90,7 @@ export async function getStoreList(
   const queryString = stringify(defaultPagination(), { arrayFormat: "comma" });
 
   const response = await getApi<PageResponse<Store>>(
-    `members/${memberId}/stores?${queryString}`
+    `stores?memberId=${memberId}&${queryString}`
   );
   if (response.success && response.result) {
     return response.result.content || [];
