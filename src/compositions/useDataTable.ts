@@ -1,7 +1,7 @@
 import { Id } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
-import { reactive, ref, Ref, toRefs } from "vue";
-import { patchApi } from "@/utils/apis";
+import { reactive, toRefs } from "vue";
+import { useSimpleTable } from "@/compositions/useSimpleTable";
 
 export function useDataTable<T extends Id>(
   url: string,
@@ -14,41 +14,10 @@ export function useDataTable<T extends Id>(
 ) {
   const state = reactive({
     pagination: pagination,
-    totalItems: 0,
-    loading: false,
-    availableFlagLoadingSet: new Set<number>(),
   });
 
-  const items = ref<T[]>([]) as Ref<T[]>;
+  const { items, totalItems, loading, changeAvailableFlag } =
+    useSimpleTable<T>(url);
 
-  const methods = {
-    changeAvailableFlag: async (
-      id: number | undefined,
-      value: boolean
-    ): Promise<void> => {
-      if (!id || state.availableFlagLoadingSet.has(id)) {
-        return;
-      }
-
-      state.availableFlagLoadingSet.add(id);
-      const response = await patchApi<boolean, T>(
-        `${url}/${id}/available-flag`,
-        {
-          availableFlag: value,
-        }
-      );
-      state.availableFlagLoadingSet.delete(id);
-
-      if (response.success) {
-        items.value = items.value.map((item) => {
-          if (item.id === id) {
-            return response.result;
-          } else {
-            return item;
-          }
-        });
-      }
-    },
-  };
-  return { ...toRefs(state), items, ...methods };
+  return { items, totalItems, loading, changeAvailableFlag, ...toRefs(state) };
 }
