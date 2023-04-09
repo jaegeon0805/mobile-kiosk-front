@@ -31,6 +31,11 @@ const routes = (): RouteConfig[] => {
       beforeEnter: requiredAuthenticated(),
       component: () => import("@/views/management/store/StorePage.vue"),
     },
+    {
+      path: "/management/category",
+      beforeEnter: requiredAuthenticated(),
+      component: () => import("@/views/management/category/CategoryPage.vue"),
+    },
   ];
   const error: RouteConfig[] = [
     {

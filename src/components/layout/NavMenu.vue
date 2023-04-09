@@ -27,9 +27,14 @@ import { NavItem } from "@/definitions/types";
 const items = computed((): NavItem[] => {
   let items: NavItem[] = [
     {
-      icon: "mdi-store-cog-outline",
+      icon: "mdi-home-edit-outline",
       title: "점포 관리",
       url: "/management/store",
+    },
+    {
+      icon: "mdi-view-dashboard-edit-outline",
+      title: "카테고리 관리",
+      url: "/management/category",
     },
   ];
 

@@ -1,4 +1,4 @@
-import { Member, Store } from "@/definitions/entities";
+import { Category, Member, Store } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
 
 export function defaultPagination(): Pagination {
@@ -19,6 +19,15 @@ export function defaultMember(): Member {
 }
 
 export function defaultStore(): Store {
+  return {
+    id: undefined,
+    name: "",
+    description: "",
+    availableFlag: false,
+  };
+}
+
+export function defaultCategory(): Category {
   return {
     id: undefined,
     name: "",

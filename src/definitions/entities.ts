@@ -13,3 +13,9 @@ export interface Store extends Id {
   description: string;
   availableFlag: boolean;
 }
+
+export interface Category extends Id {
+  name: string;
+  description: string;
+  availableFlag: boolean;
+}
