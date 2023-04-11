@@ -8,16 +8,29 @@
           text-decoration: none;
         }
 
-        &:hover {
+        .drag-handle {
+          color: rgb(0, 0, 0, 0.2);
+        }
+
+        &:not(.not-dragged-row):hover {
           background-color: rgba(33, 150, 243, 0.1) !important;
 
           a {
             color: #1876D2 !important;
+            font-weight: bold;
+          }
+
+          .drag-handle {
+            color: rgb(0, 0, 0, 1);
           }
 
           a:hover {
             text-decoration: underline;
           }
+        }
+
+        &.not-dragged-row:hover {
+          background-color: white !important;
         }
       }
     }

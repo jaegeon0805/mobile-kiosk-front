@@ -66,12 +66,14 @@ import { watchDebounced } from "@vueuse/core";
 import PageTitle from "@/components/page/PageTitle.vue";
 import StoreEditSheet from "@/views/management/store/StoreEditSheet.vue";
 import { useConfirmStore } from "@/stores/confirm";
+import { useStoreStore } from "@/stores/store";
+
+const { member } = useMemberStore();
+const { fetchStoreList } = useStoreStore();
+const { confirmDelete } = useConfirmStore();
 
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
   useEditItem<Store>(defaultStore);
-const { member } = useMemberStore();
-const { confirmDelete } = useConfirmStore();
-
 const { pagination, totalItems, items, loading, changeAvailableFlag } =
   useDataTable<Store>("stores");
 
@@ -130,6 +132,7 @@ async function deleteStore(store: Store): Promise<void> {
   confirmDelete(async () => {
     const response = await deleteApi(`stores/${store.id}`);
     if (response.success) {
+      await fetchStoreList();
       await fetchList();
     }
   });

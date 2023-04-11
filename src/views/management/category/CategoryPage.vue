@@ -9,7 +9,14 @@
         :headers="headers"
         :items="items"
         :loading="loading"
+        class="sortable"
       >
+        <template #[`header.id`]>
+          <v-icon class="drag-handle"> mdi-menu-swap</v-icon>
+        </template>
+        <template #[`item.id`]>
+          <v-icon class="drag-handle"> mdi-drag-vertical</v-icon>
+        </template>
         <template #[`item.name`]="{ item }">
           <a
             class="d-inline-block text-truncate"
@@ -57,15 +64,16 @@ import { DataTableHeader } from "vuetify";
 import { defaultCategory } from "@/definitions/defaults";
 import { Category } from "@/definitions/entities";
 import { useEditItem } from "@/compositions/useEditItem";
-import { deleteApi, getApi } from "@/utils/apis";
-import { watchDebounced } from "@vueuse/core";
+import { deleteApi, getApi, patchApi } from "@/utils/apis";
+import { useCurrentElement, watchDebounced } from "@vueuse/core";
 import PageTitle from "@/components/page/PageTitle.vue";
 import { useConfirmStore } from "@/stores/confirm";
 import { useStoreStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
 import { useSimpleTable } from "@/compositions/useSimpleTable";
 import CategoryEditSheet from "@/views/management/category/CategoryEditSheet.vue";
-import { onMounted } from "vue";
+import { onBeforeMount, onMounted } from "vue";
+import Sortable, { SortableEvent } from "sortablejs";
 
 const { selectedStore } = storeToRefs(useStoreStore());
 const { confirmDelete } = useConfirmStore();
@@ -80,7 +88,7 @@ const headers: DataTableHeader[] = [
     text: "ID",
     align: "start",
     value: "id",
-    width: "4rem",
+    width: "1rem",
     sortable: true,
   },
   {
@@ -135,6 +143,19 @@ async function deleteStore(category: Category): Promise<void> {
   });
 }
 
+async function saveSort(): Promise<void> {
+  const response = await patchApi<Category[]>(
+    `categories/display-order?storeId=${selectedStore.value.id}`,
+    items.value.map(({ id }, index) => ({
+      id: id as number,
+      displayOrder: index,
+    }))
+  );
+  if (response.success) {
+    items.value = response.result;
+  }
+}
+
 watchDebounced(
   () => selectedStore.value,
   async () => await fetchList(),
@@ -143,7 +164,35 @@ watchDebounced(
   }
 );
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await fetchList();
+});
+
+onMounted(() => {
+  const selector = useCurrentElement().value.querySelector(
+    ".sortable tbody"
+  ) as HTMLElement;
+
+  Sortable.create(selector, {
+    handle: ".drag-handle",
+    animation: 300,
+    onStart(evt: SortableEvent) {
+      const rows = selector.querySelectorAll("tr");
+      rows.forEach((row) => row.classList.add("not-dragged-row"));
+      evt.item.classList.remove("not-dragged-row");
+    },
+    onEnd(evt: SortableEvent) {
+      if (evt.newIndex != evt.oldIndex) {
+        const newItems = [...items.value];
+        const draggedItem = newItems.splice(evt.oldIndex, 1)[0];
+        newItems.splice(evt.newIndex, 0, draggedItem);
+        items.value = newItems;
+        saveSort();
+      }
+
+      const rows = selector.querySelectorAll("tr");
+      rows.forEach((row) => row.classList.remove("not-dragged-row"));
+    },
+  });
 });
 </script>
