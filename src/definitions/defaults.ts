@@ -1,4 +1,4 @@
-import { Category, Member, Store } from "@/definitions/entities";
+import { Category, Member, Menu, Store } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
 
 export function defaultPagination(): Pagination {
@@ -33,5 +33,16 @@ export function defaultCategory(): Category {
     name: "",
     description: "",
     availableFlag: false,
+  };
+}
+
+export function defaultMenu(): Menu {
+  return {
+    id: undefined,
+    name: "",
+    description: "",
+    price: 0,
+    availableFlag: false,
+    soldOutFlag: false,
   };
 }

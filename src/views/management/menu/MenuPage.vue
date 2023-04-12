@@ -1,7 +1,8 @@
 <template>
   <div>
-    <PageTitle title="카테고리 관리" @click="openCreateSheet" />
+    <PageTitle title="메뉴 관리" @click="openSheet" />
     <v-card-text class="pt-0">
+      <CategorySelectTab v-model="category" />
       <v-data-table
         disable-sort
         disable-pagination
@@ -49,10 +50,11 @@
       </v-data-table>
     </v-card-text>
 
-    <CategoryEditSheet
+    <MenuEditSheet
       v-if="sheet"
       v-model="editItem"
       :sheet.sync="sheet"
+      :category="category"
       @created="fetchList"
       @updated="fetchList"
     />
@@ -61,8 +63,8 @@
 
 <script setup lang="ts">
 import { DataTableHeader } from "vuetify";
-import { defaultCategory } from "@/definitions/defaults";
-import { Category } from "@/definitions/entities";
+import { defaultMenu } from "@/definitions/defaults";
+import { Category, Menu } from "@/definitions/entities";
 import { useEditItem } from "@/compositions/useEditItem";
 import { deleteApi, getApi, patchApi } from "@/utils/apis";
 import { useCurrentElement, watchDebounced } from "@vueuse/core";
@@ -71,17 +73,22 @@ import { useConfirmStore } from "@/stores/confirm";
 import { useStoreStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
 import { useSimpleTable } from "@/compositions/useSimpleTable";
-import CategoryEditSheet from "@/views/management/category/CategoryEditSheet.vue";
-import { onBeforeMount, onMounted } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import Sortable, { SortableEvent } from "sortablejs";
+import MenuEditSheet from "@/views/management/menu/MenuEditSheet.vue";
+import CategorySelectTab from "@/views/management/category/CategorySelectTab.vue";
+import { useAlertStore } from "@/stores/alert";
 
 const { selectedStore } = storeToRefs(useStoreStore());
+const { toastWarning } = useAlertStore();
 const { confirmDelete } = useConfirmStore();
 
 const { totalItems, items, loading, changeAvailableFlag } =
-  useSimpleTable<Category>("categories");
+  useSimpleTable<Menu>("menus");
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
-  useEditItem<Category>(defaultCategory);
+  useEditItem<Menu>(defaultMenu);
+
+const category = ref<Category | null>(null);
 
 const headers: DataTableHeader[] = [
   {
@@ -92,14 +99,14 @@ const headers: DataTableHeader[] = [
     sortable: true,
   },
   {
-    text: "카테고리명",
+    text: "메뉴명",
     align: "start",
     value: "name",
     width: "15rem",
     sortable: true,
   },
   {
-    text: "카테고리 설명",
+    text: "메뉴 설명",
     align: "start",
     value: "description",
     sortable: true,
@@ -123,20 +130,31 @@ const headers: DataTableHeader[] = [
 async function fetchList(): Promise<void> {
   items.value = [];
   totalItems.value = 0;
+  if (category.value !== null) {
+    loading.value = true;
 
-  loading.value = true;
-  const response = await getApi<Category[]>(
-    `categories?storeId=${selectedStore.value.id}`
-  );
-  loading.value = false;
+    const response = await getApi<Menu[]>(
+      `menus?categoryId=${category.value.id}`
+    );
 
-  items.value = response.result ?? [];
-  totalItems.value = response.result.length ?? 0;
+    loading.value = false;
+
+    items.value = response.result ?? [];
+    totalItems.value = response.result.length ?? 0;
+  }
 }
 
-async function deleteStore(category: Category): Promise<void> {
+function openSheet() {
+  if (category.value?.id) {
+    openCreateSheet();
+  } else {
+    toastWarning("카테고리를 먼저 선택해주세요.");
+  }
+}
+
+async function deleteStore(menu: Menu): Promise<void> {
   confirmDelete(async () => {
-    const response = await deleteApi(`categories/${category.id}`);
+    const response = await deleteApi(`menus/${menu.id}`);
     if (response.success) {
       await fetchList();
     }
@@ -144,8 +162,8 @@ async function deleteStore(category: Category): Promise<void> {
 }
 
 async function saveSort(): Promise<void> {
-  const response = await patchApi<Category[]>(
-    `categories/display-order?storeId=${selectedStore.value.id}`,
+  const response = await patchApi<Menu[]>(
+    `menus/display-order?categoryId=${category.value?.id}`,
     items.value.map(({ id }, index) => ({
       id: id as number,
       displayOrder: index,
@@ -157,7 +175,7 @@ async function saveSort(): Promise<void> {
 }
 
 watchDebounced(
-  () => selectedStore.value,
+  () => [selectedStore.value, category.value],
   async () => await fetchList(),
   {
     debounce: 300,
@@ -182,7 +200,11 @@ onMounted(() => {
       evt.item.classList.remove("not-dragged-row");
     },
     onEnd(evt: SortableEvent) {
-      if (evt.newIndex != evt.oldIndex) {
+      if (
+        evt.newIndex != evt.oldIndex &&
+        evt.newIndex !== undefined &&
+        evt.oldIndex !== undefined
+      ) {
         const newItems = [...items.value];
         const draggedItem = newItems.splice(evt.oldIndex, 1)[0];
         newItems.splice(evt.newIndex, 0, draggedItem);

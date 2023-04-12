@@ -19,3 +19,11 @@ export interface Category extends Id {
   description: string;
   availableFlag: boolean;
 }
+
+export interface Menu extends Id {
+  name: string;
+  description: string;
+  price: number;
+  availableFlag: boolean;
+  soldOutFlag: boolean;
+}

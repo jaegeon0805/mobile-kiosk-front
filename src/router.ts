@@ -1,10 +1,14 @@
-import Vue from "vue";
+import Vue, { markRaw } from "vue";
 import VueRouter, { NavigationGuardNext, Route, RouteConfig } from "vue-router";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
 import { routeSignInPage } from "@/utils/commands";
+import { useStoreStore } from "@/stores/store";
+import { useAlertStore } from "@/stores/alert";
 
 Vue.use(VueRouter);
+
+const { toastWarning } = useAlertStore(store);
 
 const requiredAuthenticated =
   () => async (to: Route, from: Route, next: NavigationGuardNext) => {
@@ -24,6 +28,28 @@ const requiredUnauthenticated =
     return next();
   };
 
+const requiredStore =
+  () => async (to: Route, from: Route, next: NavigationGuardNext) => {
+    const { storeList } = useStoreStore(store);
+    if (storeList.length === 0) {
+      toastWarning(
+        "점포를 먼저 생성하셔야 합니다. 점포 생성 페이지로 이동됩니다."
+      );
+      return next("/management/store");
+    }
+    return next();
+  };
+
+const requireAuthenticatedAndStore =
+  () => async (to: Route, from: Route, next: NavigationGuardNext) => {
+    const authGuard = requiredAuthenticated();
+    const storeGuard = requiredStore();
+
+    await authGuard(to, from, async () => {
+      await storeGuard(to, from, next);
+    });
+  };
+
 const routes = (): RouteConfig[] => {
   const management: RouteConfig[] = [
     {
@@ -33,8 +59,13 @@ const routes = (): RouteConfig[] => {
     },
     {
       path: "/management/category",
-      beforeEnter: requiredAuthenticated(),
+      beforeEnter: requireAuthenticatedAndStore(),
       component: () => import("@/views/management/category/CategoryPage.vue"),
+    },
+    {
+      path: "/management/menu",
+      beforeEnter: requireAuthenticatedAndStore(),
+      component: () => import("@/views/management/menu/MenuPage.vue"),
     },
   ];
   const error: RouteConfig[] = [

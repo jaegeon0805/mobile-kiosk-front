@@ -1,7 +1,7 @@
 <template>
   <div>
     <PageTitle title="점포 관리" @click="openCreateSheet" />
-    <v-card-text>
+    <v-card-text class="pt-0">
       <v-data-table
         must-sort
         :headers="headers"
