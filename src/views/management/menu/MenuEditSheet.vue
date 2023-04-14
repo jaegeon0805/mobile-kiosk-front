@@ -7,37 +7,38 @@
           <v-form>
             <validation-observer ref="observer">
               <v-row dense>
-                <v-col cols="12">
-                  <validation-provider
-                    v-slot="{ errors }"
-                    name="메뉴명"
-                    rules="required|max:20"
-                  >
-                    <v-text-field
-                      v-model="value.name"
-                      label="메뉴명"
-                      :error-messages="errors"
-                      autocomplete="false"
-                      counter="20"
-                      clearable
-                    />
-                  </validation-provider>
-                </v-col>
-                <v-col cols="12">
-                  <validation-provider
-                    v-slot="{ errors }"
-                    name="메뉴 설명"
-                    rules="max:255"
-                  >
-                    <v-textarea
-                      v-model="value.description"
-                      label="메뉴 설명"
-                      :error-messages="errors"
-                      autocomplete="false"
-                      counter="255"
-                      clearable
-                    />
-                  </validation-provider>
+                <v-col cols="12" class="d-flex">
+                  <ImageCropperDialog v-model="value.imageUrl" class="mr-4" />
+                  <div class="flex-grow-1">
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="메뉴명"
+                      rules="required|max:20"
+                    >
+                      <v-text-field
+                        v-model="value.name"
+                        label="메뉴명"
+                        :error-messages="errors"
+                        autocomplete="false"
+                        counter="20"
+                        clearable
+                      />
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="메뉴 설명"
+                      rules="max:255"
+                    >
+                      <v-textarea
+                        v-model="value.description"
+                        label="메뉴 설명"
+                        :error-messages="errors"
+                        autocomplete="false"
+                        counter="255"
+                        clearable
+                      />
+                    </validation-provider>
+                  </div>
                 </v-col>
                 <v-col cols="12">
                   <validation-provider
@@ -50,7 +51,6 @@
                       label="메뉴 가격"
                       :error-messages="errors"
                       autocomplete="false"
-                      counter="20"
                       clearable
                     />
                   </validation-provider>
@@ -60,8 +60,8 @@
             <v-row class="px-3">
               <v-checkbox
                 v-model="value.availableFlag"
-                label="오픈"
-                class="font-weight-black"
+                label="활성"
+                class="font-weight-black mr-4"
                 dense
               />
               <v-checkbox
@@ -70,6 +70,10 @@
                 class="font-weight-black"
                 dense
               />
+              <v-spacer />
+              <span class="text-subtitle-2 error--text"
+                >* 옵션은 메뉴를 생성 후 추가할 수 있습니다.</span
+              >
             </v-row>
           </v-form>
         </v-card-text>
@@ -88,6 +92,7 @@ import { useStoreStore } from "@/stores/store";
 import SheetTitle from "@/components/sheet/SheetTitle.vue";
 import { useEdit } from "@/compositions/useEdit";
 import { Category, Menu } from "@/definitions/entities";
+import ImageCropperDialog from "@/components/uploader/ImageCropperDialog.vue";
 
 const { confirmCreate, confirmUpdate } = useConfirmStore();
 const { fetchStoreList } = useStoreStore();

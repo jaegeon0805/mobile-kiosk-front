@@ -4,6 +4,7 @@ import { getAccessToken, routeSignInPage } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
+import { stringify } from "qs";
 
 const { toastError, toastSuccess } = useAlertStore(store);
 const { reissueToken } = useMemberStore(store);
@@ -164,4 +165,30 @@ function alert(data: ApiResponse<unknown>): void {
   } else {
     data.message && toastError(data.message);
   }
+}
+
+export async function getPresignedUrl({
+  bucket,
+  folder,
+  fileName,
+  acl,
+  contentType,
+}: {
+  bucket: string;
+  folder: string;
+  fileName: string;
+  acl: string;
+  contentType?: string;
+}): Promise<string> {
+  return (
+    await getApi(
+      `s3/presigned-url?${stringify({
+        bucket,
+        folder,
+        fileName,
+        acl,
+        contentType,
+      })}`
+    )
+  ).result;
 }

@@ -21,6 +21,7 @@ export interface Category extends Id {
 }
 
 export interface Menu extends Id {
+  imageUrl: string;
   name: string;
   description: string;
   price: number;

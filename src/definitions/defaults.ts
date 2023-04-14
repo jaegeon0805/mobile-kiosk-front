@@ -39,6 +39,7 @@ export function defaultCategory(): Category {
 export function defaultMenu(): Menu {
   return {
     id: undefined,
+    imageUrl: "",
     name: "",
     description: "",
     price: 0,
