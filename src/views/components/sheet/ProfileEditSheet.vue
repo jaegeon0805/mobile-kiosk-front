@@ -20,21 +20,21 @@
                   <v-text-field
                     label="이메일"
                     disabled
-                    v-model="myProfile.email"
+                    :value="myProfile.email"
                   />
                 </v-col>
                 <v-col cols="12">
                   <v-text-field
                     label="권한"
                     disabled
-                    v-model="myProfile.role"
+                    :value="myProfile.role === 'ROLE_USER' ? '일반' : '어드민'"
                   />
                 </v-col>
                 <v-col cols="12">
                   <validation-provider
                     v-slot="{ errors }"
                     name="이름"
-                    rules="required|max:20"
+                    rules="required|name"
                   >
                     <v-text-field
                       label="이름"
@@ -96,7 +96,7 @@ async function changeName() {
 
   confirmUpdate(async () => {
     const response = await patchApi("my-profile/name", {
-      name: myProfile.value.name.trim(),
+      name: myProfile.value.name,
     });
     if (response.success) {
       await saveMyProfile();
