@@ -1,4 +1,11 @@
-import { Category, Member, Menu, Store } from "@/definitions/entities";
+import {
+  Category,
+  Member,
+  Menu,
+  OptionDetail,
+  OptionGroup,
+  Store,
+} from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
 
 export function defaultPagination(): Pagination {
@@ -45,5 +52,22 @@ export function defaultMenu(): Menu {
     price: 0,
     availableFlag: false,
     soldOutFlag: false,
+  };
+}
+
+export function defaultOptionGroup(): OptionGroup {
+  return {
+    id: undefined,
+    name: "",
+    type: "MANDATORY",
+    maxSelections: null,
+  };
+}
+
+export function defaultOptionDetail(): OptionDetail {
+  return {
+    id: undefined,
+    name: "",
+    price: 0,
   };
 }

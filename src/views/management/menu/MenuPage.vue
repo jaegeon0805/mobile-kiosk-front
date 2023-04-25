@@ -31,6 +31,9 @@
             {{ item.description }}
           </span>
         </template>
+        <template #[`item.option`]="{ item }">
+          <v-icon @click="openOptionSheet(item)">mdi-pencil-outline</v-icon>
+        </template>
         <template #[`item.availableFlag`]="{ item }">
           <div class="d-flex justify-center pl-4">
             <v-switch
@@ -43,7 +46,7 @@
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon color="red" @click="deleteStore(item)"
+          <v-icon color="red" @click="deleteMenu(item)"
             >mdi-delete-forever</v-icon
           >
         </template>
@@ -57,6 +60,11 @@
       :category="category"
       @created="fetchList"
       @updated="fetchList"
+    />
+    <OptionEditSheet
+      v-if="optionSheet"
+      v-model="editItem"
+      :sheet.sync="optionSheet"
     />
   </div>
 </template>
@@ -73,11 +81,13 @@ import { useConfirmStore } from "@/stores/confirm";
 import { useStoreStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
 import { useSimpleTable } from "@/compositions/useSimpleTable";
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref, UnwrapRef } from "vue";
 import Sortable, { SortableEvent } from "sortablejs";
 import MenuEditSheet from "@/views/management/menu/MenuEditSheet.vue";
 import CategorySelectTab from "@/views/management/category/CategorySelectTab.vue";
 import { useAlertStore } from "@/stores/alert";
+import OptionEditSheet from "@/views/management/menu/option/OptionEditSheet.vue";
+import { cloneDeep } from "lodash";
 
 const { selectedStore } = storeToRefs(useStoreStore());
 const { toastWarning } = useAlertStore();
@@ -89,6 +99,7 @@ const { sheet, editItem, openCreateSheet, openUpdateSheet } =
   useEditItem<Menu>(defaultMenu);
 
 const category = ref<Category | null>(null);
+const optionSheet = ref(false);
 
 const headers: DataTableHeader[] = [
   {
@@ -96,34 +107,35 @@ const headers: DataTableHeader[] = [
     align: "start",
     value: "id",
     width: "1rem",
-    sortable: true,
   },
   {
     text: "메뉴명",
     align: "start",
     value: "name",
     width: "15rem",
-    sortable: true,
   },
   {
     text: "메뉴 설명",
     align: "start",
     value: "description",
-    sortable: true,
+  },
+  {
+    text: "옵션 수정",
+    align: "center",
+    value: "option",
+    width: "10rem",
   },
   {
     text: "활성 / 비활성",
     align: "center",
     value: "availableFlag",
     width: "10rem",
-    sortable: true,
   },
   {
     text: "삭제",
     align: "center",
     value: "actions",
     width: "4rem",
-    sortable: false,
   },
 ];
 
@@ -152,7 +164,12 @@ function openSheet() {
   }
 }
 
-async function deleteStore(menu: Menu): Promise<void> {
+function openOptionSheet(menu: Menu) {
+  editItem.value = cloneDeep(menu) as UnwrapRef<Menu>;
+  optionSheet.value = true;
+}
+
+async function deleteMenu(menu: Menu): Promise<void> {
   confirmDelete(async () => {
     const response = await deleteApi(`menus/${menu.id}`);
     if (response.success) {
@@ -199,7 +216,7 @@ onMounted(() => {
       rows.forEach((row) => row.classList.add("not-dragged-row"));
       evt.item.classList.remove("not-dragged-row");
     },
-    onEnd(evt: SortableEvent) {
+    async onEnd(evt: SortableEvent) {
       if (
         evt.newIndex != evt.oldIndex &&
         evt.newIndex !== undefined &&
@@ -209,7 +226,7 @@ onMounted(() => {
         const draggedItem = newItems.splice(evt.oldIndex, 1)[0];
         newItems.splice(evt.newIndex, 0, draggedItem);
         items.value = newItems;
-        saveSort();
+        await saveSort();
       }
 
       const rows = selector.querySelectorAll("tr");

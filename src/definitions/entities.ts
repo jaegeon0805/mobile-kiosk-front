@@ -28,3 +28,14 @@ export interface Menu extends Id {
   availableFlag: boolean;
   soldOutFlag: boolean;
 }
+
+export interface OptionGroup extends Id {
+  name: string;
+  type: string;
+  maxSelections: number | null;
+}
+
+export interface OptionDetail extends Id {
+  name: string;
+  price: number;
+}

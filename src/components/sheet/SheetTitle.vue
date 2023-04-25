@@ -9,10 +9,13 @@ import { computed } from "vue";
 
 const props = defineProps<{
   title: string;
+  hideSuffix?: boolean;
   isNew?: boolean;
 }>();
 
 const titleText = computed((): string => {
-  return `${props.title} ${props.isNew ? "생성" : "수정"}`;
+  return props.hideSuffix
+    ? props.title
+    : `${props.title} ${props.isNew ? "생성" : "수정"}`;
 });
 </script>
