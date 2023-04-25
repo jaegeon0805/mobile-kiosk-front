@@ -74,7 +74,7 @@
             <validation-provider
               v-slot="{ errors, valid }"
               name="이름"
-              rules="required"
+              rules="required|name"
             >
               <v-text-field
                 v-model="name"
@@ -138,7 +138,7 @@ async function submit(): Promise<void> {
   });
 
   if (response.success && response.result) {
-    saveToken(response.result);
+    await saveToken(response.result);
     await routerReplace("/");
   }
   loading.value = false;

@@ -24,7 +24,25 @@ extend("password", (password) => {
   if (passwordRegex.test(password)) {
     return true;
   }
-  return "4~20자 영문 대 소문자, 숫자, 특수문자를 사용하세요.";
+  return "영문자, 숫자, 특수문자로 4~20자를 입력하세요.";
+});
+
+extend("name", (name) => {
+  const nameRegex = /^[a-zA-Z0-9가-힣]{1,20}$/;
+
+  if (nameRegex.test(name)) {
+    return true;
+  }
+  return "한글, 영문자, 숫자로 1~20자를 입력하세요.";
+});
+
+extend("nameWithSpace", (name) => {
+  const nameRegex = /^(?! )[a-zA-Z0-9가-힣 ]{1,20}(?<! )$/;
+
+  if (nameRegex.test(name)) {
+    return true;
+  }
+  return "한글, 영문자, 숫자, 공백으로 1~20자를 입력하세요. (공백은 맨 앞뒤에 사용할 수 없습니다.) ";
 });
 
 Vue.config.productionTip = false;
