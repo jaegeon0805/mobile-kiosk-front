@@ -16,8 +16,16 @@ export function useDataTable<T extends Id>(
     pagination: pagination,
   });
 
-  const { items, totalItems, loading, changeAvailableFlag } =
+  const { items, totalItems, loading, changeAvailableFlag, created, updated } =
     useSimpleTable<T>(url);
 
-  return { items, totalItems, loading, changeAvailableFlag, ...toRefs(state) };
+  return {
+    items,
+    totalItems,
+    loading,
+    changeAvailableFlag,
+    created,
+    updated,
+    ...toRefs(state),
+  };
 }

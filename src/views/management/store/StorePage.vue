@@ -19,7 +19,7 @@
         </template>
         <template #[`item.description`]="{ item }">
           <span class="d-inline-block text-truncate" style="width: 25rem">
-            {{ item.description }}
+            {{ item.description || "-" }}
           </span>
         </template>
         <template #[`item.availableFlag`]="{ item }">
@@ -45,8 +45,8 @@
       v-if="sheet"
       v-model="editItem"
       :sheet.sync="sheet"
-      @created="fetchList"
-      @updated="fetchList"
+      @created="created"
+      @updated="updated"
     />
   </div>
 </template>
@@ -74,8 +74,15 @@ const { confirmDelete } = useConfirmStore();
 
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
   useEditItem<Store>(defaultStore);
-const { pagination, totalItems, items, loading, changeAvailableFlag } =
-  useDataTable<Store>("stores");
+const {
+  pagination,
+  totalItems,
+  items,
+  loading,
+  changeAvailableFlag,
+  created,
+  updated,
+} = useDataTable<Store>("stores");
 
 const headers: DataTableHeader[] = [
   {
@@ -133,7 +140,7 @@ async function deleteStore(store: Store): Promise<void> {
     const response = await deleteApi(`stores/${store.id}`);
     if (response.success) {
       await fetchStoreList();
-      await fetchList();
+      items.value = items.value.filter((item) => item.id !== store.id);
     }
   });
 }

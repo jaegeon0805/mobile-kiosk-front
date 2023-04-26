@@ -38,6 +38,18 @@ export function useSimpleTable<T extends Id>(url: string) {
         });
       }
     },
+    created(item: T) {
+      items.value = [...items.value, item];
+    },
+    updated(item: T) {
+      items.value = items.value.map((oldItem) => {
+        if (oldItem.id === item.id) {
+          return item;
+        } else {
+          return oldItem;
+        }
+      });
+    },
   };
   return { ...toRefs(state), items, ...methods };
 }

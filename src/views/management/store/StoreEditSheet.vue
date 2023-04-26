@@ -11,7 +11,7 @@
                   <validation-provider
                     v-slot="{ errors }"
                     name="점포명"
-                    rules="required|max:20"
+                    rules="required|nameWithSpace"
                   >
                     <v-text-field
                       v-model="value.name"
@@ -36,6 +36,8 @@
                       autocomplete="false"
                       counter="255"
                       clearable
+                      outlined
+                      no-resize
                     />
                   </validation-provider>
                 </v-col>
@@ -81,8 +83,8 @@ const props = defineProps<{
 const emits = defineEmits<{
   (e: "input", v: Store): void;
   (e: "update:sheet", v: boolean): void;
-  (e: "created"): void;
-  (e: "updated"): void;
+  (e: "created", v: Store): void;
+  (e: "updated", v: Store): void;
 }>();
 
 const { value, sheet, loading, isNew } = useEdit<Store>(props, emits);
@@ -103,7 +105,7 @@ async function save() {
 async function create(): Promise<void> {
   confirmCreate(async () => {
     loading.value = true;
-    const response = await postApi(
+    const response = await postApi<Store>(
       `stores?memberId=${member.value.id}`,
       value.value
     );
@@ -112,7 +114,7 @@ async function create(): Promise<void> {
     if (response.success) {
       await fetchStoreList();
       sheet.value = false;
-      emits("created");
+      emits("created", response.result);
     }
   });
 }
@@ -120,13 +122,16 @@ async function create(): Promise<void> {
 async function update(): Promise<void> {
   confirmUpdate(async () => {
     loading.value = true;
-    const response = await putApi(`stores/${value.value.id}`, value.value);
+    const response = await putApi<Store>(
+      `stores/${value.value.id}`,
+      value.value
+    );
     loading.value = false;
 
     if (response.success) {
       await fetchStoreList();
       sheet.value = false;
-      emits("updated");
+      emits("updated", response.result);
     }
   });
 }
