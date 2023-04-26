@@ -8,10 +8,20 @@
       @change="changeImage"
     />
 
-    <v-card width="250px">
-      <v-img v-if="value" :aspect-ratio="4 / 3" :src="value" />
-      <v-card-actions class="d-flex justify-space-between">
-        <span class="font-weight-black error--text" @click="clear">초기화</span>
+    <v-card width="250px" outlined>
+      <v-img
+        :aspect-ratio="4 / 3"
+        :src="value || require('/src/assets/img/image-upload.png')"
+      />
+      <v-card-actions>
+        <span
+          v-if="value"
+          class="font-weight-black error--text"
+          style="cursor: pointer"
+          @click="clear"
+          >초기화</span
+        >
+        <v-spacer />
         <span
           class="font-weight-black"
           style="cursor: pointer"

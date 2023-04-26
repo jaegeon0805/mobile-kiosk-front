@@ -13,7 +13,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="메뉴명"
-                      rules="required|max:20"
+                      rules="required|nameWithSymbol"
                     >
                       <v-text-field
                         v-model="value.name"
@@ -31,11 +31,14 @@
                     >
                       <v-textarea
                         v-model="value.description"
+                        class="mt-1"
                         label="메뉴 설명"
                         :error-messages="errors"
                         autocomplete="false"
                         counter="255"
                         clearable
+                        outlined
+                        no-resize
                       />
                     </validation-provider>
                   </div>
@@ -44,10 +47,11 @@
                   <validation-provider
                     v-slot="{ errors }"
                     name="메뉴 가격"
-                    rules="required"
+                    rules="required|price"
                   >
                     <v-text-field
-                      v-model="value.price"
+                      v-model="displayPrice"
+                      prefix="₩"
                       label="메뉴 가격"
                       :error-messages="errors"
                       autocomplete="false"
@@ -84,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { postApi, putApi } from "@/utils/apis";
 import { useConfirmStore } from "@/stores/confirm";
 import SheetButton from "@/components/sheet/SheetButton.vue";
@@ -109,6 +113,16 @@ const emits = defineEmits<{
   (e: "created"): void;
   (e: "updated"): void;
 }>();
+
+const displayPrice = computed({
+  get() {
+    return Number(value.value.price).toLocaleString();
+  },
+  set(newValue) {
+    const parsedValue = parseInt(newValue.replace(/\D/g, ""));
+    value.value.price = isNaN(parsedValue) ? 0 : parsedValue;
+  },
+});
 
 const { value, sheet, loading, isNew } = useEdit<Menu>(props, emits);
 

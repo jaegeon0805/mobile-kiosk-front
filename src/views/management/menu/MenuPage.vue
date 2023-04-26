@@ -21,18 +21,32 @@
         <template #[`item.name`]="{ item }">
           <a
             class="d-inline-block text-truncate"
-            style="width: 15rem"
+            style="width: 10rem"
             @click="openUpdateSheet(item)"
             v-text="item.name"
           />
         </template>
+        <template #[`item.price`]="{ item }">
+          <span>₩{{ Number(item.price).toLocaleString() }}</span>
+        </template>
         <template #[`item.description`]="{ item }">
-          <span class="d-inline-block text-truncate" style="width: 10rem">
-            {{ item.description }}
+          <span class="d-inline-block text-truncate" style="width: 20rem">
+            {{ item.description || "-" }}
           </span>
         </template>
         <template #[`item.option`]="{ item }">
           <v-icon @click="openOptionSheet(item)">mdi-pencil-outline</v-icon>
+        </template>
+        <template #[`item.soldOutFlag`]="{ item }">
+          <div class="d-flex justify-center pl-4">
+            <v-switch
+              :input-value="item.soldOutFlag"
+              inset
+              dense
+              readonly
+              @click="changeSoldOutFlag(item.id, !item.soldOutFlag)"
+            />
+          </div>
         </template>
         <template #[`item.availableFlag`]="{ item }">
           <div class="d-flex justify-center pl-4">
@@ -58,8 +72,8 @@
       v-model="editItem"
       :sheet.sync="sheet"
       :category="category"
-      @created="fetchList"
-      @updated="fetchList"
+      @created="created"
+      @updated="updated"
     />
     <OptionEditSheet
       v-if="optionSheet"
@@ -93,13 +107,14 @@ const { selectedStore } = storeToRefs(useStoreStore());
 const { toastWarning } = useAlertStore();
 const { confirmDelete } = useConfirmStore();
 
-const { totalItems, items, loading, changeAvailableFlag } =
+const { totalItems, items, loading, changeAvailableFlag, created, updated } =
   useSimpleTable<Menu>("menus");
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
   useEditItem<Menu>(defaultMenu);
 
 const category = ref<Category | null>(null);
 const optionSheet = ref(false);
+const soldOutFlagLoadingSet = ref(new Set<number>());
 
 const headers: DataTableHeader[] = [
   {
@@ -112,7 +127,13 @@ const headers: DataTableHeader[] = [
     text: "메뉴명",
     align: "start",
     value: "name",
-    width: "15rem",
+    width: "10rem",
+  },
+  {
+    text: "금액",
+    align: "start",
+    value: "price",
+    width: "5rem",
   },
   {
     text: "메뉴 설명",
@@ -123,13 +144,19 @@ const headers: DataTableHeader[] = [
     text: "옵션 수정",
     align: "center",
     value: "option",
-    width: "10rem",
+    width: "5rem",
+  },
+  {
+    text: "매진",
+    align: "center",
+    value: "soldOutFlag",
+    width: "5rem",
   },
   {
     text: "활성 / 비활성",
     align: "center",
     value: "availableFlag",
-    width: "10rem",
+    width: "5rem",
   },
   {
     text: "삭제",
@@ -151,8 +178,10 @@ async function fetchList(): Promise<void> {
 
     loading.value = false;
 
-    items.value = response.result ?? [];
-    totalItems.value = response.result.length ?? 0;
+    if (response.success) {
+      items.value = response.result ?? [];
+      totalItems.value = response.result.length ?? 0;
+    }
   }
 }
 
@@ -169,11 +198,36 @@ function openOptionSheet(menu: Menu) {
   optionSheet.value = true;
 }
 
+async function changeSoldOutFlag(
+  id: number | undefined,
+  value: boolean
+): Promise<void> {
+  if (!id || soldOutFlagLoadingSet.value.has(id)) {
+    return;
+  }
+
+  soldOutFlagLoadingSet.value.add(id);
+  const response = await patchApi<Menu>(`menus/${id}/sold-out-flag`, {
+    soldOutFlag: value,
+  });
+  soldOutFlagLoadingSet.value.delete(id);
+
+  if (response.success) {
+    items.value = items.value.map((item) => {
+      if (item.id === id) {
+        return response.result;
+      } else {
+        return item;
+      }
+    });
+  }
+}
+
 async function deleteMenu(menu: Menu): Promise<void> {
   confirmDelete(async () => {
     const response = await deleteApi(`menus/${menu.id}`);
     if (response.success) {
-      await fetchList();
+      items.value = items.value.filter((item) => item.id !== menu.id);
     }
   });
 }
