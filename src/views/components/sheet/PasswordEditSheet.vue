@@ -112,6 +112,8 @@ async function changePassword() {
 
     if (response.success) {
       sheet.value = false;
+    } else {
+      oldPassword.value = "";
     }
   });
 }

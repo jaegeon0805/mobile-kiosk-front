@@ -113,7 +113,7 @@ async function deleteMe() {
     if (response.success) {
       await routeSignInPage();
     }
-  });
+  }, "회원을 탈퇴하시겠습니까?");
 }
 
 onBeforeMount(async () => {

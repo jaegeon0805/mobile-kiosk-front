@@ -9,14 +9,23 @@ export const useConfirmStore = defineStore("confirm", {
     };
   },
   actions: {
-    confirmCreate(callbackConfirm: CallableFunction) {
-      this.confirm("등록하시겠습니까?", callbackConfirm);
+    confirmCreate(
+      callbackConfirm: CallableFunction,
+      content = "등록하시겠습니까?"
+    ) {
+      this.confirm(content, callbackConfirm);
     },
-    confirmUpdate(callbackConfirm: CallableFunction) {
-      this.confirm("수정하시겠습니까?", callbackConfirm);
+    confirmUpdate(
+      callbackConfirm: CallableFunction,
+      content = "수정하시겠습니까?"
+    ) {
+      this.confirm(content, callbackConfirm);
     },
-    confirmDelete(callbackConfirm: CallableFunction) {
-      this.confirm("삭제하시겠습니까?", callbackConfirm);
+    confirmDelete(
+      callbackConfirm: CallableFunction,
+      content = "삭제하시겠습니까?"
+    ) {
+      this.confirm(content, callbackConfirm);
     },
     confirm(
       content: string,
