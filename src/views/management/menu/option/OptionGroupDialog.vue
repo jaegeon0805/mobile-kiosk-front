@@ -8,7 +8,7 @@
         <v-form>
           <validation-observer ref="observer">
             <v-row dense>
-              <v-col cols="12" class="d-flex">
+              <v-col cols="12">
                 <validation-provider
                   v-slot="{ errors }"
                   name="옵션 그룹 타입"
@@ -23,16 +23,19 @@
                     <v-radio value="OPTIONAL" label="선택 옵션" />
                   </v-radio-group>
                 </validation-provider>
+              </v-col>
+              <v-col cols="12">
                 <validation-provider
                   v-slot="{ errors }"
                   name="최대 선택 수"
-                  :rules="{ required: value.type === 'OPTIONAL' }"
+                  :rules="maxSelectionsRules"
                 >
                   <v-text-field
                     v-model="value.maxSelections"
                     :disabled="value.type !== 'OPTIONAL'"
                     label="최대 선택 갯수"
                     :error-messages="errors"
+                    messages="값을 입력하지 않으면, 무제한 선택이 가능합니다."
                     autocomplete="false"
                     clearable
                   />
@@ -42,7 +45,7 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="옵션 그룹명"
-                  rules="required|max:20"
+                  rules="required|nameWithSymbol"
                 >
                   <v-text-field
                     v-model="value.name"
@@ -74,7 +77,7 @@ import "cropperjs/dist/cropper.css";
 import { Menu, OptionGroup } from "@/definitions/entities";
 import { useEdit } from "@/compositions/useEdit";
 import { postApi, putApi } from "@/utils/apis";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useConfirmStore } from "@/stores/confirm";
 
 const { confirmCreate, confirmUpdate } = useConfirmStore();
@@ -94,6 +97,13 @@ const emits = defineEmits<{
 
 const { value, sheet, loading, isNew } = useEdit<OptionGroup>(props, emits);
 
+const maxSelectionsRules = computed(() => {
+  return {
+    numeric: value.value.type === "OPTIONAL",
+    min_value: value.value.type === "OPTIONAL" ? 1 : null,
+    max_value: value.value.type === "OPTIONAL" ? 100 : null,
+  };
+});
 async function save() {
   const isValid = await observer.value?.validate();
   if (!isValid) {

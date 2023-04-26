@@ -1,22 +1,36 @@
 <template>
   <div>
-    <span v-if="value"
-      >선택된 옵션 그룹: {{ value.name }} / 타입: {{ value.type }} / 최대 선택
-      수: {{ value.maxSelections ?? "제한 없음" }}</span
+    <div class="d-flex align-center">
+      <v-subheader class="pl-0 font-weight-black subtitle-2 primary--text">
+        선택된 옵션 그룹:
+      </v-subheader>
+      <span v-if="value">
+        옵션 그룹명: {{ value.name }} / 타입:
+        {{ value.type === "MANDATORY" ? "필수 옵션" : "선택 옵션" }}
+        <span v-if="value.type === 'OPTIONAL'">
+          / 최대 선택 수: {{ value.maxSelections ?? "제한 없음" }}
+        </span>
+      </span>
+    </div>
+    <v-btn
+      width="100%"
+      color="primary lighten-2"
+      @click="openCreateSheet"
+      :disabled="!value"
     >
-
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
     <v-data-table
       disable-sort
       disable-pagination
       hide-default-footer
+      fixed-header
       :headers="headers"
       :items="items"
       :loading="loading"
-      class="sortable"
+      height="414"
+      class="sortable overflow-y-auto"
     >
-      <template #top>
-        <v-btn @click="openCreateSheet">추가</v-btn>
-      </template>
       <template #[`header.id`]>
         <v-icon class="drag-handle"> mdi-menu-swap</v-icon>
       </template>
@@ -30,6 +44,9 @@
           @click="openUpdateSheet(item)"
           v-text="item.name"
         />
+      </template>
+      <template #[`item.price`]="{ item }">
+        <span>₩{{ Number(item.price).toLocaleString() }}</span>
       </template>
       <template #[`item.actions`]="{ item }">
         <v-icon color="red" @click="deleteOptionDetail(item)"
@@ -75,7 +92,8 @@ const emits = defineEmits<{
 
 const { confirmDelete } = useConfirmStore();
 
-const { items, loading } = useSimpleTable<OptionDetail>("option-details");
+const { items, loading, created, updated } =
+  useSimpleTable<OptionDetail>("option-details");
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
   useEditItem<OptionDetail>(defaultOptionDetail);
 
@@ -113,20 +131,6 @@ async function fetchList() {
 
     items.value = response.result ?? [];
   }
-}
-
-function created(optionDetail: OptionDetail) {
-  items.value = [...items.value, optionDetail];
-}
-
-function updated(optionDetail: OptionDetail) {
-  items.value = items.value.map((old) => {
-    if (old.id === optionDetail.id) {
-      return optionDetail;
-    } else {
-      return old;
-    }
-  });
 }
 
 async function deleteOptionDetail(optionGroup: OptionGroup): Promise<void> {

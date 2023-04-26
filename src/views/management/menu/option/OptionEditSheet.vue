@@ -9,7 +9,8 @@
             :menu="value"
             class="ma-0"
           />
-          <OptionDetailTable v-model="optionGroup" />
+          <v-divider vertical class="mx-3" />
+          <OptionDetailTable v-model="optionGroup" class="flex-grow-1" />
         </v-card-text>
         <SheetButton
           :sheet.sync="sheet"

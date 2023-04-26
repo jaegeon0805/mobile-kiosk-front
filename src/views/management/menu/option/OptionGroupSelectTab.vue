@@ -1,36 +1,52 @@
 <template>
   <div>
-    <v-card class="overflow-y-auto" width="250" height="450" tile>
+    <v-subheader class="pa-0 font-weight-black subtitle-2 primary--text">
+      옵션 그룹
+    </v-subheader>
+
+    <v-card
+      class="overflow-y-auto overflow-x-hidden"
+      width="250"
+      height="450"
+      tile
+    >
+      <v-btn
+        width="100%"
+        color="primary lighten-2"
+        class="mr-2"
+        @click="openCreateSheet"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
       <v-list dense>
-        <v-subheader
-          class="d-flex align-center font-weight-black subtitle-2 primary--text"
-        >
-          <v-btn
-            fab
-            x-small
-            color="primary"
-            class="mr-2"
-            @click="openCreateSheet"
-            ><v-icon>mdi-plus</v-icon></v-btn
-          >
-          옵션 그룹 {{ optionGroupList[selected]?.name }}
-        </v-subheader>
-        <v-list-item-group v-model="selected" color="primary">
+        <v-list-item-group v-model="selected" color="primary" mandatory>
           <draggable
             v-model="optionGroupList"
             handle=".drag-handle"
             animation="300"
             @end="sort"
           >
-            <v-list-item v-for="(item, i) in optionGroupList" :key="i">
-              <v-list-item-icon>
+            <v-list-item
+              v-for="(item, i) in optionGroupList"
+              :key="i"
+              class="px-1 item-container"
+            >
+              <v-list-item-icon class="mr-1">
                 <v-icon class="drag-handle"> mdi-drag-vertical</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
               </v-list-item-content>
-              <v-icon @click="openUpdateSheet(item)">mdi-pencil-outline</v-icon>
-              <v-icon @click="deleteOptionGroup(item)"
+              <v-icon
+                class="item-action-icon"
+                :style="selected === i ? 'visibility: visible' : ''"
+                @click="openUpdateSheet(item)"
+                >mdi-pencil-outline</v-icon
+              >
+              <v-icon
+                class="item-action-icon"
+                :style="selected === i ? 'visibility: visible' : ''"
+                @click="deleteOptionGroup(item)"
                 >mdi-delete-forever</v-icon
               >
             </v-list-item>
@@ -94,6 +110,9 @@ function created(optionGroup: OptionGroup) {
 function updated(optionGroup: OptionGroup) {
   optionGroupList.value = optionGroupList.value.map((old) => {
     if (old.id === optionGroup.id) {
+      if (value.value?.id === optionGroup.id) {
+        value.value = optionGroup;
+      }
       return optionGroup;
     } else {
       return old;
@@ -133,6 +152,10 @@ async function sort(evt) {
   ) {
     if (selected.value === evt.oldIndex) {
       selected.value = evt.newIndex;
+    } else if (selected.value && evt.newIndex <= selected.value) {
+      selected.value++;
+    } else if (selected.value && evt.newIndex > selected.value) {
+      selected.value--;
     }
     await saveSort();
   }
@@ -146,7 +169,12 @@ watch(selected, () => {
 </script>
 
 <style scoped>
-.v-application .v-tab--active {
-  background-color: rgba(33, 150, 243, 0.2) !important;
+.item-container:hover .item-action-icon {
+  visibility: visible;
+}
+
+.item-action-icon {
+  visibility: hidden;
+  color: rgba(0, 0, 0, 0.2);
 }
 </style>

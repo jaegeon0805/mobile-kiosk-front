@@ -12,7 +12,7 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="옵션명"
-                  rules="required|max:20"
+                  rules="required|nameWithSymbol"
                 >
                   <v-text-field
                     v-model="value.name"
@@ -28,11 +28,12 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="금액"
-                  rules="required"
+                  rules="required|price"
                 >
                   <v-text-field
-                    v-model="value.price"
+                    v-model="displayPrice"
                     label="금액"
+                    prefix="₩"
                     :error-messages="errors"
                     autocomplete="false"
                     clearable
@@ -59,7 +60,7 @@ import "cropperjs/dist/cropper.css";
 import { OptionDetail, OptionGroup } from "@/definitions/entities";
 import { useEdit } from "@/compositions/useEdit";
 import { postApi, putApi } from "@/utils/apis";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useConfirmStore } from "@/stores/confirm";
 
 const { confirmCreate, confirmUpdate } = useConfirmStore();
@@ -78,6 +79,16 @@ const emits = defineEmits<{
 }>();
 
 const { value, sheet, loading, isNew } = useEdit<OptionDetail>(props, emits);
+
+const displayPrice = computed({
+  get() {
+    return Number(value.value.price).toLocaleString();
+  },
+  set(newValue) {
+    const parsedValue = parseInt(newValue.replace(/\D/g, ""));
+    value.value.price = isNaN(parsedValue) ? 0 : parsedValue;
+  },
+});
 
 async function save() {
   const isValid = await observer.value?.validate();
