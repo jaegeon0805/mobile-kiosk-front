@@ -1,8 +1,9 @@
 <template>
-  <v-card-actions>
+  <v-card-actions style="background-color: rgba(33, 150, 243, 0.1)">
     <v-row class="px-6 py-4 justify-end">
       <v-btn
         color="primary"
+        style="background-color: white"
         class="mr-1 px-6"
         :outlined="saveBtn"
         :loading="loading"
