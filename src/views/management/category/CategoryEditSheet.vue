@@ -11,7 +11,7 @@
                   <validation-provider
                     v-slot="{ errors }"
                     name="카테고리 이름"
-                    rules="required|max:20"
+                    rules="required|nameWithSpace"
                   >
                     <v-text-field
                       v-model="value.name"
@@ -36,6 +36,8 @@
                       autocomplete="false"
                       counter="255"
                       clearable
+                      outlined
+                      no-resize
                     />
                   </validation-provider>
                 </v-col>
@@ -68,12 +70,11 @@ import SheetButton from "@/components/sheet/SheetButton.vue";
 import { storeToRefs } from "pinia";
 import { useStoreStore } from "@/stores/store";
 import SheetTitle from "@/components/sheet/SheetTitle.vue";
-import { Category, Store } from "@/definitions/entities";
+import { Category } from "@/definitions/entities";
 import { useEdit } from "@/compositions/useEdit";
 
 const { confirmCreate, confirmUpdate } = useConfirmStore();
 const { selectedStore } = storeToRefs(useStoreStore());
-const { fetchStoreList } = useStoreStore();
 
 const props = defineProps<{
   value: Category;
@@ -81,10 +82,10 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "input", v: Store): void;
+  (e: "input", v: Category): void;
   (e: "update:sheet", v: boolean): void;
-  (e: "created"): void;
-  (e: "updated"): void;
+  (e: "created", v: Category): void;
+  (e: "updated", v: Category): void;
 }>();
 
 const { value, sheet, loading, isNew } = useEdit<Category>(props, emits);
@@ -105,16 +106,15 @@ async function save() {
 async function create(): Promise<void> {
   confirmCreate(async () => {
     loading.value = true;
-    const response = await postApi(
+    const response = await postApi<Category>(
       `categories?storeId=${selectedStore.value.id}`,
       value.value
     );
     loading.value = false;
 
     if (response.success) {
-      await fetchStoreList();
+      emits("created", response.result);
       sheet.value = false;
-      emits("created");
     }
   });
 }
@@ -122,13 +122,15 @@ async function create(): Promise<void> {
 async function update(): Promise<void> {
   confirmUpdate(async () => {
     loading.value = true;
-    const response = await putApi(`categories/${value.value.id}`, value.value);
+    const response = await putApi<Category>(
+      `categories/${value.value.id}`,
+      value.value
+    );
     loading.value = false;
 
     if (response.success) {
-      await fetchStoreList();
+      emits("updated", response.result);
       sheet.value = false;
-      emits("updated");
     }
   });
 }

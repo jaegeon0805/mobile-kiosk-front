@@ -20,14 +20,14 @@
         <template #[`item.name`]="{ item }">
           <a
             class="d-inline-block text-truncate"
-            style="width: 15rem"
+            style="width: 10rem"
             @click="openUpdateSheet(item)"
             v-text="item.name"
           />
         </template>
         <template #[`item.description`]="{ item }">
-          <span class="d-inline-block text-truncate" style="width: 10rem">
-            {{ item.description }}
+          <span class="d-inline-block text-truncate" style="width: 20rem">
+            {{ item.description || "-" }}
           </span>
         </template>
         <template #[`item.availableFlag`]="{ item }">
@@ -42,7 +42,7 @@
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon color="red" @click="deleteStore(item)"
+          <v-icon color="red" @click="deleteCategory(item)"
             >mdi-delete-forever</v-icon
           >
         </template>
@@ -53,8 +53,8 @@
       v-if="sheet"
       v-model="editItem"
       :sheet.sync="sheet"
-      @created="fetchList"
-      @updated="fetchList"
+      @created="created"
+      @updated="updated"
     />
   </div>
 </template>
@@ -78,7 +78,7 @@ import Sortable, { SortableEvent } from "sortablejs";
 const { selectedStore } = storeToRefs(useStoreStore());
 const { confirmDelete } = useConfirmStore();
 
-const { totalItems, items, loading, changeAvailableFlag } =
+const { totalItems, items, loading, changeAvailableFlag, created, updated } =
   useSimpleTable<Category>("categories");
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
   useEditItem<Category>(defaultCategory);
@@ -130,15 +130,17 @@ async function fetchList(): Promise<void> {
   );
   loading.value = false;
 
-  items.value = response.result ?? [];
-  totalItems.value = response.result.length ?? 0;
+  if (response.success) {
+    items.value = response.result ?? [];
+    totalItems.value = response.result.length ?? 0;
+  }
 }
 
-async function deleteStore(category: Category): Promise<void> {
+async function deleteCategory(category: Category): Promise<void> {
   confirmDelete(async () => {
     const response = await deleteApi(`categories/${category.id}`);
     if (response.success) {
-      await fetchList();
+      items.value = items.value.filter((item) => item.id !== category.id);
     }
   });
 }
@@ -182,7 +184,11 @@ onMounted(() => {
       evt.item.classList.remove("not-dragged-row");
     },
     onEnd(evt: SortableEvent) {
-      if (evt.newIndex != evt.oldIndex) {
+      if (
+        evt.newIndex != evt.oldIndex &&
+        evt.newIndex !== undefined &&
+        evt.oldIndex !== undefined
+      ) {
         const newItems = [...items.value];
         const draggedItem = newItems.splice(evt.oldIndex, 1)[0];
         newItems.splice(evt.newIndex, 0, draggedItem);
