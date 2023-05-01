@@ -45,6 +45,16 @@
               </v-card>
             </div>
           </v-card-text>
+          <v-overlay
+            v-if="menu.soldOutFlag"
+            opacity="0.6"
+            color="white"
+            absolute
+          >
+            <span class="font-weight-black text-h6" style="color: #fc4c4e">
+              Sold out
+            </span>
+          </v-overlay>
         </v-card>
       </v-expansion-panel-content>
     </v-expansion-panel>

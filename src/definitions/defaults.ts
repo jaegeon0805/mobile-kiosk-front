@@ -78,5 +78,6 @@ export function defaultStoreForKiosk(): StoreForKiosk {
     id: undefined,
     name: "",
     description: "",
+    availableFlag: false,
   };
 }

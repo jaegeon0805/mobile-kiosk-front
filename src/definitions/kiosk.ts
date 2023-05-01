@@ -5,6 +5,7 @@ export interface Id {
 export interface StoreForKiosk extends Id {
   name: string;
   description: string;
+  availableFlag: boolean;
   categories?: CategoryForKiosk[];
 }
 
@@ -19,6 +20,7 @@ export interface MenuForKiosk extends Id {
   name: string;
   description: string;
   price: number;
+  soldOutFlag: boolean;
 }
 
 export interface OptionGroupForKiosk extends Id {

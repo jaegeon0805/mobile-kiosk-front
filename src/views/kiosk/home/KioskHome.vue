@@ -22,8 +22,23 @@
             <v-tab>포장할게요</v-tab>
             <v-tab>먹고갈게요</v-tab>
           </v-tabs>
-          <v-card flat tile class="d-flex align-center my-2 pa-2" height="50px">
-            {{ isTakeOutText }}
+          <v-card
+            flat
+            tile
+            class="d-flex justify-center align-center my-2 pa-2"
+            height="50px"
+          >
+            <span v-if="store.availableFlag" class="font-weight-black">
+              {{ isTakeOutText }}
+            </span>
+            <span
+              v-else-if="store.id && !store.availableFlag"
+              class="font-weight-black"
+              style="color: #fc4c4e"
+            >
+              <v-icon color="#fc4c4e" class="ma-1">mdi-clock-outline</v-icon>
+              오늘 매장주문이 종료되었습니다.
+            </span>
           </v-card>
         </v-card-text>
       </v-card>
@@ -51,7 +66,7 @@ const isTakeOut = ref(true);
 
 const isTakeOutText = computed(() => {
   return isTakeOut.value
-    ? "Take Out할 수 있게 준비됩니다."
+    ? "가져갈 수 있게 준비됩니다."
     : "매장에서 드실 수 있게 준비됩니다.";
 });
 
