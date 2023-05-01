@@ -1,0 +1,75 @@
+<template>
+  <div>
+    <KioskAppBar :title="store.name" />
+
+    <v-main>
+      <v-card color="#E7F8FF" flat>
+        <v-card-title class="py-3" style="height: 48px">
+          <span class="text-subtitle-1 font-weight-bold">
+            {{ store.name }}
+          </span>
+          <v-spacer />
+          <v-icon>mdi-cart-outline</v-icon>
+        </v-card-title>
+        <v-divider class="mx-4" />
+        <v-card-text>
+          <pre v-html="store.description" />
+          <v-tabs
+            v-model="selectedTabIndex"
+            background-color="#D9E8F0"
+            fixed-tabs
+          >
+            <v-tab>포장할게요</v-tab>
+            <v-tab>먹고갈게요</v-tab>
+          </v-tabs>
+          <v-card flat tile class="d-flex align-center my-2 pa-2" height="50px">
+            {{ isTakeOutText }}
+          </v-card>
+        </v-card-text>
+      </v-card>
+
+      <KioskCategorySelectBar v-model="store.categories" />
+      <KioskMenuList v-model="store.categories" />
+    </v-main>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useRoute } from "vue-router/composables";
+import { computed, onMounted, ref, watch } from "vue";
+import { getApi } from "@/utils/apis";
+import { StoreForKiosk } from "@/definitions/kiosk";
+import { defaultStoreForKiosk } from "@/definitions/defaults";
+import { routerPush } from "@/utils/commands";
+import KioskMenuList from "@/views/kiosk/home/KioskMenuList.vue";
+import KioskCategorySelectBar from "@/views/kiosk/home/KioskCategorySelectBar.vue";
+import KioskAppBar from "@/views/kiosk/home/KioskAppBar.vue";
+
+const store = ref<StoreForKiosk>(defaultStoreForKiosk());
+const selectedTabIndex = ref(0);
+const isTakeOut = ref(true);
+
+const isTakeOutText = computed(() => {
+  return isTakeOut.value
+    ? "Take Out할 수 있게 준비됩니다."
+    : "매장에서 드실 수 있게 준비됩니다.";
+});
+
+watch(
+  () => selectedTabIndex.value,
+  () => {
+    isTakeOut.value = selectedTabIndex.value === 0;
+  }
+);
+
+onMounted(async () => {
+  const storeId = useRoute().params.storeId;
+  const response = await getApi<StoreForKiosk>(`kiosk/${storeId}`);
+
+  if (response.success) {
+    store.value = response.result;
+  } else {
+    await routerPush("/error/404");
+  }
+});
+</script>

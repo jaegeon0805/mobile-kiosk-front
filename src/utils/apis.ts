@@ -20,7 +20,9 @@ function createAxiosInstance() {
 
   instance.interceptors.request.use(
     async function (config) {
-      await setAuthorization(config);
+      if (!config.url?.startsWith("api/v1/kiosk/")) {
+        await setAuthorization(config);
+      }
       return config;
     },
     function (error) {

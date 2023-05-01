@@ -7,6 +7,7 @@ import {
   Store,
 } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
+import { StoreForKiosk } from "@/definitions/kiosk";
 
 export function defaultPagination(): Pagination {
   return {
@@ -69,5 +70,13 @@ export function defaultOptionDetail(): OptionDetail {
     id: undefined,
     name: "",
     price: 0,
+  };
+}
+
+export function defaultStoreForKiosk(): StoreForKiosk {
+  return {
+    id: undefined,
+    name: "",
+    description: "",
   };
 }

@@ -1,4 +1,4 @@
-import Vue, { markRaw } from "vue";
+import Vue from "vue";
 import VueRouter, { NavigationGuardNext, Route, RouteConfig } from "vue-router";
 import store from "@/stores";
 import { useMemberStore } from "@/stores/member";
@@ -68,6 +68,15 @@ const routes = (): RouteConfig[] => {
       component: () => import("@/views/management/menu/MenuPage.vue"),
     },
   ];
+  const kiosk: RouteConfig[] = [
+    {
+      path: "/kiosk/:storeId",
+      component: () => import("@/views/kiosk/home/KioskHome.vue"),
+      meta: {
+        layout: "kiosk",
+      },
+    },
+  ];
   const error: RouteConfig[] = [
     {
       path: "/error/404",
@@ -103,6 +112,7 @@ const routes = (): RouteConfig[] => {
       component: () => import("@/views/HomePage.vue"),
     },
     ...management,
+    ...kiosk,
     ...sign,
     ...error,
     {
