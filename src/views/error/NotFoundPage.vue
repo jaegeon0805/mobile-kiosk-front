@@ -13,9 +13,3 @@
 <script setup lang="ts">
 import router from "@/router";
 </script>
-
-<style scoped>
-.error-page {
-  max-width: 700px;
-}
-</style>
