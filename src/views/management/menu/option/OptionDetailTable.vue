@@ -39,8 +39,7 @@
       </template>
       <template #[`item.name`]="{ item }">
         <a
-          class="d-inline-block text-truncate"
-          style="width: 15rem"
+          class="text-ellipsis"
           @click="openUpdateSheet(item)"
           v-text="item.name"
         />

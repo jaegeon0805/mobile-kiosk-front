@@ -19,14 +19,13 @@
         </template>
         <template #[`item.name`]="{ item }">
           <a
-            class="d-inline-block text-truncate"
-            style="width: 10rem"
+            class="text-ellipsis"
             @click="openUpdateSheet(item)"
             v-text="item.name"
           />
         </template>
         <template #[`item.description`]="{ item }">
-          <span class="d-inline-block text-truncate" style="width: 20rem">
+          <span class="text-ellipsis">
             {{ item.description || "-" }}
           </span>
         </template>
