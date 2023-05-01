@@ -45,6 +45,17 @@
 
       <KioskCategorySelectBar v-model="store.categories" />
       <KioskMenuList v-model="store.categories" />
+
+      <div class="px-6 pt-4" style="height: 30vh">
+        <span class="d-block text-overline">유의사항</span>
+        <span class="d-block text-caption text--secondary"
+          >* 본 서비스는 실제 서비스가 아닌, 포트폴리오 용 서비스입니다.</span
+        >
+        <span class="d-block text-caption text--secondary"
+          >* 본 서비스는 실제로 결제되지 않으며, 모바일에 최적화
+          되어있습니다.</span
+        >
+      </div>
     </v-main>
   </div>
 </template>

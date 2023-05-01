@@ -24,24 +24,29 @@
             <div>
               <span
                 class="text-ellipsis font-weight-black"
-                style="font-size: 16px"
+                style="font-size: 16px; color: black"
               >
                 {{ menu.name }}
               </span>
               <span class="description">{{ menu.description }}</span>
-              <span class="d-block font-weight-bold">
+              <span class="d-block font-weight-bold" style="color: black">
                 {{ Number(menu.price).toLocaleString() }}원
               </span>
             </div>
             <div class="ml-4">
               <v-card
                 v-if="menu.imageUrl"
-                width="120px"
-                height="120px"
+                width="100px"
+                height="100px"
                 rounded="lg"
                 flat
               >
-                <v-img aspect-ratio="1" :src="menu.imageUrl" />
+                <v-img
+                  aspect-ratio="1"
+                  :src="menu.imageUrl"
+                  min-height="100px"
+                  min-width="100px"
+                />
               </v-card>
             </div>
           </v-card-text>
@@ -51,9 +56,10 @@
             color="white"
             absolute
           >
-            <span class="font-weight-black text-h6" style="color: #fc4c4e">
-              Sold out
-            </span>
+            <v-img
+              :src="require('/src/assets/img/sold-out.png')"
+              width="200px"
+            />
           </v-overlay>
         </v-card>
       </v-expansion-panel-content>
@@ -62,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, watch } from "vue";
 import { CategoryForKiosk } from "@/definitions/kiosk";
 
 const props = withDefaults(
@@ -74,13 +80,19 @@ const props = withDefaults(
   }
 );
 
-const openCategories = computed(() => {
-  return props.value?.map((_, index) => index);
-});
+const openCategories = ref<number[]>([]);
 
 function isLastIndex(list: any[], index: number): boolean {
   return index === list.length - 1;
 }
+
+watch(
+  () => props.value,
+  (newValue) => {
+    openCategories.value = newValue.map((_, index) => index);
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped lang="scss">
