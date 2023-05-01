@@ -16,11 +16,13 @@ import router from "@/router";
 import GlobalAlert from "@/components/dialog/GlobalAlert.vue";
 import GlobalConfirm from "@/components/dialog/GlobalConfirm.vue";
 import ErrorLayout from "@/views/layouts/ErrorLayout.vue";
+import KioskLayout from "@/views/layouts/KioskLayout.vue";
 
 const layouts = {
   default: DefaultLayout,
   auth: AuthLayout,
   error: ErrorLayout,
+  kiosk: KioskLayout,
 };
 const currentLayout = computed(
   () =>
