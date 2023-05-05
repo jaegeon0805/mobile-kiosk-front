@@ -98,11 +98,9 @@ const emits = defineEmits<{
 const { value, sheet, loading, isNew } = useEdit<OptionGroup>(props, emits);
 
 const maxSelectionsRules = computed(() => {
-  return {
-    numeric: value.value.type === "OPTIONAL",
-    min_value: value.value.type === "OPTIONAL" ? 1 : null,
-    max_value: value.value.type === "OPTIONAL" ? 100 : null,
-  };
+  return value.value.type === "OPTIONAL"
+    ? "numeric|min_value:1|max_value:100"
+    : "";
 });
 async function save() {
   const isValid = await observer.value?.validate();
