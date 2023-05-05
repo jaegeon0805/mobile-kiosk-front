@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="openAlert" top light class="ma-4" :timeout="item.timer">
+  <v-snackbar v-model="openAlert" :timeout="item.timer" top light class="mt-4">
     <div class="d-flex align-center">
       <v-icon :color="item.color">{{ item.icon }}</v-icon>
       <span class="mx-2 alert-message" v-html="item.message" />
