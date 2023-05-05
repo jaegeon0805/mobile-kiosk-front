@@ -4,7 +4,7 @@
 
     <v-main>
       <v-card color="#E7F8FF" flat>
-        <v-card-title class="py-3" style="height: 48px">
+        <v-card-title class="py-3" style="height: 50px">
           <span class="text-subtitle-1 font-weight-bold">
             {{ store.name }}
           </span>
@@ -69,7 +69,7 @@ import { defaultStoreForKiosk } from "@/definitions/defaults";
 import { routerPush } from "@/utils/commands";
 import KioskMenuList from "@/views/kiosk/home/KioskMenuList.vue";
 import KioskCategorySelectBar from "@/views/kiosk/home/KioskCategorySelectBar.vue";
-import KioskAppBar from "@/views/kiosk/home/KioskAppBar.vue";
+import KioskAppBar from "@/views/kiosk/KioskAppBar.vue";
 
 const store = ref<StoreForKiosk>(defaultStoreForKiosk());
 const selectedTabIndex = ref(0);
@@ -90,7 +90,7 @@ watch(
 
 onMounted(async () => {
   const storeId = useRoute().params.storeId;
-  const response = await getApi<StoreForKiosk>(`kiosk/${storeId}`);
+  const response = await getApi<StoreForKiosk>(`kiosk/stores/${storeId}`);
 
   if (response.success) {
     store.value = response.result;

@@ -71,7 +71,14 @@ const routes = (): RouteConfig[] => {
   const kiosk: RouteConfig[] = [
     {
       path: "/kiosk/:storeId",
-      component: () => import("@/views/kiosk/home/KioskHome.vue"),
+      component: () => import("@/views/kiosk/home/KioskHomePage.vue"),
+      meta: {
+        layout: "kiosk",
+      },
+    },
+    {
+      path: "/kiosk/:storeId/menu/:menuId",
+      component: () => import("@/views/kiosk/menu/KioskMenuPage.vue"),
       meta: {
         layout: "kiosk",
       },

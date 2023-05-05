@@ -97,3 +97,15 @@ export async function getStoreList(
   }
   return [];
 }
+
+export function isLastIndex(list: any[], index: number): boolean {
+  return index === list.length - 1;
+}
+
+export function toPriceText(price: number) {
+  return Number(price).toLocaleString() + "원";
+}
+
+export function toOptionPriceText(price: number) {
+  return "+" + Number(price).toLocaleString() + "원";
+}

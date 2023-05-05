@@ -7,7 +7,7 @@ import {
   Store,
 } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
-import { StoreForKiosk } from "@/definitions/kiosk";
+import { MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
 
 export function defaultPagination(): Pagination {
   return {
@@ -79,5 +79,16 @@ export function defaultStoreForKiosk(): StoreForKiosk {
     name: "",
     description: "",
     availableFlag: false,
+  };
+}
+
+export function defaultMenuForKiosk(): MenuForKiosk {
+  return {
+    id: undefined,
+    imageUrl: "",
+    name: "",
+    description: "",
+    price: 0,
+    soldOutFlag: false,
   };
 }

@@ -19,6 +19,7 @@
           tile
           class="px-6"
           :class="{ 'border-bottom': !isLastIndex(category.menus, index) }"
+          @click="routerPush(`/kiosk/121/menu/${menu.id}`)"
         >
           <v-card-text class="d-flex justify-space-between px-0">
             <div>
@@ -55,11 +56,9 @@
             opacity="0.6"
             color="white"
             absolute
+            @click="routerPush(`/kiosk/121/menu/${menu.id}`)"
           >
-            <v-img
-              :src="require('/src/assets/img/sold-out.png')"
-              width="200px"
-            />
+            <v-img :src="require('/src/assets/img/sold-out.png')" />
           </v-overlay>
         </v-card>
       </v-expansion-panel-content>
@@ -70,6 +69,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { CategoryForKiosk } from "@/definitions/kiosk";
+import { isLastIndex, routerPush } from "@/utils/commands";
 
 const props = withDefaults(
   defineProps<{
@@ -81,10 +81,6 @@ const props = withDefaults(
 );
 
 const openCategories = ref<number[]>([]);
-
-function isLastIndex(list: any[], index: number): boolean {
-  return index === list.length - 1;
-}
 
 watch(
   () => props.value,
