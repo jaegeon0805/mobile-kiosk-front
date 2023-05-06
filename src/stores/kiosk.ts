@@ -6,7 +6,7 @@ import {
 } from "@/definitions/defaults";
 import { CartItem, MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
 import { OptionDetail } from "@/definitions/entities";
-import { isEquals, routerReplace } from "@/utils/commands";
+import { isEquals, routerPush } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
 
 export const useKioskStore = defineStore("kiosk", {
@@ -79,11 +79,11 @@ export const useKioskStore = defineStore("kiosk", {
 
       if (index === -1) {
         this.$state.cart = [...this.$state.cart, newItem];
-        await routerReplace(`/kiosk/${this.$state.currentStore.id}`);
+        await routerPush(`/kiosk/${this.$state.currentStore.id}`);
       } else {
         if (this.$state.cart[index].quantity + newItem.quantity <= 100) {
           this.$state.cart[index].quantity += newItem.quantity;
-          await routerReplace(`/kiosk/${this.$state.currentStore.id}`);
+          await routerPush(`/kiosk/${this.$state.currentStore.id}`);
         } else {
           const { toastWarning } = useAlertStore();
           toastWarning(
@@ -94,5 +94,7 @@ export const useKioskStore = defineStore("kiosk", {
       }
     },
   },
-  persist: true,
+  persist: {
+    storage: sessionStorage,
+  },
 });
