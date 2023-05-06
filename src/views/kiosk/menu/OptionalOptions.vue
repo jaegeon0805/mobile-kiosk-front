@@ -8,6 +8,7 @@
       dense
       multiple
       @change="(event) => clickOption(optionGroup, event)"
+      :disabled="disabled"
     >
       <template #label>
         <span class="text-ellipsis text--primary">{{ optionDetail.name }}</span>
@@ -29,6 +30,7 @@ import { toOptionPriceText } from "@/utils/commands";
 const { toastWarning } = useAlertStore();
 
 const props = defineProps<{
+  disabled: boolean;
   optionGroup: OptionGroupForKiosk;
   selectedOptionalOptions: { [key: number]: OptionDetailForKiosk[] };
 }>();

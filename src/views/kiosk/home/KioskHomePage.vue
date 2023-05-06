@@ -9,7 +9,9 @@
             {{ store.name }}
           </span>
           <v-spacer />
-          <v-icon>mdi-cart-outline</v-icon>
+          <v-badge :content="cartItemCount" :value="cartItemCount" overlap>
+            <v-icon color="black">mdi-cart-outline</v-icon>
+          </v-badge>
         </v-card-title>
         <v-divider class="mx-4" />
         <v-card-text>
@@ -57,6 +59,29 @@
         >
       </div>
     </v-main>
+
+    <KioskFooter
+      v-show="cartItemCount || !isStoreOpen"
+      :disabled="!isStoreOpen"
+    >
+      <template v-if="!isStoreOpen">
+        <span>준비 중입니다.</span>
+      </template>
+      <template v-else>
+        <v-chip
+          color="white"
+          text-color="primary"
+          class="font-weight-black"
+          small
+        >
+          {{ cartItemCount }}
+        </v-chip>
+        <v-spacer />
+        <span>장바구니 보기</span>
+        <v-spacer />
+        <span>{{ toPriceText(1000) }}</span>
+      </template>
+    </KioskFooter>
   </div>
 </template>
 
@@ -66,14 +91,19 @@ import { computed, onMounted, ref, watch } from "vue";
 import { getApi } from "@/utils/apis";
 import { StoreForKiosk } from "@/definitions/kiosk";
 import { defaultStoreForKiosk } from "@/definitions/defaults";
-import { routerPush } from "@/utils/commands";
+import { routerPush, toPriceText } from "@/utils/commands";
 import KioskMenuList from "@/views/kiosk/home/KioskMenuList.vue";
 import KioskCategorySelectBar from "@/views/kiosk/home/KioskCategorySelectBar.vue";
 import KioskAppBar from "@/views/kiosk/KioskAppBar.vue";
+import { useKioskStore } from "@/stores/kiosk";
+import KioskFooter from "@/views/kiosk/KioskFooter.vue";
+import { storeToRefs } from "pinia";
+
+const { updateStore, updateTakeOutInfo } = useKioskStore();
+const { isStoreOpen, isTakeOut, cartItemCount } = storeToRefs(useKioskStore());
 
 const store = ref<StoreForKiosk>(defaultStoreForKiosk());
 const selectedTabIndex = ref(0);
-const isTakeOut = ref(true);
 
 const isTakeOutText = computed(() => {
   return isTakeOut.value
@@ -84,7 +114,7 @@ const isTakeOutText = computed(() => {
 watch(
   () => selectedTabIndex.value,
   () => {
-    isTakeOut.value = selectedTabIndex.value === 0;
+    updateTakeOutInfo(selectedTabIndex.value === 0);
   }
 );
 
@@ -94,6 +124,7 @@ onMounted(async () => {
 
   if (response.success) {
     store.value = response.result;
+    updateStore(store.value);
   } else {
     await routerPush("/error/404");
   }

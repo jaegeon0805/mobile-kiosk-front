@@ -56,7 +56,7 @@
             opacity="0.6"
             color="white"
             absolute
-            @click="routerPush(`/kiosk/121/menu/${menu.id}`)"
+            @click="routerPush(`/kiosk/${currentStore.id}/menu/${menu.id}`)"
           >
             <v-img :src="require('/src/assets/img/sold-out.png')" />
           </v-overlay>
@@ -70,6 +70,10 @@
 import { ref, watch } from "vue";
 import { CategoryForKiosk } from "@/definitions/kiosk";
 import { isLastIndex, routerPush } from "@/utils/commands";
+import { useKioskStore } from "@/stores/kiosk";
+import { storeToRefs } from "pinia";
+
+const { currentStore } = storeToRefs(useKioskStore());
 
 const props = withDefaults(
   defineProps<{

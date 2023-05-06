@@ -109,3 +109,7 @@ export function toPriceText(price: number) {
 export function toOptionPriceText(price: number) {
   return "+" + Number(price).toLocaleString() + "원";
 }
+
+export function isEquals(obj1: any, obj2: any) {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}

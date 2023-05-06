@@ -1,5 +1,9 @@
 <template>
-  <v-radio-group v-model="selectedMandatoryOptions[optionGroup.id]" mandatory>
+  <v-radio-group
+    v-model="selectedMandatoryOptions[optionGroup.id]"
+    mandatory
+    :disabled="disabled"
+  >
     <v-radio
       v-for="optionDetail in optionGroup.optionDetails"
       :key="optionDetail.id"
@@ -22,6 +26,7 @@ import { useVModels } from "@vueuse/core";
 import { toOptionPriceText } from "@/utils/commands";
 
 const props = defineProps<{
+  disabled: boolean;
   optionGroup: OptionGroupForKiosk;
   selectedMandatoryOptions: { [key: number]: OptionDetailForKiosk };
 }>();

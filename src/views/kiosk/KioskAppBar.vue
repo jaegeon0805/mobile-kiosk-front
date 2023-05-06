@@ -13,12 +13,14 @@
           v-if="backSpaceButton"
           class="mr-2"
           color="white"
-          @click="router.back()"
+          @click="routerPush(`/kiosk/${currentStore.id}`)"
         >
           mdi-arrow-left
         </v-icon>
         <v-spacer />
-        <v-icon color="white">mdi-cart-outline</v-icon>
+        <v-badge :content="cartItemCount" :value="cartItemCount" overlap>
+          <v-icon color="white">mdi-cart-outline</v-icon>
+        </v-badge>
       </v-app-bar>
     </v-slide-y-transition>
 
@@ -32,14 +34,21 @@
         height="50px"
         width="100%"
       >
-        <v-icon v-if="backSpaceButton" class="mr-2" @click="router.back()">
+        <v-icon
+          v-if="backSpaceButton"
+          class="mr-2"
+          color="black"
+          @click="routerPush(`/kiosk/${currentStore.id}`)"
+        >
           mdi-arrow-left
         </v-icon>
         <span class="text-subtitle-1 font-weight-bold text-ellipsis">
           {{ title }}
         </span>
         <v-spacer />
-        <v-icon>mdi-cart-outline</v-icon>
+        <v-badge :content="cartItemCount" :value="cartItemCount" overlap>
+          <v-icon color="black">mdi-cart-outline</v-icon>
+        </v-badge>
       </v-app-bar>
     </v-slide-y-transition>
   </div>
@@ -47,7 +56,11 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
-import router from "@/router";
+import { useKioskStore } from "@/stores/kiosk";
+import { storeToRefs } from "pinia";
+import { routerPush } from "@/utils/commands";
+
+const { currentStore, cartItemCount } = storeToRefs(useKioskStore());
 
 withDefaults(
   defineProps<{

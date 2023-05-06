@@ -3,16 +3,17 @@
     <v-btn
       block
       large
+      :disabled="disabled"
       color="primary"
       class="font-weight-black text-body-1"
       @click="emits('click')"
     >
-      {{ title }}
+      <slot />
     </v-btn>
   </v-footer>
 </template>
 
 <script setup lang="ts">
-defineProps<{ title: string }>();
+defineProps<{ disabled: boolean }>();
 const emits = defineEmits<{ (e: "click"): void }>();
 </script>

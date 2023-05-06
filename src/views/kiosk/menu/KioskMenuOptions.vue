@@ -37,11 +37,13 @@
           v-if="optionGroup.type === 'MANDATORY'"
           :optionGroup="optionGroup"
           :selected-mandatory-options.sync="selectedMandatoryOptions"
+          :disabled="!isStoreOpen || isMenuSoldOut"
         />
         <OptionalOptions
           v-else
           :option-group="optionGroup"
           :selected-optional-options="selectedOptionalOptions"
+          :disabled="!isStoreOpen || isMenuSoldOut"
         />
       </v-card-text>
     </v-card>
@@ -56,6 +58,10 @@ import { keys } from "lodash";
 import { useVModels } from "@vueuse/core";
 import MandatoryOptions from "@/views/kiosk/menu/MandatoryOptions.vue";
 import OptionalOptions from "@/views/kiosk/menu/OptionalOptions.vue";
+import { storeToRefs } from "pinia";
+import { useKioskStore } from "@/stores/kiosk";
+
+const { isStoreOpen, isMenuSoldOut } = storeToRefs(useKioskStore());
 
 const props = defineProps<{
   value: MenuForKiosk;
