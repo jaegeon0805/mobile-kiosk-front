@@ -23,10 +23,17 @@ export const useKioskStore = defineStore("kiosk", {
     isMenuSoldOut(): boolean {
       return this.currentMenu.soldOutFlag;
     },
-    cartItemCount(): number {
+    cartItemCount(): number | string {
       let totalItemCount = 0;
       this.cart.forEach((item) => (totalItemCount += item.quantity));
-      return totalItemCount;
+      return totalItemCount > 99 ? "99+" : totalItemCount;
+    },
+    totalPrice(): number {
+      let totalPrice = 0;
+      this.cart.forEach(
+        (item) => (totalPrice += item.itemPrice * item.quantity)
+      );
+      return totalPrice;
     },
   },
   actions: {
@@ -45,6 +52,7 @@ export const useKioskStore = defineStore("kiosk", {
       selectedMandatoryOptions: { [key: number]: OptionDetail },
       selectedOptionalOptions: { [key: number]: OptionDetail[] }
     ) {
+      let itemPrice = menu.price;
       const mandatoryOptions = {};
       const optionalOptions = {};
 
@@ -52,18 +60,23 @@ export const useKioskStore = defineStore("kiosk", {
         .sort()
         .forEach((key) => {
           mandatoryOptions[key] = [selectedMandatoryOptions[key].id];
+          itemPrice += selectedMandatoryOptions[key].price;
         });
 
       Object.keys(selectedOptionalOptions)
         .sort()
         .forEach((key) => {
           optionalOptions[key] = selectedOptionalOptions[key]
-            .map((option) => option.id)
+            .map((option) => {
+              itemPrice += option.price;
+              return option.id;
+            })
             .sort();
         });
 
       const newItem: CartItem = {
         menu,
+        itemPrice,
         quantity,
         mandatoryOptions,
         optionalOptions,

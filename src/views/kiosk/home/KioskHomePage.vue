@@ -4,7 +4,7 @@
 
     <v-main>
       <v-card color="#E7F8FF" flat>
-        <v-card-title class="py-3" style="height: 50px">
+        <v-card-title class="py-3 overflow-hidden" style="height: 50px">
           <span class="text-subtitle-1 font-weight-bold">
             {{ store.name }}
           </span>
@@ -77,9 +77,9 @@
           {{ cartItemCount }}
         </v-chip>
         <v-spacer />
-        <span>장바구니 보기</span>
+        <span>장바구니</span>
         <v-spacer />
-        <span>{{ toPriceText(1000) }}</span>
+        <span>{{ toPriceText(totalPrice) }}</span>
       </template>
     </KioskFooter>
   </div>
@@ -100,7 +100,9 @@ import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import { storeToRefs } from "pinia";
 
 const { updateStore, updateTakeOutInfo } = useKioskStore();
-const { isStoreOpen, isTakeOut, cartItemCount } = storeToRefs(useKioskStore());
+const { isStoreOpen, isTakeOut, cartItemCount, totalPrice } = storeToRefs(
+  useKioskStore()
+);
 
 const store = ref<StoreForKiosk>(defaultStoreForKiosk());
 const selectedTabIndex = ref(0);

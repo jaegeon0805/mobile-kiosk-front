@@ -40,6 +40,7 @@ export interface OptionDetailForKiosk extends Id {
 
 export interface CartItem {
   menu: MenuForKiosk;
+  itemPrice: number;
   quantity: number;
   mandatoryOptions: { [key: number]: number[] };
   optionalOptions: { [key: number]: number[] };
