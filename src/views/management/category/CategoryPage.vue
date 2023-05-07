@@ -24,11 +24,6 @@
             v-text="item.name"
           />
         </template>
-        <template #[`item.description`]="{ item }">
-          <span class="text-ellipsis">
-            {{ item.description || "-" }}
-          </span>
-        </template>
         <template #[`item.availableFlag`]="{ item }">
           <div class="d-flex justify-center pl-4">
             <v-switch
@@ -94,15 +89,10 @@ const headers: DataTableHeader[] = [
     text: "카테고리명",
     align: "start",
     value: "name",
-    width: "15rem",
+    width: "30rem",
     sortable: true,
   },
-  {
-    text: "카테고리 설명",
-    align: "start",
-    value: "description",
-    sortable: true,
-  },
+
   {
     text: "활성 / 비활성",
     align: "center",

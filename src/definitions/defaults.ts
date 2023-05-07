@@ -39,7 +39,6 @@ export function defaultCategory(): Category {
   return {
     id: undefined,
     name: "",
-    description: "",
     availableFlag: false,
   };
 }

@@ -23,24 +23,6 @@
                     />
                   </validation-provider>
                 </v-col>
-                <v-col cols="12">
-                  <validation-provider
-                    v-slot="{ errors }"
-                    name="카테고리 설명"
-                    rules="max:255"
-                  >
-                    <v-textarea
-                      v-model="value.description"
-                      label="카레고리 설명"
-                      :error-messages="errors"
-                      autocomplete="false"
-                      counter="255"
-                      clearable
-                      outlined
-                      no-resize
-                    />
-                  </validation-provider>
-                </v-col>
               </v-row>
             </validation-observer>
             <v-row class="px-3">
