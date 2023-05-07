@@ -9,13 +9,10 @@
             {{ store.name }}
           </span>
           <v-spacer />
-          <v-badge :content="cartItemCount" :value="cartItemCount" overlap>
-            <v-icon color="black">mdi-cart-outline</v-icon>
-          </v-badge>
+          <CartIcon />
         </v-card-title>
         <v-divider class="mx-4" />
         <v-card-text>
-          <pre v-html="store.description" />
           <v-tabs
             v-model="selectedTabIndex"
             background-color="#D9E8F0"
@@ -27,6 +24,7 @@
           <v-card
             flat
             tile
+            outlined
             class="d-flex justify-center align-center my-2 pa-2"
             height="50px"
           >
@@ -41,6 +39,10 @@
               <v-icon color="#fc4c4e" class="ma-1">mdi-clock-outline</v-icon>
               오늘 매장주문이 종료되었습니다.
             </span>
+          </v-card>
+
+          <v-card v-if="store.description" flat class="pa-2" outlined>
+            <span class="text-caption">{{ store.description }}</span>
           </v-card>
         </v-card-text>
       </v-card>
@@ -63,23 +65,23 @@
     <KioskFooter
       v-show="cartItemCount || !isStoreOpen"
       :disabled="!isStoreOpen"
+      @click="routerPush(`/kiosk/${currentStore.id}/cart`)"
     >
       <template v-if="!isStoreOpen">
         <span>준비 중입니다.</span>
       </template>
       <template v-else>
-        <v-chip
-          color="white"
-          text-color="primary"
-          class="font-weight-black"
-          small
-        >
-          {{ cartItemCount }}
-        </v-chip>
-        <v-spacer />
-        <span>장바구니</span>
-        <v-spacer />
-        <span>{{ toPriceText(totalPrice) }}</span>
+        <span>
+          {{ toPriceText(totalPrice) }} 주문하기
+          <v-chip
+            color="white"
+            text-color="primary"
+            class="font-weight-black"
+            small
+          >
+            {{ cartItemCount }}
+          </v-chip>
+        </span>
       </template>
     </KioskFooter>
   </div>
@@ -98,11 +100,11 @@ import KioskAppBar from "@/views/kiosk/KioskAppBar.vue";
 import { useKioskStore } from "@/stores/kiosk";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import { storeToRefs } from "pinia";
+import CartIcon from "@/views/kiosk/CartIcon.vue";
 
 const { updateStore, updateTakeOutInfo } = useKioskStore();
-const { isStoreOpen, isTakeOut, cartItemCount, totalPrice } = storeToRefs(
-  useKioskStore()
-);
+const { currentStore, isStoreOpen, isTakeOut, cartItemCount, totalPrice } =
+  storeToRefs(useKioskStore());
 
 const store = ref<StoreForKiosk>(defaultStoreForKiosk());
 const selectedTabIndex = ref(0);
@@ -127,6 +129,7 @@ onMounted(async () => {
   if (response.success) {
     store.value = response.result;
     updateStore(store.value);
+    selectedTabIndex.value = isTakeOut.value ? 0 : 1;
   } else {
     await routerPush("/error/404");
   }

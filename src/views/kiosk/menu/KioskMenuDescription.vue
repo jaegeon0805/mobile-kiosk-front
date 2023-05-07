@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-img v-if="value.imageUrl" :src="value.imageUrl" />
+    <v-img
+      v-if="value.imageUrl"
+      :src="value.imageUrl"
+      gradient="to top, rgba(0,0,0,0), rgba(0,0,0,0.1)"
+    />
     <v-card flat>
       <v-card-title class="d-flex flex-column align-start">
         <span class="font-weight-black">

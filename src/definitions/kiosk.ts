@@ -44,4 +44,5 @@ export interface CartItem {
   quantity: number;
   mandatoryOptions: { [key: number]: number[] };
   optionalOptions: { [key: number]: number[] };
+  optionNames: string[];
 }

@@ -83,6 +83,13 @@ const routes = (): RouteConfig[] => {
         layout: "kiosk",
       },
     },
+    {
+      path: "/kiosk/:storeId/cart",
+      component: () => import("@/views/kiosk/cart/KioskCartPage.vue"),
+      meta: {
+        layout: "kiosk",
+      },
+    },
   ];
   const error: RouteConfig[] = [
     {

@@ -18,9 +18,7 @@
           mdi-arrow-left
         </v-icon>
         <v-spacer />
-        <v-badge :content="cartItemCount" :value="cartItemCount" overlap>
-          <v-icon color="white">mdi-cart-outline</v-icon>
-        </v-badge>
+        <CartIcon color="white" />
       </v-app-bar>
     </v-slide-y-transition>
 
@@ -46,9 +44,7 @@
           {{ title }}
         </span>
         <v-spacer />
-        <v-badge :content="cartItemCount" :value="cartItemCount" overlap>
-          <v-icon color="black">mdi-cart-outline</v-icon>
-        </v-badge>
+        <CartIcon />
       </v-app-bar>
     </v-slide-y-transition>
   </div>
@@ -59,8 +55,9 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { useKioskStore } from "@/stores/kiosk";
 import { storeToRefs } from "pinia";
 import { routerPush } from "@/utils/commands";
+import CartIcon from "@/views/kiosk/CartIcon.vue";
 
-const { currentStore, cartItemCount } = storeToRefs(useKioskStore());
+const { currentStore } = storeToRefs(useKioskStore());
 
 withDefaults(
   defineProps<{

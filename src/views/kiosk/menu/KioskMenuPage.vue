@@ -21,7 +21,7 @@
     <KioskFooter
       :disabled="!isStoreOpen || isMenuSoldOut"
       @click="
-        addCart(
+        addCartItem(
           menu,
           quantity,
           selectedMandatoryOptions,
@@ -50,7 +50,7 @@ import { storeToRefs } from "pinia";
 import { useKioskStore } from "@/stores/kiosk";
 import KioskMenuCounter from "@/views/kiosk/menu/KioskMenuCounter.vue";
 
-const { updateMenu, addCart } = useKioskStore();
+const { updateMenu, addCartItem } = useKioskStore();
 const { isStoreOpen, isMenuSoldOut } = storeToRefs(useKioskStore());
 
 const menu = ref<MenuForKiosk>(defaultMenuForKiosk());

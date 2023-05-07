@@ -13,7 +13,7 @@ export const useKioskStore = defineStore("kiosk", {
   state: () => ({
     currentStore: defaultStoreForKiosk() as StoreForKiosk,
     currentMenu: defaultMenuForKiosk() as MenuForKiosk,
-    isTakeOut: false,
+    isTakeOut: true,
     cart: [] as CartItem[],
   }),
   getters: {
@@ -22,6 +22,9 @@ export const useKioskStore = defineStore("kiosk", {
     },
     isMenuSoldOut(): boolean {
       return this.currentMenu.soldOutFlag;
+    },
+    isNotEmptyCart(): boolean {
+      return this.cart.length > 0;
     },
     cartItemCount(): number | string {
       let totalItemCount = 0;
@@ -46,12 +49,13 @@ export const useKioskStore = defineStore("kiosk", {
     updateTakeOutInfo(value: boolean) {
       this.$state.isTakeOut = value;
     },
-    async addCart(
+    async addCartItem(
       menu: MenuForKiosk,
       quantity: number,
       selectedMandatoryOptions: { [key: number]: OptionDetail },
       selectedOptionalOptions: { [key: number]: OptionDetail[] }
     ) {
+      const optionNames = [] as string[];
       let itemPrice = menu.price;
       const mandatoryOptions = {};
       const optionalOptions = {};
@@ -61,6 +65,7 @@ export const useKioskStore = defineStore("kiosk", {
         .forEach((key) => {
           mandatoryOptions[key] = [selectedMandatoryOptions[key].id];
           itemPrice += selectedMandatoryOptions[key].price;
+          optionNames.push(selectedMandatoryOptions[key].name);
         });
 
       Object.keys(selectedOptionalOptions)
@@ -69,6 +74,7 @@ export const useKioskStore = defineStore("kiosk", {
           optionalOptions[key] = selectedOptionalOptions[key]
             .map((option) => {
               itemPrice += option.price;
+              optionNames.push(option.name);
               return option.id;
             })
             .sort();
@@ -80,6 +86,7 @@ export const useKioskStore = defineStore("kiosk", {
         quantity,
         mandatoryOptions,
         optionalOptions,
+        optionNames,
       };
 
       const index = this.$state.cart.findIndex((oldItem) => {
@@ -105,6 +112,23 @@ export const useKioskStore = defineStore("kiosk", {
           );
         }
       }
+    },
+    removeCartItem(item: CartItem) {
+      this.$state.cart = this.$state.cart.filter(
+        (oldItem) => !isEquals(oldItem, item)
+      );
+    },
+    changeQuantity(item: CartItem, quantity: number) {
+      const oldItem = this.$state.cart.find((oldItem) =>
+        isEquals(oldItem, item)
+      );
+
+      if (oldItem) {
+        oldItem.quantity = quantity;
+      }
+    },
+    clearCart() {
+      this.$state.cart = [] as CartItem[];
     },
   },
   persist: {

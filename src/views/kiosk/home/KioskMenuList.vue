@@ -23,30 +23,23 @@
         >
           <v-card-text class="d-flex justify-space-between px-0">
             <div>
-              <span
-                class="text-ellipsis font-weight-black"
-                style="font-size: 16px; color: black"
-              >
+              <span class="text-ellipsis text--primary" style="font-size: 16px">
                 {{ menu.name }}
               </span>
-              <span class="description">{{ menu.description }}</span>
-              <span class="d-block font-weight-bold" style="color: black">
-                {{ Number(menu.price).toLocaleString() }}원
+              <span class="description text-caption">
+                {{ menu.description }}
+              </span>
+              <span class="d-block font-weight-bold text--primary">
+                {{ toPriceText(menu.price) }}
               </span>
             </div>
             <div class="ml-4">
-              <v-card
-                v-if="menu.imageUrl"
-                width="100px"
-                height="100px"
-                rounded="lg"
-                flat
-              >
+              <v-card v-if="menu.imageUrl" rounded="lg" flat outlined>
                 <v-img
-                  aspect-ratio="1"
+                  :aspect-ratio="4 / 3"
                   :src="menu.imageUrl"
-                  min-height="100px"
-                  min-width="100px"
+                  min-height="90px"
+                  min-width="120px"
                 />
               </v-card>
             </div>
@@ -69,7 +62,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { CategoryForKiosk } from "@/definitions/kiosk";
-import { isLastIndex, routerPush } from "@/utils/commands";
+import { isLastIndex, routerPush, toPriceText } from "@/utils/commands";
 import { useKioskStore } from "@/stores/kiosk";
 import { storeToRefs } from "pinia";
 
@@ -113,9 +106,5 @@ watch(
   -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.border-bottom {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 </style>
