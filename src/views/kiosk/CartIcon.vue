@@ -15,7 +15,7 @@ const { currentStore, cartItemCount } = storeToRefs(useKioskStore());
 
 withDefaults(
   defineProps<{
-    color: string;
+    color?: string;
   }>(),
   {
     color: "black",

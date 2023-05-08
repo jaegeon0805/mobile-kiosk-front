@@ -10,6 +10,8 @@ const { toastError, toastSuccess } = useAlertStore(store);
 const { reissueToken } = useMemberStore(store);
 export const axiosInstance = createAxiosInstance();
 
+const whitePathList = ["api/v1/kiosk", "api/v1/payment"];
+
 function createAxiosInstance() {
   const instance = axios.create({
     baseURL: envs.API_HOST,
@@ -20,7 +22,7 @@ function createAxiosInstance() {
 
   instance.interceptors.request.use(
     async function (config) {
-      if (!config.url?.startsWith("api/v1/kiosk/")) {
+      if (!whitePathList.some((path) => config.url?.startsWith(path))) {
         await setAuthorization(config);
       }
       return config;

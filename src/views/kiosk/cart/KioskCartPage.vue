@@ -36,7 +36,7 @@
             </span>
             <CounterBtn
               :quantity="item.quantity"
-              max="100"
+              :max="100"
               @minus="changeQuantity(item, item.quantity - 1)"
               @plus="changeQuantity(item, item.quantity + 1)"
             />
