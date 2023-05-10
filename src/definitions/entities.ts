@@ -34,7 +34,7 @@ export interface OptionGroup extends Id {
   maxSelections: number | null;
 }
 
-export interface OptionDetail extends Id {
+export interface Option extends Id {
   name: string;
   price: number;
 }

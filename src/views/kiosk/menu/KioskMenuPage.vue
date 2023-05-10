@@ -44,7 +44,7 @@ import { routerReplace, toPriceText } from "@/utils/commands";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import KioskMenuDescription from "@/views/kiosk/menu/KioskMenuDescription.vue";
 import KioskMenuOptions from "@/views/kiosk/menu/KioskMenuOptions.vue";
-import { OptionDetail } from "@/definitions/entities";
+import { Option } from "@/definitions/entities";
 import KioskAppBar from "@/views/kiosk/KioskAppBar.vue";
 import { storeToRefs } from "pinia";
 import { useKioskStore } from "@/stores/kiosk";
@@ -56,8 +56,8 @@ const { isStoreOpen, isMenuSoldOut } = storeToRefs(useKioskStore());
 const menu = ref<MenuForKiosk>(defaultMenuForKiosk());
 const totalPrice = ref(0);
 const quantity = ref(1);
-const selectedMandatoryOptions = ref<{ [key: number]: OptionDetail }>({});
-const selectedOptionalOptions = ref<{ [key: number]: OptionDetail[] }>({});
+const selectedMandatoryOptions = ref<{ [key: number]: Option }>({});
+const selectedOptionalOptions = ref<{ [key: number]: Option[] }>({});
 
 const footerTitle = computed(() => {
   return isStoreOpen.value

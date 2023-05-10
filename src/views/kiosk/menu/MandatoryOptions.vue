@@ -5,37 +5,32 @@
     :disabled="disabled"
   >
     <v-radio
-      v-for="optionDetail in optionGroup.optionDetails"
-      :key="optionDetail.id"
-      :value="optionDetail"
+      v-for="option in optionGroup.options"
+      :key="option.id"
+      :value="option"
     >
       <template #label>
-        <span class="text-ellipsis text--primary">{{ optionDetail.name }}</span>
+        <span class="text-ellipsis text--primary">{{ option.name }}</span>
         <v-spacer />
-        <span class="text--primary">{{
-          toOptionPriceText(optionDetail.price)
-        }}</span>
+        <span class="text--primary">{{ toOptionPriceText(option.price) }}</span>
       </template>
     </v-radio>
   </v-radio-group>
 </template>
 
 <script setup lang="ts">
-import { OptionDetailForKiosk, OptionGroupForKiosk } from "@/definitions/kiosk";
+import { OptionForKiosk, OptionGroupForKiosk } from "@/definitions/kiosk";
 import { useVModels } from "@vueuse/core";
 import { toOptionPriceText } from "@/utils/commands";
 
 const props = defineProps<{
   disabled: boolean;
   optionGroup: OptionGroupForKiosk;
-  selectedMandatoryOptions: { [key: number]: OptionDetailForKiosk };
+  selectedMandatoryOptions: { [key: number]: OptionForKiosk };
 }>();
 
 const emits = defineEmits<{
-  (
-    e: "update:selectedMandatoryOptions",
-    v: { [key: number]: OptionDetailForKiosk }
-  );
+  (e: "update:selectedMandatoryOptions", v: { [key: number]: OptionForKiosk });
 }>();
 
 const { selectedMandatoryOptions } = useVModels(props, emits);

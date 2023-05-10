@@ -1,5 +1,3 @@
-import { OptionDetail } from "@/definitions/entities";
-
 export interface Id {
   id?: number;
 }
@@ -30,10 +28,10 @@ export interface OptionGroupForKiosk extends Id {
   name: string;
   type: string;
   maxSelections: number | null;
-  optionDetails?: OptionDetail[];
+  options?: OptionForKiosk[];
 }
 
-export interface OptionDetailForKiosk extends Id {
+export interface OptionForKiosk extends Id {
   name: string;
   price: number;
 }

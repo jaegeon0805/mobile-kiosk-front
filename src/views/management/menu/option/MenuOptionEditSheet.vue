@@ -10,7 +10,7 @@
             class="ma-0"
           />
           <v-divider vertical class="mx-3" />
-          <OptionDetailTable v-model="optionGroup" class="flex-grow-1" />
+          <OptionTable v-model="optionGroup" class="flex-grow-1" />
         </v-card-text>
         <SheetButton
           :sheet.sync="sheet"
@@ -29,7 +29,7 @@ import SheetButton from "@/components/sheet/SheetButton.vue";
 import SheetTitle from "@/components/sheet/SheetTitle.vue";
 import OptionGroupSelectTab from "@/views/management/menu/option/OptionGroupSelectTab.vue";
 import { ref } from "vue";
-import OptionDetailTable from "@/views/management/menu/option/OptionDetailTable.vue";
+import OptionTable from "@/views/management/menu/option/OptionTable.vue";
 
 const props = defineProps<{
   value: Menu;

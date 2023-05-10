@@ -2,7 +2,7 @@ import {
   Category,
   Member,
   Menu,
-  OptionDetail,
+  Option,
   OptionGroup,
   Store,
 } from "@/definitions/entities";
@@ -64,7 +64,7 @@ export function defaultOptionGroup(): OptionGroup {
   };
 }
 
-export function defaultOptionDetail(): OptionDetail {
+export function defaultOption(): Option {
   return {
     id: undefined,
     name: "",

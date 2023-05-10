@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import "cropperjs/dist/cropper.css";
-import { OptionDetail, OptionGroup } from "@/definitions/entities";
+import { Option, OptionGroup } from "@/definitions/entities";
 import { useEdit } from "@/compositions/useEdit";
 import { postApi, putApi } from "@/utils/apis";
 import { computed, ref } from "vue";
@@ -66,19 +66,19 @@ import { useConfirmStore } from "@/stores/confirm";
 const { confirmCreate, confirmUpdate } = useConfirmStore();
 
 const props = defineProps<{
-  value: OptionDetail;
+  value: Option;
   sheet: boolean;
   optionGroup: OptionGroup;
 }>();
 
 const emits = defineEmits<{
-  (e: "input", v: OptionDetail): void;
+  (e: "input", v: Option): void;
   (e: "update:sheet", v: boolean): void;
-  (e: "created", v: OptionDetail): void;
-  (e: "updated", v: OptionDetail): void;
+  (e: "created", v: Option): void;
+  (e: "updated", v: Option): void;
 }>();
 
-const { value, sheet, loading, isNew } = useEdit<OptionDetail>(props, emits);
+const { value, sheet, loading, isNew } = useEdit<Option>(props, emits);
 
 const displayPrice = computed({
   get() {
@@ -106,8 +106,8 @@ async function save() {
 async function create(): Promise<void> {
   confirmCreate(async () => {
     loading.value = true;
-    const response = await postApi<OptionDetail>(
-      `option-details?optionGroupId=${props.optionGroup.id}`,
+    const response = await postApi<Option>(
+      `options?optionGroupId=${props.optionGroup.id}`,
       value.value
     );
     loading.value = false;
@@ -122,8 +122,8 @@ async function create(): Promise<void> {
 async function update(): Promise<void> {
   confirmUpdate(async () => {
     loading.value = true;
-    const response = await putApi<OptionDetail>(
-      `option-details/${value.value.id}`,
+    const response = await putApi<Option>(
+      `options/${value.value.id}`,
       value.value
     );
     loading.value = false;

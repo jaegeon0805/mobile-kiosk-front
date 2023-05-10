@@ -48,13 +48,13 @@
         <span>₩{{ Number(item.price).toLocaleString() }}</span>
       </template>
       <template #[`item.actions`]="{ item }">
-        <v-icon color="red" @click="deleteOptionDetail(item)"
+        <v-icon color="red" @click="deleteOption(item)"
           >mdi-delete-forever</v-icon
         >
       </template>
     </v-data-table>
 
-    <OptionDetailDialog
+    <OptionDialog
       v-if="sheet"
       v-model="editItem"
       :sheet.sync="sheet"
@@ -66,14 +66,14 @@
 </template>
 
 <script setup lang="ts">
-import { Menu, OptionDetail, OptionGroup } from "@/definitions/entities";
+import { Menu, Option, OptionGroup } from "@/definitions/entities";
 import { useEditItem } from "@/compositions/useEditItem";
-import { defaultOptionDetail } from "@/definitions/defaults";
+import { defaultOption } from "@/definitions/defaults";
 import { deleteApi, getApi, patchApi } from "@/utils/apis";
 import { DataTableHeader } from "vuetify";
 import { useSimpleTable } from "@/compositions/useSimpleTable";
 import { onMounted, watch } from "vue";
-import OptionDetailDialog from "@/views/management/menu/option/OptionDetailDialog.vue";
+import OptionDialog from "@/views/management/menu/option/OptionDialog.vue";
 import { useConfirmStore } from "@/stores/confirm";
 import { useCurrentElement } from "@vueuse/core";
 import Sortable, { SortableEvent } from "sortablejs";
@@ -91,10 +91,9 @@ const emits = defineEmits<{
 
 const { confirmDelete } = useConfirmStore();
 
-const { items, loading, created, updated } =
-  useSimpleTable<OptionDetail>("option-details");
+const { items, loading, created, updated } = useSimpleTable<Option>("options");
 const { sheet, editItem, openCreateSheet, openUpdateSheet } =
-  useEditItem<OptionDetail>(defaultOptionDetail);
+  useEditItem<Option>(defaultOption);
 
 const headers: DataTableHeader[] = [
   {
@@ -124,17 +123,17 @@ const headers: DataTableHeader[] = [
 
 async function fetchList() {
   if (props.value?.id) {
-    const response = await getApi<OptionDetail[]>(
-      `option-details?optionGroupId=${props.value?.id}`
+    const response = await getApi<Option[]>(
+      `options?optionGroupId=${props.value?.id}`
     );
 
     items.value = response.result ?? [];
   }
 }
 
-async function deleteOptionDetail(optionGroup: OptionGroup): Promise<void> {
+async function deleteOption(optionGroup: OptionGroup): Promise<void> {
   confirmDelete(async () => {
-    const response = await deleteApi(`option-details/${optionGroup.id}`);
+    const response = await deleteApi(`options/${optionGroup.id}`);
     if (response.success) {
       items.value = items.value.filter((item) => item.id !== optionGroup.id);
     }
@@ -150,7 +149,7 @@ watch(
 
 async function saveSort(): Promise<void> {
   const response = await patchApi<Menu[]>(
-    `option-details/display-order?optionGroupId=${props.value?.id}`,
+    `options/display-order?optionGroupId=${props.value?.id}`,
     items.value.map(({ id }, index) => ({
       id: id as number,
       displayOrder: index,

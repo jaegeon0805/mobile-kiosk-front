@@ -5,7 +5,7 @@ import {
   defaultStoreForKiosk,
 } from "@/definitions/defaults";
 import { CartItem, MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
-import { OptionDetail } from "@/definitions/entities";
+import { Option } from "@/definitions/entities";
 import { isEquals, routerPush } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
 import { v4 as uuidV4 } from "uuid";
@@ -54,8 +54,8 @@ export const useKioskStore = defineStore("kiosk", {
     async addCartItem(
       menu: MenuForKiosk,
       quantity: number,
-      selectedMandatoryOptions: { [key: number]: OptionDetail },
-      selectedOptionalOptions: { [key: number]: OptionDetail[] }
+      selectedMandatoryOptions: { [key: number]: Option },
+      selectedOptionalOptions: { [key: number]: Option[] }
     ) {
       const optionNames = [] as string[];
       let itemPrice = menu.price;

@@ -1,28 +1,26 @@
 <template>
   <div>
     <v-checkbox
-      v-for="optionDetail in optionGroup.optionDetails"
+      v-for="option in optionGroup.options"
       v-model="selectedOptionalOptions[optionGroup.id]"
-      :key="optionDetail.id"
-      :value="optionDetail"
+      :key="option.id"
+      :value="option"
       dense
       multiple
       @change="(event) => clickOption(optionGroup, event)"
       :disabled="disabled"
     >
       <template #label>
-        <span class="text-ellipsis text--primary">{{ optionDetail.name }}</span>
+        <span class="text-ellipsis text--primary">{{ option.name }}</span>
         <v-spacer />
-        <span class="text--primary">{{
-          toOptionPriceText(optionDetail.price)
-        }}</span>
+        <span class="text--primary">{{ toOptionPriceText(option.price) }}</span>
       </template>
     </v-checkbox>
   </div>
 </template>
 
 <script setup lang="ts">
-import { OptionDetailForKiosk, OptionGroupForKiosk } from "@/definitions/kiosk";
+import { OptionForKiosk, OptionGroupForKiosk } from "@/definitions/kiosk";
 import { useVModels } from "@vueuse/core";
 import { useAlertStore } from "@/stores/alert";
 import { toOptionPriceText } from "@/utils/commands";
@@ -32,14 +30,11 @@ const { toastWarning } = useAlertStore();
 const props = defineProps<{
   disabled: boolean;
   optionGroup: OptionGroupForKiosk;
-  selectedOptionalOptions: { [key: number]: OptionDetailForKiosk[] };
+  selectedOptionalOptions: { [key: number]: OptionForKiosk[] };
 }>();
 
 const emits = defineEmits<{
-  (
-    e: "update:selectedOptionalOptions",
-    v: { [key: number]: OptionDetailForKiosk[] }
-  );
+  (e: "update:selectedOptionalOptions", v: { [key: number]: OptionForKiosk[] });
 }>();
 
 const { selectedOptionalOptions } = useVModels(props, emits);

@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { MenuForKiosk } from "@/definitions/kiosk";
 import { ref, watch } from "vue";
-import { OptionDetail } from "@/definitions/entities";
+import { Option } from "@/definitions/entities";
 import { keys } from "lodash";
 import { useVModels } from "@vueuse/core";
 import MandatoryOptions from "@/views/kiosk/menu/MandatoryOptions.vue";
@@ -65,14 +65,14 @@ const { isStoreOpen, isMenuSoldOut } = storeToRefs(useKioskStore());
 
 const props = defineProps<{
   value: MenuForKiosk;
-  selectedOptionalOptions: { [key: number]: OptionDetail[] };
-  selectedMandatoryOptions: { [key: number]: OptionDetail };
+  selectedOptionalOptions: { [key: number]: Option[] };
+  selectedMandatoryOptions: { [key: number]: Option };
   totalPrice: number;
 }>();
 
 const emits = defineEmits<{
-  (e: "update:selectedOptionalOptions", v: { [key: number]: OptionDetail[] });
-  (e: "update:selectedMandatoryOptions", v: { [key: number]: OptionDetail });
+  (e: "update:selectedOptionalOptions", v: { [key: number]: Option[] });
+  (e: "update:selectedMandatoryOptions", v: { [key: number]: Option });
   (e: "update:totalPrice", v: number);
 }>();
 
