@@ -127,6 +127,11 @@ watch(
 onMounted(async () => {
   await load(async () => {
     const storeId = useRoute().params.storeId;
+
+    if (!currentStore.value.id) {
+      await routerPush(`/kiosk/${storeId}`);
+    }
+
     const response = await getApi<StoreForKiosk>(`kiosk/stores/${storeId}`);
 
     if (response.success) {

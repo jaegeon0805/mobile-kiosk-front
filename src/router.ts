@@ -90,6 +90,13 @@ const routes = (): RouteConfig[] => {
         layout: "kiosk",
       },
     },
+    {
+      path: "/kiosk/:storeId/payment",
+      component: () => import("@/views/kiosk/payment/PaymentWait.vue"),
+      meta: {
+        layout: "kiosk",
+      },
+    },
   ];
   const error: RouteConfig[] = [
     {

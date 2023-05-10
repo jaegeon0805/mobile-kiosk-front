@@ -81,13 +81,14 @@
 import KioskCartAppBar from "@/views/kiosk/cart/KioskCartAppBar.vue";
 import { useKioskStore } from "@/stores/kiosk";
 import { storeToRefs } from "pinia";
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 import { routerPush, toPriceText } from "@/utils/commands";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import CounterBtn from "@/views/kiosk/CounterBtn.vue";
 import { postApi } from "@/utils/apis";
 import { PaymentReadyResponse } from "@/definitions/kiosk";
 import { useSpinnerStore } from "@/stores/loadingSpinner";
+import { useRoute } from "vue-router/composables";
 
 const { updateTakeOutInfo, changeQuantity, removeCartItem } = useKioskStore();
 const {
@@ -108,6 +109,7 @@ async function pay() {
       `kiosk-orders?storeId=${currentStore.value.id}`,
       {
         customerUuid: customerUuid.value,
+        orderType: isTakeOut ? "TAKE_OUT" : "DINE_IN",
         cartItems: cart.value.map((item) => {
           return {
             menuId: item.menu.id,
@@ -134,4 +136,14 @@ watch(
     updateTakeOutInfo(isTakeOut.value);
   }
 );
+
+onMounted(async () => {
+  await load(async () => {
+    const storeId = useRoute().params.storeId;
+
+    if (!currentStore.value.id) {
+      await routerPush(`/kiosk/${storeId}`);
+    }
+  });
+});
 </script>

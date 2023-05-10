@@ -40,7 +40,7 @@ import { useRoute } from "vue-router/composables";
 import { getApi } from "@/utils/apis.js";
 import { MenuForKiosk } from "@/definitions/kiosk.js";
 import { defaultMenuForKiosk } from "@/definitions/defaults";
-import { routerReplace, toPriceText } from "@/utils/commands";
+import { routerPush, routerReplace, toPriceText } from "@/utils/commands";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import KioskMenuDescription from "@/views/kiosk/menu/KioskMenuDescription.vue";
 import KioskMenuOptions from "@/views/kiosk/menu/KioskMenuOptions.vue";
@@ -52,7 +52,9 @@ import KioskMenuCounter from "@/views/kiosk/menu/KioskMenuCounter.vue";
 import { useSpinnerStore } from "@/stores/loadingSpinner";
 
 const { updateMenu, addCartItem } = useKioskStore();
-const { isStoreOpen, isMenuSoldOut } = storeToRefs(useKioskStore());
+const { currentStore, isStoreOpen, isMenuSoldOut } = storeToRefs(
+  useKioskStore()
+);
 const { load } = useSpinnerStore();
 
 const menu = ref<MenuForKiosk>(defaultMenuForKiosk());
@@ -71,6 +73,12 @@ const footerTitle = computed(() => {
 
 onMounted(async () => {
   await load(async () => {
+    const storeId = useRoute().params.storeId;
+
+    if (!currentStore.value.id) {
+      await routerPush(`/kiosk/${storeId}`);
+    }
+
     const menuId = useRoute().params.menuId;
     const response = await getApi<MenuForKiosk>(`kiosk/menus/${menuId}`);
 
