@@ -57,6 +57,10 @@ export const useKioskStore = defineStore("kiosk", {
       selectedMandatoryOptions: { [key: number]: Option },
       selectedOptionalOptions: { [key: number]: Option[] }
     ) {
+      if (!menu.id) {
+        return;
+      }
+
       const optionNames = [] as string[];
       let itemPrice = menu.price;
       const mandatoryOptions = {};

@@ -49,9 +49,11 @@ import KioskAppBar from "@/views/kiosk/KioskAppBar.vue";
 import { storeToRefs } from "pinia";
 import { useKioskStore } from "@/stores/kiosk";
 import KioskMenuCounter from "@/views/kiosk/menu/KioskMenuCounter.vue";
+import { useSpinnerStore } from "@/stores/loadingSpinner";
 
 const { updateMenu, addCartItem } = useKioskStore();
 const { isStoreOpen, isMenuSoldOut } = storeToRefs(useKioskStore());
+const { load } = useSpinnerStore();
 
 const menu = ref<MenuForKiosk>(defaultMenuForKiosk());
 const totalPrice = ref(0);
@@ -68,14 +70,16 @@ const footerTitle = computed(() => {
 });
 
 onMounted(async () => {
-  const menuId = useRoute().params.menuId;
-  const response = await getApi<MenuForKiosk>(`kiosk/menus/${menuId}`);
+  await load(async () => {
+    const menuId = useRoute().params.menuId;
+    const response = await getApi<MenuForKiosk>(`kiosk/menus/${menuId}`);
 
-  if (response.success) {
-    menu.value = response.result;
-    updateMenu(menu.value);
-  } else {
-    await routerReplace("/error/404");
-  }
+    if (response.success) {
+      menu.value = response.result;
+      updateMenu(menu.value);
+    } else {
+      await routerReplace("/error/404");
+    }
+  });
 });
 </script>

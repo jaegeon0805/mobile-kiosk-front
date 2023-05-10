@@ -101,10 +101,12 @@ import { useKioskStore } from "@/stores/kiosk";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import { storeToRefs } from "pinia";
 import CartIcon from "@/views/kiosk/CartIcon.vue";
+import { useSpinnerStore } from "@/stores/loadingSpinner";
 
 const { updateStore, updateTakeOutInfo } = useKioskStore();
 const { currentStore, isStoreOpen, isTakeOut, cartItemCount, totalPrice } =
   storeToRefs(useKioskStore());
+const { load } = useSpinnerStore();
 
 const store = ref<StoreForKiosk>(defaultStoreForKiosk());
 const selectedTabIndex = ref(0);
@@ -123,15 +125,17 @@ watch(
 );
 
 onMounted(async () => {
-  const storeId = useRoute().params.storeId;
-  const response = await getApi<StoreForKiosk>(`kiosk/stores/${storeId}`);
+  await load(async () => {
+    const storeId = useRoute().params.storeId;
+    const response = await getApi<StoreForKiosk>(`kiosk/stores/${storeId}`);
 
-  if (response.success) {
-    store.value = response.result;
-    updateStore(store.value);
-    selectedTabIndex.value = isTakeOut.value ? 0 : 1;
-  } else {
-    await routerPush("/error/404");
-  }
+    if (response.success) {
+      store.value = response.result;
+      updateStore(store.value);
+      selectedTabIndex.value = isTakeOut.value ? 0 : 1;
+    } else {
+      await routerPush("/error/404");
+    }
+  });
 });
 </script>

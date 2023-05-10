@@ -87,6 +87,7 @@ import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import CounterBtn from "@/views/kiosk/CounterBtn.vue";
 import { postApi } from "@/utils/apis";
 import { PaymentReadyResponse } from "@/definitions/kiosk";
+import { useSpinnerStore } from "@/stores/loadingSpinner";
 
 const { updateTakeOutInfo, changeQuantity, removeCartItem } = useKioskStore();
 const {
@@ -99,29 +100,32 @@ const {
   cartItemCount,
   customerUuid,
 } = storeToRefs(useKioskStore());
+const { load } = useSpinnerStore();
 
 async function pay() {
-  const response = await postApi<PaymentReadyResponse>(
-    `kiosk-orders?storeId=${currentStore.value.id}`,
-    {
-      customerUuid: customerUuid.value,
-      cartItems: cart.value.map((item) => {
-        return {
-          menuId: item.menu.id,
-          quantity: item.quantity,
-          options: {
-            ...item.mandatoryOptions,
-            ...item.optionalOptions,
-          },
-        };
-      }),
-    },
-    false
-  );
+  await load(async () => {
+    const response = await postApi<PaymentReadyResponse>(
+      `kiosk-orders?storeId=${currentStore.value.id}`,
+      {
+        customerUuid: customerUuid.value,
+        cartItems: cart.value.map((item) => {
+          return {
+            menuId: item.menu.id,
+            quantity: item.quantity,
+            options: {
+              ...item.mandatoryOptions,
+              ...item.optionalOptions,
+            },
+          };
+        }),
+      },
+      false
+    );
 
-  if (response.success) {
-    window.location.href = response.result.nextRedirectMobileUrl;
-  }
+    if (response.success) {
+      window.location.href = response.result.nextRedirectMobileUrl;
+    }
+  });
 }
 
 watch(
