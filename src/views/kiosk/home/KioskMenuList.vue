@@ -19,7 +19,7 @@
           tile
           class="px-6"
           :class="{ 'border-bottom': !isLastIndex(category.menus, index) }"
-          @click="routerPush(`/kiosk/121/menu/${menu.id}`)"
+          @click="routerPush(`/kiosk/${currentStore.id}/menu/${menu.id}`)"
         >
           <v-card-text class="d-flex justify-space-between px-0">
             <div>
@@ -49,7 +49,6 @@
             opacity="0.6"
             color="white"
             absolute
-            @click="routerPush(`/kiosk/${currentStore.id}/menu/${menu.id}`)"
           >
             <v-img :src="require('/src/assets/img/sold-out.png')" />
           </v-overlay>

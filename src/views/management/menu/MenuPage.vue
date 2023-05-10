@@ -74,7 +74,7 @@
       @created="created"
       @updated="updated"
     />
-    <OptionEditSheet
+    <MenuOptionEditSheet
       v-if="optionSheet"
       v-model="editItem"
       :sheet.sync="optionSheet"
@@ -99,7 +99,7 @@ import Sortable, { SortableEvent } from "sortablejs";
 import MenuEditSheet from "@/views/management/menu/MenuEditSheet.vue";
 import CategorySelectTab from "@/views/management/category/CategorySelectTab.vue";
 import { useAlertStore } from "@/stores/alert";
-import OptionEditSheet from "@/views/management/menu/option/MenuOptionEditSheet.vue";
+import MenuOptionEditSheet from "@/views/management/menu/option/MenuOptionEditSheet.vue";
 import { cloneDeep } from "lodash";
 
 const { selectedStore } = storeToRefs(useStoreStore());
