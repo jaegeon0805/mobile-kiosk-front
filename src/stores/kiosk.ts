@@ -8,9 +8,11 @@ import { CartItem, MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
 import { OptionDetail } from "@/definitions/entities";
 import { isEquals, routerPush } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
+import { v4 as uuidV4 } from "uuid";
 
 export const useKioskStore = defineStore("kiosk", {
   state: () => ({
+    customerUuid: uuidV4() as string,
     currentStore: defaultStoreForKiosk() as StoreForKiosk,
     currentMenu: defaultMenuForKiosk() as MenuForKiosk,
     isTakeOut: true,

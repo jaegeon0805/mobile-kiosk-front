@@ -46,3 +46,8 @@ export interface CartItem {
   optionalOptions: { [key: number]: number[] };
   optionNames: string[];
 }
+
+export interface PaymentReadyResponse {
+  nextRedirectMobileUrl: string;
+  nextRedirectPcUrl: string;
+}

@@ -56,7 +56,7 @@
       </v-card>
     </v-main>
 
-    <KioskFooter v-show="isNotEmptyCart" :disabled="!isStoreOpen">
+    <KioskFooter v-show="isNotEmptyCart" :disabled="!isStoreOpen" @click="pay">
       <template v-if="!isStoreOpen">
         <span>준비 중입니다.</span>
       </template>
@@ -85,6 +85,8 @@ import { watch } from "vue";
 import { routerPush, toPriceText } from "@/utils/commands";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import CounterBtn from "@/views/kiosk/CounterBtn.vue";
+import { postApi } from "@/utils/apis";
+import { PaymentReadyResponse } from "@/definitions/kiosk";
 
 const { updateTakeOutInfo, changeQuantity, removeCartItem } = useKioskStore();
 const {
@@ -95,7 +97,32 @@ const {
   isStoreOpen,
   totalPrice,
   cartItemCount,
+  customerUuid,
 } = storeToRefs(useKioskStore());
+
+async function pay() {
+  const response = await postApi<PaymentReadyResponse>(
+    `kiosk-orders?storeId=${currentStore.value.id}`,
+    {
+      customerUuid: customerUuid.value,
+      cartItems: cart.value.map((item) => {
+        return {
+          menuId: item.menu.id,
+          quantity: item.quantity,
+          options: {
+            ...item.mandatoryOptions,
+            ...item.optionalOptions,
+          },
+        };
+      }),
+    },
+    false
+  );
+
+  if (response.success) {
+    window.location.href = response.result.nextRedirectMobileUrl;
+  }
+}
 
 watch(
   () => isTakeOut.value,

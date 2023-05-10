@@ -10,7 +10,7 @@ const { toastError, toastSuccess } = useAlertStore(store);
 const { reissueToken } = useMemberStore(store);
 export const axiosInstance = createAxiosInstance();
 
-const whitePathList = ["api/v1/kiosk", "api/v1/payment"];
+const whitePathList = ["api/v1/kiosk"];
 
 function createAxiosInstance() {
   const instance = axios.create({
