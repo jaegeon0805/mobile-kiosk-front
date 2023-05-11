@@ -92,7 +92,7 @@ const routes = (): RouteConfig[] => {
     },
     {
       path: "/kiosk/:storeId/payment",
-      component: () => import("@/views/kiosk/payment/PaymentWait.vue"),
+      component: () => import("@/views/kiosk/payment/PaymentWaitPage.vue"),
       meta: {
         layout: "kiosk",
       },
