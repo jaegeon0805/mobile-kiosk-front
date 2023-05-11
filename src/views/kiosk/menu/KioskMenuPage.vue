@@ -19,6 +19,7 @@
     </v-main>
 
     <KioskFooter
+      v-show="showFooter"
       :disabled="!isStoreOpen || isMenuSoldOut"
       @click="
         addCartItem(
@@ -62,6 +63,7 @@ const totalPrice = ref(0);
 const quantity = ref(1);
 const selectedMandatoryOptions = ref<{ [key: number]: Option }>({});
 const selectedOptionalOptions = ref<{ [key: number]: Option[] }>({});
+const showFooter = ref(false);
 
 const footerTitle = computed(() => {
   return isStoreOpen.value
@@ -84,6 +86,7 @@ onMounted(async () => {
 
     if (response.success) {
       menu.value = response.result;
+      showFooter.value = true;
       updateMenu(menu.value);
     } else {
       await routerReplace("/error/404");

@@ -1,5 +1,5 @@
 <template>
-  <v-slide-y-transition>
+  <v-slide-y-reverse-transition>
     <v-footer app color="white" height="70px" elevation="3">
       <v-btn
         block
@@ -12,7 +12,7 @@
         <slot />
       </v-btn>
     </v-footer>
-  </v-slide-y-transition>
+  </v-slide-y-reverse-transition>
 </template>
 
 <script setup lang="ts">
