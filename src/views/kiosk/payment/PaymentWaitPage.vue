@@ -36,7 +36,7 @@ onMounted(async () => {
 
     if (response.success) {
       clearCart();
-      await routerPush(`/kiosk/${currentStore.value.id}`);
+      await routerPush(`/kiosk/${currentStore.value.id}/order`);
     } else {
       await routerPush(`kiosk/${currentStore.value.id}/cart`);
     }

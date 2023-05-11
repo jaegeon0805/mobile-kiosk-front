@@ -113,3 +113,9 @@ export function toOptionPriceText(price: number) {
 export function isEquals(obj1: any, obj2: any) {
   return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
+
+export function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+}

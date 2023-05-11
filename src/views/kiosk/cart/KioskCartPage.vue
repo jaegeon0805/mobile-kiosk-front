@@ -82,7 +82,7 @@ import KioskCartAppBar from "@/views/kiosk/cart/KioskCartAppBar.vue";
 import { useKioskStore } from "@/stores/kiosk";
 import { storeToRefs } from "pinia";
 import { onMounted, watch } from "vue";
-import { routerPush, toPriceText } from "@/utils/commands";
+import { isMobile, routerPush, toPriceText } from "@/utils/commands";
 import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import CounterBtn from "@/views/kiosk/CounterBtn.vue";
 import { postApi } from "@/utils/apis";
@@ -125,7 +125,11 @@ async function pay() {
     );
 
     if (response.success) {
-      window.location.href = response.result.nextRedirectMobileUrl;
+      if (isMobile()) {
+        window.location.href = response.result.nextRedirectMobileUrl;
+      } else {
+        window.location.href = response.result.nextRedirectPcUrl;
+      }
     }
   });
 }
