@@ -30,7 +30,7 @@ onMounted(async () => {
     const pgToken = query.pg_token;
 
     const response = await patchApi(
-      `kiosk-orders/${orderId}/approve?customerUuid=${customerUuid}&pgToken=${pgToken}`,
+      `kiosk-orders/${orderId}/approve?customerUuid=${customerUuid.value}&pgToken=${pgToken}`,
       null
     );
 
