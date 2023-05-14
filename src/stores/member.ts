@@ -47,7 +47,7 @@ export const useMemberStore = defineStore("member", {
       }
     },
     async saveMyProfile(): Promise<void> {
-      this.member = await getMyProfile();
+      this.$state.member = await getMyProfile();
     },
     memberClear() {
       this.$reset();
