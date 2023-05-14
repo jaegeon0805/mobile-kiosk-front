@@ -13,7 +13,7 @@ import { useKioskStore } from "@/stores/kiosk";
 import { storeToRefs } from "pinia";
 import { useSpinnerStore } from "@/stores/loadingSpinner";
 
-const { currentStore } = storeToRefs(useKioskStore());
+const { currentStore, customerUuid } = storeToRefs(useKioskStore());
 const { clearCart } = useKioskStore();
 const { load } = useSpinnerStore();
 const { query } = useRoute();
@@ -30,7 +30,7 @@ onMounted(async () => {
     const pgToken = query.pg_token;
 
     const response = await patchApi(
-      `kiosk-orders/${orderId}/approve?pgToken=${pgToken}`,
+      `kiosk-orders/${orderId}/approve?customerUuid=${customerUuid}&pgToken=${pgToken}`,
       null
     );
 
