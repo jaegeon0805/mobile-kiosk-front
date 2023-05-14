@@ -10,20 +10,19 @@ export const useAlertStore = defineStore("alert", {
   },
   actions: {
     toastSuccess(message: string, timer = 3_000) {
-      this.alert(message, timer, "#1876D2", "mdi-check-circle");
+      this.alert(message, timer, "#1876D2");
     },
     toastWarning(message: string, timer = 10_000) {
-      this.alert(message, timer, "#ffca28", "mdi-alert");
+      this.alert(message, timer, "#ffca28");
     },
     toastError(message: string, timer = 30_000) {
-      this.alert(message, timer, "#d32f2f", "mdi-alert-circle");
+      this.alert(message, timer, "#d32f2f");
     },
-    alert(message: string, timer: number, color: string, icon: string) {
+    alert(message: string, timer: number, color: string) {
       this.$state.item = {
         message,
         timer,
         color,
-        icon,
       };
       this.$state.openAlert = true;
     },

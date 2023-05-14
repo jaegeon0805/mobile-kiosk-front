@@ -2,7 +2,6 @@ export interface Alert {
   message: string;
   timer: number;
   color: string;
-  icon: string;
 }
 
 export interface Confirm {
