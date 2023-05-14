@@ -36,12 +36,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import ProfileMenu from "@/components/layout/AppBarMenu.vue";
 import StoreSelectMenu from "@/components/layout/StoreSelectMenu.vue";
 import NavMenu from "@/components/layout/NavMenu.vue";
+import { useSocketStore } from "@/stores/socket";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const { initializeWebSocket, disconnect } = useSocketStore();
+const { uuid } = storeToRefs(useMemberStore());
 
 const navigation = ref(true);
+
+onMounted(() => {
+  initializeWebSocket(uuid.value);
+});
+
+onUnmounted(() => {
+  disconnect();
+});
 </script>
 
 <style scoped>
