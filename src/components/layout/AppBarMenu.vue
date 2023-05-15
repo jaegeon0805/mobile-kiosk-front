@@ -11,7 +11,6 @@
             <v-icon> mdi-account-circle </v-icon>
           </v-avatar>
         </v-chip>
-        <v-icon>mdi-bell</v-icon>
       </template>
 
       <v-list dense class="d-flex flex-column align-center">

@@ -3,6 +3,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useAlertStore } from "@/stores/alert";
 import envs from "@/constants/envs";
+import { useNotificationStore } from "@/stores/notification";
 
 export const useSocketStore = defineStore("socket", {
   state: () => ({
@@ -10,7 +11,7 @@ export const useSocketStore = defineStore("socket", {
   }),
   actions: {
     initializeWebSocket(uuid: string) {
-      const socket = new SockJS(`${envs.API_HOST}/ws`);
+      const socket = new SockJS(envs.SOCKET_URL);
       this.$state.stompClient = new Client({
         webSocketFactory: () => socket,
       });
@@ -18,9 +19,12 @@ export const useSocketStore = defineStore("socket", {
       this.$state.stompClient.onConnect = () => {
         this.$state.stompClient.subscribe(
           `/topic/store-owner/${uuid}`,
-          (message) => {
+          async (message) => {
             if (message.body) {
+              const { fetchNotifications } = useNotificationStore();
               const { toastSuccess } = useAlertStore();
+
+              await fetchNotifications();
               toastSuccess(message.body, 10_000);
             }
           },

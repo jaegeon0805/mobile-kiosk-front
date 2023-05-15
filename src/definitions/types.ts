@@ -59,3 +59,25 @@ export interface PageResponse<T> {
   numberOfElements: number;
   empty: boolean;
 }
+
+export interface OrderItem {
+  menu: OrderMenu;
+  optionGroups: OrderOptionGroup[];
+  quantity: number;
+}
+
+export interface OrderMenu {
+  name: string;
+  price: number;
+}
+
+export interface OrderOptionGroup {
+  name: string;
+  type: string;
+  options: OrderOption[];
+}
+
+export interface OrderOption {
+  name: string;
+  price: number;
+}

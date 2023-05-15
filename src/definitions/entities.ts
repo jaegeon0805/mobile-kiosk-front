@@ -1,3 +1,5 @@
+import { OrderItem } from "@/definitions/types";
+
 export interface Id {
   id?: number;
 }
@@ -37,4 +39,19 @@ export interface OptionGroup extends Id {
 export interface Option extends Id {
   name: string;
   price: number;
+}
+
+export interface Notification extends Id {
+  store: Store;
+  order: Order;
+}
+
+export interface Order extends Id {
+  title: string;
+  orderState: string;
+  orderType: string;
+  quantity: number;
+  totalPrice: number;
+  detail: OrderItem[];
+  approveAt: Date;
 }

@@ -91,3 +91,25 @@ export function defaultMenuForKiosk(): MenuForKiosk {
     soldOutFlag: false,
   };
 }
+
+// export function defaultNotification(): Notification {
+//   return {
+//     store: defaultStore(),
+//     order: defaultOrderItem(),
+//   };
+// }
+//
+// export function defaultOrderItem(): OrderItem {
+//   return {
+//     menu: defaultOrderMenu(),
+//     optionGroups: [] as OrderOptionGroup[],
+//     quantity: 0,
+//   };
+// }
+//
+// export function defaultOrderMenu(): OrderMenu {
+//   return {
+//     name: "",
+//     price: 0,
+//   };
+// }

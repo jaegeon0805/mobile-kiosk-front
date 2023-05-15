@@ -10,13 +10,16 @@
       <v-card
         flat
         rounded="lg"
-        class="d-flex flex-grow-1 align-center pl-2 pr-4 py-3 mt-10"
+        class="d-flex flex-grow-1 align-center pl-2 pr-6 py-3 mt-10"
       >
         <v-app-bar-nav-icon @click.stop="navigation = !navigation" />
         <v-spacer />
         <ProfileMenu />
+        <NotificationIcon v-model="openNotification" />
       </v-card>
     </v-app-bar>
+
+    <NotificationDrawer v-model="openNotification" />
 
     <v-main class="mt-10">
       <v-container class="pa-4 fill-height" fluid>
@@ -43,18 +46,25 @@ import NavMenu from "@/components/layout/NavMenu.vue";
 import { useSocketStore } from "@/stores/socket";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
+import { useNotificationStore } from "@/stores/notification";
+import NotificationDrawer from "@/components/notifcation/NotificationDrawer.vue";
+import NotificationIcon from "@/components/notifcation/NotificationIcon.vue";
 
 const { initializeWebSocket, disconnect } = useSocketStore();
+const { fetchNotifications, notificationClear } = useNotificationStore();
 const { uuid } = storeToRefs(useMemberStore());
 
 const navigation = ref(true);
+const openNotification = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
   initializeWebSocket(uuid.value);
+  await fetchNotifications();
 });
 
 onUnmounted(() => {
   disconnect();
+  notificationClear();
 });
 </script>
 

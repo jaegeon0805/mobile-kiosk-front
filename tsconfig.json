@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "noImplicitReturns": false,
     "noImplicitAny": false,
     "strictNullChecks": true,
