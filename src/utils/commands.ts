@@ -9,6 +9,7 @@ import { defaultMember, defaultPagination } from "@/definitions/defaults";
 import { Member, Store } from "@/definitions/entities";
 import { useStoreStore } from "@/stores/store";
 import { stringify } from "qs";
+import { TypeItem } from "@/definitions/enums";
 
 const { memberClear, isTokenExpired, reissueToken } = useMemberStore(store);
 const { storeClear } = useStoreStore(store);
@@ -118,4 +119,8 @@ export function isMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
+}
+
+export function getTypeName(types: TypeItem[], value: string): string {
+  return types.find((t) => t.value === value)?.text ?? "";
 }

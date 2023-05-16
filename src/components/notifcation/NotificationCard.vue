@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover class="my-2">
+  <v-card flat hover class="my-2" @click="routeOrderPage(value.store)">
     <v-card-title
       class="d-flex justify-space-between text-subtitle-2 pb-1 pt-2"
     >
@@ -22,11 +22,29 @@
 </template>
 
 <script setup lang="ts">
-import { toPriceText } from "@/utils/commands";
+import { routerPush, toPriceText } from "@/utils/commands";
 import { formatDateTime } from "@/utils/formatter";
-import { Notification } from "@/definitions/entities";
+import { Notification, Store } from "@/definitions/entities";
+import { useStoreStore } from "@/stores/store";
+import { useNotificationStore } from "@/stores/notification";
+
+const { selectStore } = useStoreStore();
+const { readNotifications } = useNotificationStore();
 
 defineProps<{
   value: Notification;
 }>();
+
+const emits = defineEmits<{
+  (e: "close-notification"): void;
+}>();
+
+async function routeOrderPage(store: Store) {
+  if (store.id) {
+    selectStore(store);
+    await readNotifications(store.id);
+    await routerPush("/management/order");
+    emits("close-notification");
+  }
+}
 </script>

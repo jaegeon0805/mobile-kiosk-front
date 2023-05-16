@@ -48,8 +48,8 @@ export interface Notification extends Id {
 
 export interface Order extends Id {
   title: string;
-  orderState: string;
   orderType: string;
+  orderState: string;
   quantity: number;
   totalPrice: number;
   detail: OrderItem[];

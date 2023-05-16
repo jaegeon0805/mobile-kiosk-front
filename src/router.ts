@@ -67,6 +67,11 @@ const routes = (): RouteConfig[] => {
       beforeEnter: requireAuthenticatedAndStore(),
       component: () => import("@/views/management/menu/MenuPage.vue"),
     },
+    {
+      path: "/management/order",
+      beforeEnter: requireAuthenticatedAndStore(),
+      component: () => import("@/views/management/order/OrderPage.vue"),
+    },
   ];
   const kiosk: RouteConfig[] = [
     {

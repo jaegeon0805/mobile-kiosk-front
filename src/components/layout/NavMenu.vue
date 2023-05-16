@@ -41,6 +41,11 @@ const items = computed((): NavItem[] => {
       title: "메뉴 관리",
       url: "/management/menu",
     },
+    {
+      icon: "mdi-book-settings-outline",
+      title: "주문 관리",
+      url: "/management/order",
+    },
   ];
 
   // TODO 회원관리는 관리자만 표시되도록 추가해야함

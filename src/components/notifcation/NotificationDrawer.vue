@@ -16,6 +16,7 @@
       v-for="notification in notifications"
       :key="notification.id"
       :value="notification"
+      @close-notification="value = false"
     />
   </v-navigation-drawer>
 </template>

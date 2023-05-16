@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Notification } from "@/definitions/entities";
-import { getApi } from "@/utils/apis";
+import { getApi, patchApi } from "@/utils/apis";
 
 export const useNotificationStore = defineStore("notification", {
   state: () => ({
@@ -14,6 +14,17 @@ export const useNotificationStore = defineStore("notification", {
   actions: {
     async fetchNotifications() {
       const response = await getApi<Notification[]>("notifications");
+
+      if (response.success) {
+        this.$state.notifications = response.result;
+      }
+    },
+    async readNotifications(storeId: number) {
+      const response = await patchApi<Notification[]>(
+        `notifications?storeId=${storeId}`,
+        null,
+        false
+      );
 
       if (response.success) {
         this.$state.notifications = response.result;
