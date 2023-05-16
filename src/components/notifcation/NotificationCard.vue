@@ -26,10 +26,8 @@ import { routerPush, toPriceText } from "@/utils/commands";
 import { formatDateTime } from "@/utils/formatter";
 import { Notification, Store } from "@/definitions/entities";
 import { useStoreStore } from "@/stores/store";
-import { useNotificationStore } from "@/stores/notification";
 
 const { selectStore } = useStoreStore();
-const { readNotifications } = useNotificationStore();
 
 defineProps<{
   value: Notification;
@@ -40,11 +38,8 @@ const emits = defineEmits<{
 }>();
 
 async function routeOrderPage(store: Store) {
-  if (store.id) {
-    selectStore(store);
-    await readNotifications(store.id);
-    await routerPush("/management/order");
-    emits("close-notification");
-  }
+  selectStore(store);
+  await routerPush("/management/order");
+  emits("close-notification");
 }
 </script>

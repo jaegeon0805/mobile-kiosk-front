@@ -69,8 +69,10 @@ import OrderDetailSheet from "@/views/management/order/OrderDetailSheet.vue";
 import OrderFilter from "@/views/management/order/OrderFilter.vue";
 import { OrderFilters } from "@/definitions/filters";
 import { defaultOrderFilter } from "@/definitions/defaults";
+import { useNotificationStore } from "@/stores/notification";
 
 const { selectedStore } = storeToRefs(useStoreStore());
+const { readNotifications } = useNotificationStore();
 
 const { pagination, totalItems, items, loading } = useDataTable<Order>(
   "orders",
@@ -148,8 +150,14 @@ async function fetchList(): Promise<void> {
   );
   loading.value = false;
 
-  items.value = response.result?.content ?? [];
-  totalItems.value = response.result?.totalElements ?? 0;
+  if (response.success) {
+    items.value = response.result?.content ?? [];
+    totalItems.value = response.result?.totalElements ?? 0;
+
+    if (selectedStore.value.id) {
+      await readNotifications(selectedStore.value.id);
+    }
+  }
 }
 
 const queryString = computed(() =>

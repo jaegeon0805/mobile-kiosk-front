@@ -20,14 +20,20 @@ export const useNotificationStore = defineStore("notification", {
       }
     },
     async readNotifications(storeId: number) {
-      const response = await patchApi<Notification[]>(
-        `notifications?storeId=${storeId}`,
-        null,
-        false
-      );
+      if (
+        this.$state.notifications.some(
+          (notification) => notification.store.id === storeId
+        )
+      ) {
+        const response = await patchApi<Notification[]>(
+          `notifications?storeId=${storeId}`,
+          null,
+          false
+        );
 
-      if (response.success) {
-        this.$state.notifications = response.result;
+        if (response.success) {
+          this.$state.notifications = response.result;
+        }
       }
     },
     notificationClear() {
