@@ -8,8 +8,21 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useSpinnerStore } from "@/stores/loadingSpinner";
+import { useCustomerSocketStore } from "@/stores/customerWebSocket";
+import { useKioskStore } from "@/stores/kiosk";
 
 const { loading } = storeToRefs(useSpinnerStore());
+const { customerUuid } = storeToRefs(useKioskStore());
+const { initializeWebSocket, webSocketDisconnect } = useCustomerSocketStore();
+
+onMounted(async () => {
+  initializeWebSocket(customerUuid.value);
+});
+
+onUnmounted(() => {
+  webSocketDisconnect();
+});
 </script>

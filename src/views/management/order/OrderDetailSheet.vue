@@ -8,6 +8,7 @@
             v-for="(item, index) in value"
             :key="index"
             :value="item"
+            outline
           />
         </v-card-text>
         <SheetButton

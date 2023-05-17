@@ -14,13 +14,7 @@
           <span>{{ formatDateTime(item.approveAt) }}</span>
         </template>
         <template #[`item.orderState`]="{ item }">
-          <span
-            :class="
-              item.orderState === ORDER_STATE.PAYMENT
-                ? 'primary--text font-weight-black'
-                : ''
-            "
-          >
+          <span :class="getOrderStateClass(item.orderState)">
             {{ getTypeName(OrderStates, item.orderState) }}
           </span>
         </template>
@@ -39,6 +33,25 @@
         <template #[`item.detail`]="{ item }">
           <v-icon @click="openSheet(item.detail)">mdi-magnify-expand</v-icon>
         </template>
+        <template #[`item.action`]="{ item }">
+          <v-btn
+            v-if="item.orderState === ORDER_STATE.PAYMENT"
+            outlined
+            small
+            class="primary--text font-weight-black"
+            @click="complete(item)"
+          >
+            완료하기
+          </v-btn>
+          <v-btn
+            v-else-if="item.orderState === ORDER_STATE.COMPLETE"
+            outlined
+            small
+            class="error--text font-weight-black"
+          >
+            환불하기
+          </v-btn>
+        </template>
       </v-data-table>
     </v-card-text>
 
@@ -54,7 +67,7 @@
 import { DataTableHeader } from "vuetify";
 import { Order } from "@/definitions/entities";
 import { useDataTable } from "@/compositions/useDataTable";
-import { getApi } from "@/utils/apis";
+import { getApi, patchApi } from "@/utils/apis";
 import { computed, ref } from "vue";
 import { stringify } from "qs";
 import { OrderItem, PageResponse } from "@/definitions/types";
@@ -63,16 +76,18 @@ import PageTitle from "@/components/page/PageTitle.vue";
 import { useStoreStore } from "@/stores/store";
 import { storeToRefs } from "pinia";
 import { ORDER_STATE, OrderStates, OrderTypes } from "@/definitions/enums";
-import { getTypeName, toPriceText } from "@/utils/commands";
+import { getOrderStateClass, getTypeName, toPriceText } from "@/utils/commands";
 import { formatDateTime } from "@/utils/formatter";
 import OrderDetailSheet from "@/views/management/order/OrderDetailSheet.vue";
 import OrderFilter from "@/views/management/order/OrderFilter.vue";
 import { OrderFilters } from "@/definitions/filters";
 import { defaultOrderFilter } from "@/definitions/defaults";
 import { useNotificationStore } from "@/stores/notification";
+import { useConfirmStore } from "@/stores/confirm";
 
 const { selectedStore } = storeToRefs(useStoreStore());
 const { readNotifications } = useNotificationStore();
+const { confirm } = useConfirmStore();
 
 const { pagination, totalItems, items, loading } = useDataTable<Order>(
   "orders",
@@ -123,21 +138,39 @@ const headers: DataTableHeader[] = [
     text: "상세정보",
     align: "center",
     value: "detail",
-    width: "10rem",
+    width: "5rem",
     sortable: false,
   },
   {
-    text: "동작",
-    align: "start",
-    value: "center",
+    text: "",
+    align: "center",
+    value: "action",
     width: "5rem",
     sortable: false,
   },
 ];
 
-function openSheet(value: OrderItem[]) {
-  viewItems.value = value;
+function openSheet(items: OrderItem[]) {
+  viewItems.value = items;
   optionSheet.value = true;
+}
+
+async function complete(order: Order) {
+  confirm("완료 처리하시겠습니까?", async () => {
+    const response = await patchApi<Order>(
+      `orders/${order.id}/complete?storeId=${selectedStore.value.id}`,
+      null
+    );
+
+    if (response.success) {
+      items.value = items.value.map((oldItem) => {
+        if (oldItem.id === response.result.id) {
+          return response.result;
+        }
+        return oldItem;
+      });
+    }
+  });
 }
 
 async function fetchList(): Promise<void> {

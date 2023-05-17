@@ -1,5 +1,5 @@
 <template>
-  <v-card flat outlined class="my-2">
+  <v-card flat :outlined="outline" class="my-2">
     <v-card-title class="text-subtitle-1">
       메뉴: {{ value.menu.name }} / 주문 수량: {{ value.quantity }}개
     </v-card-title>
@@ -22,5 +22,6 @@ import { OPTION_TYPE } from "@/definitions/enums";
 
 defineProps<{
   value: OrderItem;
+  outline?: boolean;
 }>();
 </script>

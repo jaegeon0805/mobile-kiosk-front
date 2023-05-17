@@ -1,12 +1,12 @@
 <template>
   <div>
-    <KioskAppBar :title="store.name" />
+    <KioskAppBar :title="currentStore.name" />
 
     <v-main>
       <v-card color="#E7F8FF" flat>
         <v-card-title class="py-3 overflow-hidden" style="height: 50px">
           <span class="text-subtitle-1 font-weight-bold">
-            {{ store.name }}
+            {{ currentStore.name }}
           </span>
           <v-spacer />
           <CartIcon />
@@ -28,11 +28,11 @@
             class="d-flex justify-center align-center my-2 pa-2"
             height="50px"
           >
-            <span v-if="store.availableFlag" class="font-weight-black">
+            <span v-if="isStoreOpen" class="font-weight-black">
               {{ isTakeOutText }}
             </span>
             <span
-              v-else-if="store.id && !store.availableFlag"
+              v-else-if="currentStore.id && !isStoreOpen"
               class="font-weight-black"
               style="color: #fc4c4e"
             >
@@ -41,14 +41,14 @@
             </span>
           </v-card>
 
-          <v-card v-if="store.description" flat class="pa-2" outlined>
-            <span class="text-caption">{{ store.description }}</span>
+          <v-card v-if="currentStore.description" flat class="pa-2" outlined>
+            <span class="text-caption">{{ currentStore.description }}</span>
           </v-card>
         </v-card-text>
       </v-card>
 
-      <KioskCategorySelectBar v-model="store.categories" />
-      <KioskMenuList v-model="store.categories" />
+      <KioskCategorySelectBar v-model="currentStore.categories" />
+      <KioskMenuList v-model="currentStore.categories" />
 
       <div class="px-6 pt-4" style="height: 30vh">
         <span class="d-block text-overline">유의사항</span>
@@ -63,7 +63,7 @@
     </v-main>
 
     <KioskFooter
-      v-show="cartItemCount || !isStoreOpen"
+      v-show="showFooter && (cartItemCount || !isStoreOpen)"
       :disabled="!isStoreOpen"
       @click="routerPush(`/kiosk/${currentStore.id}/cart`)"
     >
@@ -84,6 +84,8 @@
         </span>
       </template>
     </KioskFooter>
+
+    <OrderPageButton :bottom="cartItemCount || !isStoreOpen ? '10vh' : '3vh'" />
   </div>
 </template>
 
@@ -92,7 +94,6 @@ import { useRoute } from "vue-router/composables";
 import { computed, onMounted, ref, watch } from "vue";
 import { getApi } from "@/utils/apis";
 import { StoreForKiosk } from "@/definitions/kiosk";
-import { defaultStoreForKiosk } from "@/definitions/defaults";
 import { routerPush, toPriceText } from "@/utils/commands";
 import KioskMenuList from "@/views/kiosk/home/KioskMenuList.vue";
 import KioskCategorySelectBar from "@/views/kiosk/home/KioskCategorySelectBar.vue";
@@ -102,13 +103,14 @@ import KioskFooter from "@/views/kiosk/KioskFooter.vue";
 import { storeToRefs } from "pinia";
 import CartIcon from "@/views/kiosk/CartIcon.vue";
 import { useSpinnerStore } from "@/stores/loadingSpinner";
+import OrderPageButton from "@/views/kiosk/order/OrderPageButton.vue";
 
 const { updateStore, updateTakeOutInfo } = useKioskStore();
 const { currentStore, isStoreOpen, isTakeOut, cartItemCount, totalPrice } =
   storeToRefs(useKioskStore());
 const { load } = useSpinnerStore();
 
-const store = ref<StoreForKiosk>(defaultStoreForKiosk());
+const showFooter = ref(false);
 const selectedTabIndex = ref(0);
 
 const isTakeOutText = computed(() => {
@@ -135,9 +137,9 @@ onMounted(async () => {
     const response = await getApi<StoreForKiosk>(`kiosk/stores/${storeId}`);
 
     if (response.success) {
-      store.value = response.result;
-      updateStore(store.value);
+      updateStore(response.result);
       selectedTabIndex.value = isTakeOut.value ? 0 : 1;
+      showFooter.value = true;
     } else {
       await routerPush("/error/404");
     }

@@ -103,8 +103,15 @@ const routes = (): RouteConfig[] => {
       },
     },
     {
-      path: "/kiosk/:storeId/order",
-      component: () => import("@/views/kiosk/order/OrderCheckPage.vue"),
+      path: "/kiosk/:storeId/orders",
+      component: () => import("@/views/kiosk/order/KioskOrderPage.vue"),
+      meta: {
+        layout: "kiosk",
+      },
+    },
+    {
+      path: "/kiosk/:storeId/orders/:orderId",
+      component: () => import("@/views/kiosk/order/KioskOrderDetailPage.vue"),
       meta: {
         layout: "kiosk",
       },

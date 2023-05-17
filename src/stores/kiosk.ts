@@ -5,16 +5,18 @@ import {
   defaultStoreForKiosk,
 } from "@/definitions/defaults";
 import { CartItem, MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
-import { Option } from "@/definitions/entities";
+import { Option, Order } from "@/definitions/entities";
 import { isEquals, routerPush } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
 import { v4 as uuidV4 } from "uuid";
+import { getApi } from "@/utils/apis";
 
 export const useKioskStore = defineStore("kiosk", {
   state: () => ({
     customerUuid: uuidV4() as string,
     currentStore: defaultStoreForKiosk() as StoreForKiosk,
     currentMenu: defaultMenuForKiosk() as MenuForKiosk,
+    orders: [] as Order[],
     isTakeOut: true,
     cart: [] as CartItem[],
   }),
@@ -135,6 +137,15 @@ export const useKioskStore = defineStore("kiosk", {
     },
     clearCart() {
       this.$state.cart = [] as CartItem[];
+    },
+    async fetchOrders() {
+      const response = await getApi<Order[]>(
+        `kiosk-orders?customerUuid=${this.$state.customerUuid}`
+      );
+
+      if (response.success) {
+        this.$state.orders = response.result;
+      }
     },
   },
   persist: {

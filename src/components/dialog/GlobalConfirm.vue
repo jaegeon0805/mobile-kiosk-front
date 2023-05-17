@@ -1,8 +1,11 @@
 <template>
-  <v-dialog v-model="openConfirm" :width="item.width">
+  <v-dialog v-model="openConfirm" :width="item.width" style="z-index: 1000">
     <v-card class="d-flex flex-column overflow-hidden" height="250px">
       <v-card-text class="flex-grow-1 pa-0 d-flex justify-center align-center">
-        <span class="dialog-content" v-html="item.content" />
+        <span
+          class="dialog-content pre-wrap font-weight-medium"
+          v-html="item.content"
+        />
       </v-card-text>
 
       <v-card-actions class="pa-0">

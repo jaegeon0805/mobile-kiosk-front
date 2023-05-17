@@ -9,7 +9,7 @@ import { defaultMember, defaultPagination } from "@/definitions/defaults";
 import { Member, Store } from "@/definitions/entities";
 import { useStoreStore } from "@/stores/store";
 import { stringify } from "qs";
-import { TypeItem } from "@/definitions/enums";
+import { ORDER_STATE, TypeItem } from "@/definitions/enums";
 
 const { memberClear, isTokenExpired, reissueToken } = useMemberStore(store);
 const { storeClear } = useStoreStore(store);
@@ -123,4 +123,14 @@ export function isMobile() {
 
 export function getTypeName(types: TypeItem[], value: string): string {
   return types.find((t) => t.value === value)?.text ?? "";
+}
+
+export function getOrderStateClass(orderState: string) {
+  if (orderState === ORDER_STATE.PAYMENT) {
+    return "green--text font-weight-black";
+  } else if (orderState === ORDER_STATE.COMPLETE) {
+    return "primary--text font-weight-black";
+  } else if (orderState === ORDER_STATE.REFUND) {
+    return "error--text font-weight-black";
+  }
 }
