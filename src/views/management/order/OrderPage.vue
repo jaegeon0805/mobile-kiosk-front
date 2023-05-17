@@ -48,6 +48,7 @@
             outlined
             small
             class="error--text font-weight-black"
+            @click="refund(item)"
           >
             환불하기
           </v-btn>
@@ -159,6 +160,24 @@ async function complete(order: Order) {
   confirm("완료 처리하시겠습니까?", async () => {
     const response = await patchApi<Order>(
       `orders/${order.id}/complete?storeId=${selectedStore.value.id}`,
+      null
+    );
+
+    if (response.success) {
+      items.value = items.value.map((oldItem) => {
+        if (oldItem.id === response.result.id) {
+          return response.result;
+        }
+        return oldItem;
+      });
+    }
+  });
+}
+
+async function refund(order: Order) {
+  confirm("환불 처리하시겠습니까?", async () => {
+    const response = await patchApi<Order>(
+      `orders/${order.id}/refund?storeId=${selectedStore.value.id}`,
       null
     );
 
