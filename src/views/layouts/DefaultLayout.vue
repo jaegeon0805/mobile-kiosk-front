@@ -43,14 +43,14 @@ import { onMounted, onUnmounted, ref } from "vue";
 import ProfileMenu from "@/components/layout/AppBarMenu.vue";
 import StoreSelectMenu from "@/components/layout/StoreSelectMenu.vue";
 import NavMenu from "@/components/layout/NavMenu.vue";
-import { useSocketStore } from "@/stores/socket";
+import { useOwnerSocketStore } from "@/stores/ownerWebSocket";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { useNotificationStore } from "@/stores/notification";
 import NotificationDrawer from "@/components/notifcation/NotificationDrawer.vue";
 import NotificationIcon from "@/components/notifcation/NotificationIcon.vue";
 
-const { initializeWebSocket, disconnect } = useSocketStore();
+const { initializeWebSocket, webSocketDisconnect } = useOwnerSocketStore();
 const { fetchNotifications, notificationClear } = useNotificationStore();
 const { uuid } = storeToRefs(useMemberStore());
 
@@ -63,7 +63,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  disconnect();
+  webSocketDisconnect();
   notificationClear();
 });
 </script>

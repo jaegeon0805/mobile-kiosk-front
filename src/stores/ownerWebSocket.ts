@@ -5,19 +5,19 @@ import { useAlertStore } from "@/stores/alert";
 import envs from "@/constants/envs";
 import { useNotificationStore } from "@/stores/notification";
 
-export const useSocketStore = defineStore("socket", {
+export const useOwnerSocketStore = defineStore("ownerWebSocket", {
   state: () => ({
-    stompClient: null as any,
+    ownerClient: null as any,
   }),
   actions: {
     initializeWebSocket(uuid: string) {
       const socket = new SockJS(envs.SOCKET_URL);
-      this.$state.stompClient = new Client({
+      this.$state.ownerClient = new Client({
         webSocketFactory: () => socket,
       });
 
-      this.$state.stompClient.onConnect = () => {
-        this.$state.stompClient.subscribe(
+      this.$state.ownerClient.onConnect = () => {
+        this.$state.ownerClient.subscribe(
           `/topic/store-owner/${uuid}`,
           async (message) => {
             if (message.body) {
@@ -25,7 +25,7 @@ export const useSocketStore = defineStore("socket", {
               const { toastSuccess } = useAlertStore();
 
               await fetchNotifications();
-              toastSuccess(message.body, 10_000);
+              toastSuccess(message.body, 20_000);
             }
           },
           (error) => {
@@ -34,14 +34,14 @@ export const useSocketStore = defineStore("socket", {
         );
       };
 
-      this.$state.stompClient.activate();
+      this.$state.ownerClient.activate();
     },
-    disconnect() {
-      if (this.$state.stompClient && this.$state.stompClient.connected) {
-        this.$state.stompClient.deactivate();
+    webSocketDisconnect() {
+      if (this.$state.ownerClient && this.$state.ownerClient.connected) {
+        this.$state.ownerClient.deactivate();
       }
 
-      this.$state.stompClient = null;
+      this.$state.ownerClient = null;
     },
   },
   persist: {
