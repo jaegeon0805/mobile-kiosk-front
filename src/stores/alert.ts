@@ -10,13 +10,13 @@ export const useAlertStore = defineStore("alert", {
   },
   actions: {
     toastSuccess(message: string, timer = 3_000) {
-      this.alert(message, timer, "#1876D2");
+      this.alert(message, timer, "success");
     },
     toastWarning(message: string, timer = 10_000) {
-      this.alert(message, timer, "#ffca28");
+      this.alert(message, timer, "primary");
     },
     toastError(message: string, timer = 30_000) {
-      this.alert(message, timer, "#d32f2f");
+      this.alert(message, timer, "error");
     },
     alert(message: string, timer: number, color: string) {
       this.$state.item = {
