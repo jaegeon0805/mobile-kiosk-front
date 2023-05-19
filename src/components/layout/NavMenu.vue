@@ -7,8 +7,8 @@
       MANAGEMENT
     </v-subheader>
     <v-list-item
-      v-for="(item, index) in userMenus"
-      :key="index"
+      v-for="item in userMenus"
+      :key="item.url"
       dark
       link
       :to="item.url"
@@ -32,8 +32,8 @@
         ADMIN
       </v-subheader>
       <v-list-item
-        v-for="(item, index) in adminMenus"
-        :key="index"
+        v-for="item in adminMenus"
+        :key="item.url"
         dark
         link
         :to="item.url"
