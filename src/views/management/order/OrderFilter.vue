@@ -2,19 +2,7 @@
   <div>
     <v-row no-gutters class="mb-1">
       <v-col cols="12">
-        <v-chip
-          outlined
-          :input-value="showFilter"
-          class="px-4 mb-1"
-          label
-          style="cursor: pointer"
-          @click="showFilter = !showFilter"
-        >
-          <span class="d-inline-flex align-center">
-            <v-icon left>mdi-tune</v-icon>
-            필터
-          </span>
-        </v-chip>
+        <FilterChip v-model="showFilter" />
       </v-col>
     </v-row>
     <v-card v-show="showFilter" outlined class="px-3 py-1 grey lighten-5">
@@ -48,6 +36,7 @@ import FilterButton from "@/components/filter/FilterButton.vue";
 import { isEquals } from "@/utils/commands";
 import { defaultOrderFilter } from "@/definitions/defaults";
 import DateTimeRangeFilter from "@/components/filter/DateTimeRangeFilter.vue";
+import FilterChip from "@/components/filter/FilterChip.vue";
 
 const props = defineProps<{
   value: OrderFilters;

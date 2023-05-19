@@ -2,19 +2,7 @@
   <div>
     <v-row no-gutters class="mb-1">
       <v-col cols="12" class="d-flex justify-space-between">
-        <v-chip
-          outlined
-          :input-value="showFilter"
-          class="px-4 mb-1"
-          label
-          style="cursor: pointer"
-          @click="showFilter = !showFilter"
-        >
-          <span class="d-inline-flex align-center">
-            <v-icon left>mdi-tune</v-icon>
-            필터
-          </span>
-        </v-chip>
+        <FilterChip v-model="showFilter" />
         <SearchBar
           v-model="value.search"
           placeholder="닉네임, 이메일을 입력해주세요."
@@ -48,6 +36,7 @@ import { defaultMemberFilter } from "@/definitions/defaults";
 import DateTimeRangeFilter from "@/components/filter/DateTimeRangeFilter.vue";
 import { AvailableTypes } from "@/definitions/enums";
 import SearchBar from "@/components/filter/SearchBar.vue";
+import FilterChip from "@/components/filter/FilterChip.vue";
 
 const props = defineProps<{
   value: MemberFilters;
