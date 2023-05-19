@@ -3,12 +3,7 @@
     <v-card-title>{{ title }}</v-card-title>
     <v-spacer />
     <slot />
-    <v-btn
-      outlined
-      class="px-2 font-weight-black"
-      color="primary"
-      @click="emits('click')"
-    >
+    <v-btn outlined class="px-2 font-weight-black" @click="emits('click')">
       <v-icon v-if="buttonIcon">{{ buttonIcon }}</v-icon>
       <span v-else>{{ buttonTitle }}</span>
     </v-btn>
