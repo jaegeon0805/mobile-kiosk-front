@@ -2,7 +2,13 @@
   <div class="d-flex align-center pr-4">
     <v-card-title>{{ title }}</v-card-title>
     <v-spacer />
-    <v-btn outlined class="px-2 font-weight-black" @click="emits('click')">
+    <slot />
+    <v-btn
+      outlined
+      class="px-2 font-weight-black"
+      color="primary"
+      @click="emits('click')"
+    >
       <v-icon v-if="buttonIcon">{{ buttonIcon }}</v-icon>
       <span v-else>{{ buttonTitle }}</span>
     </v-btn>
