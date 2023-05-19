@@ -6,7 +6,6 @@
     dense
     clearable
     outlined
-    style="max-width: 400px"
     hide-details="auto"
     @click:clear="value = null"
     @keyup.enter="value = search"
@@ -35,3 +34,14 @@ const value = useVModel(props, "value", emits, { eventName: "input" });
 
 const search = ref("");
 </script>
+
+<style lang="scss" scoped>
+.v-text-field {
+  ::v-deep(.v-input__slot) {
+    min-height: 36px !important;
+    height: 36px;
+  }
+
+  max-width: 400px;
+}
+</style>

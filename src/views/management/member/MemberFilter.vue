@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row no-gutters class="mb-1">
-      <v-col cols="12" class="d-flex justify-space-between">
+      <v-col cols="12" class="d-flex justify-space-between align-center">
         <FilterChip v-model="showFilter" />
         <SearchBar
           v-model="value.search"
