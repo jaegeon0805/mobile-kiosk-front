@@ -17,6 +17,9 @@ export const useMemberStore = defineStore("member", {
         !!window.localStorage.getItem("refreshToken")
       );
     },
+    isAdmin(): boolean {
+      return this.member.role === "ROLE_ADMIN";
+    },
   },
   actions: {
     async saveToken(tokens: Token): Promise<void> {

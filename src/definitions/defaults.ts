@@ -8,7 +8,7 @@ import {
 } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
 import { MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
-import { OrderFilters } from "@/definitions/filters";
+import { MemberFilters, OrderFilters } from "@/definitions/filters";
 
 export function defaultPagination(): Pagination {
   return {
@@ -97,6 +97,15 @@ export function defaultOrderFilter(): OrderFilters {
   return {
     orderState: [],
     orderType: [],
+    fromDateTime: "",
+    toDateTime: "",
+  };
+}
+
+export function defaultMemberFilter(): MemberFilters {
+  return {
+    search: "",
+    availableFlag: null,
     fromDateTime: "",
     toDateTime: "",
   };

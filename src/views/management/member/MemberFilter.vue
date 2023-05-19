@@ -1,0 +1,70 @@
+<template>
+  <div>
+    <v-row no-gutters class="mb-1">
+      <v-col cols="12" class="d-flex justify-space-between">
+        <v-chip
+          outlined
+          :input-value="showFilter"
+          class="px-4 mb-1"
+          label
+          style="cursor: pointer"
+          @click="showFilter = !showFilter"
+        >
+          <span class="d-inline-flex align-center">
+            <v-icon left>mdi-tune</v-icon>
+            필터
+          </span>
+        </v-chip>
+        <SearchBar
+          v-model="value.search"
+          placeholder="닉네임, 이메일을 입력해주세요."
+        />
+      </v-col>
+    </v-row>
+    <v-card v-show="showFilter" outlined class="px-3 py-1 grey lighten-5">
+      <CheckBoxFilter
+        v-model="value.availableFlag"
+        :items="AvailableTypes"
+        name="활성 / 비활성"
+      />
+      <DateTimeRangeFilter
+        :fromDateTime.sync="value.fromDateTime"
+        :toDateTime.sync="value.toDateTime"
+        name="회원 가입일"
+      />
+      <FilterButton :isNotEmptyFilter="isNotEmptyFilter" @reset="reset" />
+    </v-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import CheckBoxFilter from "@/components/filter/CheckBoxFilter.vue";
+import { MemberFilters } from "@/definitions/filters";
+import { useVModel } from "@vueuse/core";
+import FilterButton from "@/components/filter/FilterButton.vue";
+import { isEquals } from "@/utils/commands";
+import { defaultMemberFilter } from "@/definitions/defaults";
+import DateTimeRangeFilter from "@/components/filter/DateTimeRangeFilter.vue";
+import { AvailableTypes } from "@/definitions/enums";
+import SearchBar from "@/components/filter/SearchBar.vue";
+
+const props = defineProps<{
+  value: MemberFilters;
+}>();
+
+const emits = defineEmits<{
+  (e: "input", v: MemberFilters);
+}>();
+
+const value = useVModel(props, "value", emits, { eventName: "input" });
+
+const showFilter = ref(false);
+const isNotEmptyFilter = computed((): boolean => {
+  return !isEquals(props.value, defaultMemberFilter());
+});
+
+function reset() {
+  value.value = defaultMemberFilter();
+}
+</script>

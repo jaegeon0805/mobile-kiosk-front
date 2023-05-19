@@ -5,6 +5,7 @@ import { useMemberStore } from "@/stores/member";
 import { routeSignInPage } from "@/utils/commands";
 import { useStoreStore } from "@/stores/store";
 import { useAlertStore } from "@/stores/alert";
+import { storeToRefs } from "pinia";
 
 Vue.use(VueRouter);
 
@@ -12,8 +13,8 @@ const { toastWarning } = useAlertStore(store);
 
 const requiredAuthenticated =
   () => async (to: Route, from: Route, next: NavigationGuardNext) => {
-    const { isSignedIn } = useMemberStore(store);
-    if (isSignedIn) {
+    const { isSignedIn } = storeToRefs(useMemberStore(store));
+    if (isSignedIn.value) {
       return next();
     }
     return routeSignInPage();
@@ -21,11 +22,20 @@ const requiredAuthenticated =
 
 const requiredUnauthenticated =
   () => async (to: Route, from: Route, next: NavigationGuardNext) => {
-    const { isSignedIn } = useMemberStore(store);
-    if (isSignedIn) {
+    const { isSignedIn } = storeToRefs(useMemberStore(store));
+    if (isSignedIn.value) {
       return next(from.path ? from.path : "/");
     }
     return next();
+  };
+
+const requiredAdminAuthenticated =
+  () => async (to: Route, from: Route, next: NavigationGuardNext) => {
+    const { isSignedIn, isAdmin } = storeToRefs(useMemberStore(store));
+    if (isSignedIn.value && isAdmin.value) {
+      return next();
+    }
+    return routeSignInPage();
   };
 
 const requiredStore =
@@ -71,6 +81,12 @@ const routes = (): RouteConfig[] => {
       path: "/management/order",
       beforeEnter: requireAuthenticatedAndStore(),
       component: () => import("@/views/management/order/OrderPage.vue"),
+    },
+    {
+      path: "/management/member",
+      beforeEnter: requiredAdminAuthenticated(),
+      component: () =>
+        import("@/views/management/member/MemberManagementPage.vue"),
     },
   ];
   const kiosk: RouteConfig[] = [

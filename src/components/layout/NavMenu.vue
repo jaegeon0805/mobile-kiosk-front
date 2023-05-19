@@ -1,7 +1,13 @@
 <template>
   <v-list nav dense>
+    <v-subheader
+      class="text-subtitle-2"
+      style="color: rgba(255, 255, 255, 0.7)"
+    >
+      MANAGEMENT
+    </v-subheader>
     <v-list-item
-      v-for="(item, index) in items"
+      v-for="(item, index) in userMenus"
       :key="index"
       dark
       link
@@ -17,38 +23,69 @@
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
+
+    <template v-if="isAdmin">
+      <v-subheader
+        class="text-subtitle-2 mt-10"
+        style="color: rgba(255, 255, 255, 0.7)"
+      >
+        ADMIN
+      </v-subheader>
+      <v-list-item
+        v-for="(item, index) in adminMenus"
+        :key="index"
+        dark
+        link
+        :to="item.url"
+        class="mx-2"
+        active-class="primary--text"
+      >
+        <v-list-item-icon>
+          <v-icon> {{ item.icon }} </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </template>
   </v-list>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { NavItem } from "@/definitions/types";
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
 
-const items = computed((): NavItem[] => {
-  let items: NavItem[] = [
-    {
-      icon: "mdi-home-edit-outline",
-      title: "점포 관리",
-      url: "/management/store",
-    },
-    {
-      icon: "mdi-view-dashboard-edit-outline",
-      title: "카테고리 관리",
-      url: "/management/category",
-    },
-    {
-      icon: "mdi-cookie-edit-outline",
-      title: "메뉴 관리",
-      url: "/management/menu",
-    },
-    {
-      icon: "mdi-book-settings-outline",
-      title: "주문 관리",
-      url: "/management/order",
-    },
-  ];
+const { isAdmin } = storeToRefs(useMemberStore());
 
-  // TODO 회원관리는 관리자만 표시되도록 추가해야함
-  return items;
-});
+const userMenus = [
+  {
+    icon: "mdi-home-edit-outline",
+    title: "점포 관리",
+    url: "/management/store",
+  },
+  {
+    icon: "mdi-view-dashboard-edit-outline",
+    title: "카테고리 관리",
+    url: "/management/category",
+  },
+  {
+    icon: "mdi-cookie-edit-outline",
+    title: "메뉴 관리",
+    url: "/management/menu",
+  },
+  {
+    icon: "mdi-book-settings-outline",
+    title: "주문 관리",
+    url: "/management/order",
+  },
+];
+
+const adminMenus = [
+  {
+    icon: "mdi-account-edit-outline",
+    title: "유저 관리",
+    url: "/management/member",
+  },
+];
 </script>

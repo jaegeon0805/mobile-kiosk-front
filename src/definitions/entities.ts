@@ -55,3 +55,12 @@ export interface Order extends Id {
   detail: OrderItem[];
   approveAt: Date;
 }
+
+export interface MemberForAdmin extends Id {
+  email: string;
+  name: string;
+  role: "ROLE_ADMIN" | "ROLE_USER";
+  availableFlag: boolean;
+  createdAt: Date;
+  stores: Store[];
+}
