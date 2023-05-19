@@ -1,3 +1,8 @@
+export interface StoreFilters {
+  search: string;
+  availableFlag: boolean | null;
+}
+
 export interface OrderFilters {
   orderState: string[];
   orderType: string[];

@@ -1,7 +1,12 @@
 <template>
   <div>
-    <PageTitle title="점포 관리" @click="openCreateSheet" />
+    <PageTitle title="점포 관리" @click="openCreateSheet">
+      <v-btn outlined class="mx-2 px-2 font-weight-black" @click="fetchList">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </PageTitle>
     <v-card-text class="pt-0">
+      <StoreFilter v-model="filter" />
       <v-data-table
         must-sort
         :headers="headers"
@@ -52,12 +57,12 @@
 
 <script setup lang="ts">
 import { DataTableHeader } from "vuetify";
-import { defaultStore } from "@/definitions/defaults";
+import { defaultStore, defaultStoreFilter } from "@/definitions/defaults";
 import { Store } from "@/definitions/entities";
 import { useEditItem } from "@/compositions/useEditItem";
 import { useDataTable } from "@/compositions/useDataTable";
 import { deleteApi, getApi } from "@/utils/apis";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useMemberStore } from "@/stores/member";
 import { stringify } from "qs";
 import { PageResponse } from "@/definitions/types";
@@ -66,6 +71,8 @@ import PageTitle from "@/components/page/PageTitle.vue";
 import StoreEditSheet from "@/views/management/store/StoreEditSheet.vue";
 import { useConfirmStore } from "@/stores/confirm";
 import { useStoreStore } from "@/stores/store";
+import { StoreFilters } from "@/definitions/filters";
+import StoreFilter from "@/views/management/store/StoreFilter.vue";
 
 const { member } = useMemberStore();
 const { fetchStoreList } = useStoreStore();
@@ -82,6 +89,8 @@ const {
   created,
   updated,
 } = useDataTable<Store>("stores");
+
+const filter = ref<StoreFilters>(defaultStoreFilter());
 
 const headers: DataTableHeader[] = [
   {
@@ -145,7 +154,10 @@ async function deleteStore(store: Store): Promise<void> {
 }
 
 const queryString = computed(() =>
-  stringify({ ...pagination.value }, { arrayFormat: "comma" })
+  stringify(
+    { ...pagination.value, ...filter.value },
+    { arrayFormat: "comma", skipNulls: true }
+  )
 );
 
 watchDebounced(

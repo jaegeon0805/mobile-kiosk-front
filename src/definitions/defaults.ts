@@ -8,7 +8,11 @@ import {
 } from "@/definitions/entities";
 import { Pagination } from "@/definitions/types";
 import { MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
-import { MemberFilters, OrderFilters } from "@/definitions/filters";
+import {
+  MemberFilters,
+  OrderFilters,
+  StoreFilters,
+} from "@/definitions/filters";
 
 export function defaultPagination(): Pagination {
   return {
@@ -93,6 +97,13 @@ export function defaultMenuForKiosk(): MenuForKiosk {
   };
 }
 
+export function defaultStoreFilter(): StoreFilters {
+  return {
+    search: "",
+    availableFlag: null,
+  };
+}
+
 export function defaultOrderFilter(): OrderFilters {
   return {
     orderState: [],
@@ -101,7 +112,6 @@ export function defaultOrderFilter(): OrderFilters {
     toDateTime: "",
   };
 }
-
 export function defaultMemberFilter(): MemberFilters {
   return {
     search: "",
