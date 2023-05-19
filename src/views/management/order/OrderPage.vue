@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="주문 관리" />
+    <PageTitle title="주문 관리" button-icon="mdi-refresh" @click="fetchList" />
     <v-card-text class="pt-0">
       <OrderFilter v-model="filter" />
       <v-data-table
