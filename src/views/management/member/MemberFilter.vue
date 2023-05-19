@@ -20,18 +20,17 @@
         :toDateTime.sync="value.toDateTime"
         name="회원 가입일"
       />
-      <FilterButton :isNotEmptyFilter="isNotEmptyFilter" @reset="reset" />
+      <FilterResetButton @reset="reset" />
     </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import CheckBoxFilter from "@/components/filter/CheckBoxFilter.vue";
 import { MemberFilters } from "@/definitions/filters";
 import { useVModel } from "@vueuse/core";
-import FilterButton from "@/components/filter/FilterButton.vue";
-import { isEquals } from "@/utils/commands";
+import FilterResetButton from "@/components/filter/FilterResetButton.vue";
 import { defaultMemberFilter } from "@/definitions/defaults";
 import DateTimeRangeFilter from "@/components/filter/DateTimeRangeFilter.vue";
 import { AvailableTypes } from "@/definitions/enums";
@@ -49,9 +48,6 @@ const emits = defineEmits<{
 const value = useVModel(props, "value", emits, { eventName: "input" });
 
 const showFilter = ref(false);
-const isNotEmptyFilter = computed((): boolean => {
-  return !isEquals(props.value, defaultMemberFilter());
-});
 
 function reset() {
   value.value = defaultMemberFilter();
