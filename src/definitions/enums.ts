@@ -1,5 +1,5 @@
-export interface TypeItem {
-  value: string;
+export interface TypeItem<T = string> {
+  value: T;
   text: string;
 }
 
@@ -26,6 +26,16 @@ export const OrderStates: TypeItem[] = [
 ];
 
 export const OPTION_TYPE = {
-  MANDATORY: "필수",
-  OPTIONAL: "선택",
+  MANDATORY: "MANDATORY",
+  OPTIONAL: "OPTIONAL",
 };
+
+export const OptionTypes: TypeItem[] = [
+  { value: OPTION_TYPE.MANDATORY, text: "필수" },
+  { value: OPTION_TYPE.OPTIONAL, text: "선택" },
+];
+
+export const AvailableTypes: TypeItem<boolean>[] = [
+  { value: true, text: "활성" },
+  { value: false, text: "비활성" },
+];

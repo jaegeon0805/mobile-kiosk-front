@@ -6,7 +6,8 @@
     <v-card-text v-if="value.optionGroups.length > 0">
       <div v-for="(optionGroup, index) in value.optionGroups" :key="index">
         <span>
-          {{ optionGroup.name }}({{ OPTION_TYPE[optionGroup.type] }}):
+          {{ optionGroup.name }}
+          ({{ getTypeName(OptionTypes, optionGroup.type) }}):
         </span>
         <span>
           {{ optionGroup.options.map((option) => option.name).join(",") }}
@@ -18,7 +19,8 @@
 
 <script setup lang="ts">
 import { OrderItem } from "@/definitions/types";
-import { OPTION_TYPE } from "@/definitions/enums";
+import { OptionTypes } from "@/definitions/enums";
+import { getTypeName } from "@/utils/commands";
 
 defineProps<{
   value: OrderItem;

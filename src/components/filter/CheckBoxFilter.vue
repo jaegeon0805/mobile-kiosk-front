@@ -31,7 +31,7 @@ import { TypeItem } from "@/definitions/enums";
 
 const props = defineProps<{
   value: string | string[];
-  items: TypeItem[];
+  items: TypeItem<any>[];
   name: string;
 }>();
 
