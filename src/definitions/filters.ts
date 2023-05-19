@@ -12,7 +12,7 @@ export interface OrderFilters {
 
 export interface MemberFilters {
   search: string;
-  availableFlag: boolean | null;
+  suspendFlag: boolean | null;
   fromDateTime: Date | string;
   toDateTime: Date | string;
 }

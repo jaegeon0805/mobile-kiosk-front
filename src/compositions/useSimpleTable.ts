@@ -23,10 +23,28 @@ export function useSimpleTable<T extends Id>(url: string) {
       const response = await patchApi<boolean, T>(
         `${url}/${id}/available-flag`,
         {
-          availableFlag: value,
+          flag: value,
         }
       );
       state.availableFlagLoadingSet.delete(id);
+
+      if (response.success) {
+        items.value = items.value.map((item) => {
+          if (item.id === id) {
+            return response.result;
+          } else {
+            return item;
+          }
+        });
+      }
+    },
+    changeSuspendFlag: async (
+      id: number | undefined,
+      value: boolean
+    ): Promise<void> => {
+      const response = await patchApi<boolean, T>(`${url}/${id}/suspend-flag`, {
+        flag: value,
+      });
 
       if (response.success) {
         items.value = items.value.map((item) => {

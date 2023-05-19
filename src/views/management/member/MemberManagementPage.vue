@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="유저 관리" button-icon="mdi-refresh" @click="fetchList" />
+    <PageTitle title="회원 관리" button-icon="mdi-refresh" @click="fetchList" />
     <v-card-text class="pt-0">
       <MemberFilter v-model="filter" />
       <v-data-table
@@ -13,16 +13,13 @@
         <template #[`item.createdAt`]="{ item }">
           <span>{{ formatDateTime(item.createdAt) }}</span>
         </template>
-        <template #[`item.availableFlag`]="{ item }">
-          <div class="d-flex justify-center">
-            <v-switch
-              :input-value="item.availableFlag"
-              inset
-              dense
-              readonly
-              @click="changeAvailableFlag(item.id, !item.availableFlag)"
-            />
-          </div>
+        <template #[`item.suspendFlag`]="{ item }">
+          <span
+            :class="item.suspendFlag ? 'error--text' : 'success--text'"
+            class="font-weight-medium"
+          >
+            {{ item.suspendFlag ? "정지" : "활성" }}
+          </span>
         </template>
         <template #[`item.name`]="{ item }">
           <span class="text-ellipsis">{{ item.name }}</span>
@@ -36,9 +33,26 @@
           </v-icon>
         </template>
         <template #[`item.action`]="{ item }">
-          <v-btn x-small outlined color="error" @click="resetPassword(item)"
-            >비밀번호 초기화</v-btn
-          >
+          <div class="d-flex">
+            <v-btn
+              x-small
+              outlined
+              :color="item.suspendFlag ? 'success' : 'error'"
+              width="50px"
+              @click="confirmChangeSuspend(item)"
+            >
+              {{ item.suspendFlag ? "활성화" : "정지" }}
+            </v-btn>
+            <v-btn
+              x-small
+              outlined
+              color="error"
+              class="ml-2"
+              @click="resetPassword(item)"
+            >
+              비밀번호 초기화
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
     </v-card-text>
@@ -74,7 +88,7 @@ const optionSheet = ref(false);
 const viewItems = ref<Store[]>([]);
 const filter = ref<MemberFilters>(defaultMemberFilter());
 
-const { pagination, totalItems, items, loading, changeAvailableFlag } =
+const { pagination, totalItems, items, loading, changeSuspendFlag } =
   useDataTable<MemberForAdmin>("members", {
     page: 1,
     itemsPerPage: 10,
@@ -108,16 +122,16 @@ const headers: DataTableHeader[] = [
     sortable: false,
   },
   {
-    text: "활성 / 비활성",
-    align: "center",
-    value: "availableFlag",
-    width: "8rem",
+    text: "정지 여부",
+    align: "start",
+    value: "suspendFlag",
+    width: "6rem",
   },
   {
     text: "",
     align: "center",
     value: "action",
-    width: "5rem",
+    width: "10rem",
     sortable: false,
   },
 ];
@@ -125,6 +139,15 @@ const headers: DataTableHeader[] = [
 function openSheet(items: Store[]) {
   viewItems.value = items;
   optionSheet.value = true;
+}
+
+async function confirmChangeSuspend(item: MemberForAdmin) {
+  const message = !item.suspendFlag
+    ? "회원을 정지 시키겠습니까?\n해당 회원의 모든 기능이 비활성화 됩니다."
+    : "회원의 정지를 푸시겠습니까?";
+  confirm(message, async () => {
+    await changeSuspendFlag(item.id, !item.suspendFlag);
+  });
 }
 
 async function resetPassword(member: MemberForAdmin) {

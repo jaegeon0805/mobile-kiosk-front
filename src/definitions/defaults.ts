@@ -115,7 +115,7 @@ export function defaultOrderFilter(): OrderFilters {
 export function defaultMemberFilter(): MemberFilters {
   return {
     search: "",
-    availableFlag: null,
+    suspendFlag: null,
     fromDateTime: "",
     toDateTime: "",
   };

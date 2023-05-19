@@ -60,7 +60,7 @@ export interface MemberForAdmin extends Id {
   email: string;
   name: string;
   role: "ROLE_ADMIN" | "ROLE_USER";
-  availableFlag: boolean;
+  suspendFlag: boolean;
   createdAt: Date;
   stores: Store[];
 }

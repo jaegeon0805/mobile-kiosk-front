@@ -11,9 +11,9 @@
     </v-row>
     <v-card v-show="showFilter" outlined class="px-3 py-1 grey lighten-5">
       <CheckBoxFilter
-        v-model="value.availableFlag"
-        :items="AvailableTypes"
-        name="활성 / 비활성"
+        v-model="value.suspendFlag"
+        :items="SuspendTypes"
+        name="정지 여부"
       />
       <DateTimeRangeFilter
         :fromDateTime.sync="value.fromDateTime"
@@ -33,7 +33,7 @@ import { useVModel } from "@vueuse/core";
 import FilterResetButton from "@/components/filter/FilterResetButton.vue";
 import { defaultMemberFilter } from "@/definitions/defaults";
 import DateTimeRangeFilter from "@/components/filter/DateTimeRangeFilter.vue";
-import { AvailableTypes } from "@/definitions/enums";
+import { SuspendTypes } from "@/definitions/enums";
 import SearchBar from "@/components/filter/SearchBar.vue";
 import FilterChip from "@/components/filter/FilterChip.vue";
 

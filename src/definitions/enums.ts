@@ -35,6 +35,11 @@ export const OptionTypes: TypeItem[] = [
   { value: OPTION_TYPE.OPTIONAL, text: "선택" },
 ];
 
+export const SuspendTypes: TypeItem<boolean>[] = [
+  { value: true, text: "정지" },
+  { value: false, text: "활성" },
+];
+
 export const AvailableTypes: TypeItem<boolean>[] = [
   { value: true, text: "활성" },
   { value: false, text: "비활성" },

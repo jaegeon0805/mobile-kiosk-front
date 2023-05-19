@@ -84,7 +84,7 @@ const userMenus = [
 const adminMenus = [
   {
     icon: "mdi-account-edit-outline",
-    title: "유저 관리",
+    title: "회원 관리",
     url: "/management/member",
   },
 ];
