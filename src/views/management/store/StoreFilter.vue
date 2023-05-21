@@ -23,20 +23,20 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CheckBoxFilter from "@/components/filter/CheckBoxFilter.vue";
-import { MemberFilters } from "@/definitions/filters";
+import { StoreFilters } from "@/definitions/filters";
 import { useVModel } from "@vueuse/core";
-import { defaultMemberFilter } from "@/definitions/defaults";
+import { defaultStoreFilter } from "@/definitions/defaults";
 import { AvailableTypes } from "@/definitions/enums";
 import SearchBar from "@/components/filter/SearchBar.vue";
 import FilterChip from "@/components/filter/FilterChip.vue";
 import FilterResetButton from "@/components/filter/FilterResetButton.vue";
 
 const props = defineProps<{
-  value: MemberFilters;
+  value: StoreFilters;
 }>();
 
 const emits = defineEmits<{
-  (e: "input", v: MemberFilters);
+  (e: "input", v: StoreFilters);
 }>();
 
 const value = useVModel(props, "value", emits, { eventName: "input" });
@@ -44,6 +44,6 @@ const value = useVModel(props, "value", emits, { eventName: "input" });
 const showFilter = ref(false);
 
 function reset() {
-  value.value = defaultMemberFilter();
+  value.value = defaultStoreFilter();
 }
 </script>

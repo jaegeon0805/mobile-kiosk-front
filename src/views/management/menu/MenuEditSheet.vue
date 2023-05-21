@@ -96,7 +96,7 @@ import { useStoreStore } from "@/stores/store";
 import SheetTitle from "@/components/sheet/SheetTitle.vue";
 import { useEdit } from "@/compositions/useEdit";
 import { Category, Menu } from "@/definitions/entities";
-import ImageCropperDialog from "@/components/uploader/ImageCropperDialog.vue";
+import ImageCropperDialog from "@/components/dialog/ImageCropperDialog.vue";
 
 const { confirmCreate, confirmUpdate } = useConfirmStore();
 const { fetchStoreList } = useStoreStore();

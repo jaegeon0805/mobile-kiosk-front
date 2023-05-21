@@ -14,6 +14,9 @@
         :options.sync="pagination"
         :loading="loading"
       >
+        <template #[`item.qr`]="{ item }">
+          <v-icon @click="openDialog(item)">mdi-qrcode-scan</v-icon>
+        </template>
         <template #[`item.name`]="{ item }">
           <a
             class="text-ellipsis"
@@ -29,12 +32,25 @@
         <template #[`item.availableFlag`]="{ item }">
           <div class="d-flex justify-center">
             <v-switch
+              v-if="!item.suspendFlag"
               :input-value="item.availableFlag"
               inset
               dense
               readonly
               @click="changeAvailableFlag(item.id, !item.availableFlag)"
             />
+            <v-tooltip v-else top>
+              <template v-slot:activator="{ on, attrs }">
+                <span
+                  v-bind="attrs"
+                  v-on="on"
+                  class="font-weight-black error--text mr-4"
+                >
+                  정지
+                </span>
+              </template>
+              <span>해당 점포는 정지되어 키오스크를 사용할 수 없습니다.</span>
+            </v-tooltip>
           </div>
         </template>
         <template #[`item.actions`]="{ item }">
@@ -52,6 +68,8 @@
       @created="created"
       @updated="updated"
     />
+
+    <QRDialog :value="storeId" :open.sync="openQrDialog" />
   </div>
 </template>
 
@@ -73,6 +91,7 @@ import { useConfirmStore } from "@/stores/confirm";
 import { useStoreStore } from "@/stores/store";
 import { StoreFilters } from "@/definitions/filters";
 import StoreFilter from "@/views/management/store/StoreFilter.vue";
+import QRDialog from "@/components/dialog/QRDialog.vue";
 
 const { member } = useMemberStore();
 const { fetchStoreList } = useStoreStore();
@@ -91,6 +110,9 @@ const {
 } = useDataTable<Store>("stores");
 
 const filter = ref<StoreFilters>(defaultStoreFilter());
+
+const storeId = ref(0);
+const openQrDialog = ref(false);
 
 const headers: DataTableHeader[] = [
   {
@@ -121,13 +143,27 @@ const headers: DataTableHeader[] = [
     sortable: true,
   },
   {
+    text: "QR 코드",
+    align: "center",
+    value: "qr",
+    width: "5rem",
+    sortable: false,
+  },
+  {
     text: "삭제",
     align: "center",
     value: "actions",
-    width: "4rem",
+    width: "5rem",
     sortable: false,
   },
 ];
+
+function openDialog(store: Store) {
+  if (store.id) {
+    storeId.value = store.id;
+    openQrDialog.value = true;
+  }
+}
 
 async function fetchList(): Promise<void> {
   items.value = [];

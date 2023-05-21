@@ -30,7 +30,7 @@ import TagChip from "@/components/button/TagChip.vue";
 import { TypeItem } from "@/definitions/enums";
 
 const props = defineProps<{
-  value: string | string[];
+  value: () => string | string[] | null;
   items: TypeItem<any>[];
   name: string;
 }>();

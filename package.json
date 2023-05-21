@@ -21,6 +21,7 @@
     "lodash-es": "^4.17.21",
     "pinia": "^2.0.33",
     "pinia-plugin-persistedstate": "^3.1.0",
+    "qrcode.vue": "^1.7.0",
     "qs": "^6.11.1",
     "sockjs-client": "^1.6.1",
     "sortablejs": "^1.15.0",
