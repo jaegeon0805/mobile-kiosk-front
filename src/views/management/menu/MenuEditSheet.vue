@@ -47,7 +47,7 @@
                   <validation-provider
                     v-slot="{ errors }"
                     name="메뉴 가격"
-                    rules="required|price"
+                    rules="required|menuPrice"
                   >
                     <v-text-field
                       v-model="displayPrice"

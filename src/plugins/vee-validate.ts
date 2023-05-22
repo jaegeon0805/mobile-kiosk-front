@@ -54,13 +54,22 @@ extend("nameWithSymbol", (name) => {
   return "한글, 영문자, 숫자, 공백, '(', ')', '+'로 1~20자를 입력하세요. (공백은 맨 앞뒤에 사용할 수 없습니다.) ";
 });
 
+extend("menuPrice", (price) => {
+  const actualPrice = parseInt(price.replace(/\D/g, ""));
+
+  if (!isNaN(actualPrice) && 100 <= actualPrice && actualPrice <= 1000000) {
+    return true;
+  }
+  return "메뉴 가격은 최소 백원에서 최대 백만원까지 입력이 가능합니다.";
+});
+
 extend("price", (price) => {
   const actualPrice = parseInt(price.replace(/\D/g, ""));
 
-  if (!isNaN(actualPrice) && actualPrice <= 1000000000) {
+  if (!isNaN(actualPrice) && actualPrice <= 1000000) {
     return true;
   }
-  return "금액은 10억을 넘길 수 없습니다.";
+  return "금액은 백만원을 넘길 수 없습니다.";
 });
 
 Vue.config.productionTip = false;

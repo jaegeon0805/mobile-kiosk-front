@@ -44,7 +44,7 @@ export function defaultCategory(): Category {
   return {
     id: undefined,
     name: "",
-    availableFlag: false,
+    availableFlag: true,
   };
 }
 
@@ -54,8 +54,8 @@ export function defaultMenu(): Menu {
     imageUrl: "",
     name: "",
     description: "",
-    price: 0,
-    availableFlag: false,
+    price: 100,
+    availableFlag: true,
     soldOutFlag: false,
   };
 }
