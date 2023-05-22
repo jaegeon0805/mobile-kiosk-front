@@ -37,6 +37,7 @@ export function defaultStore(): Store {
     name: "",
     description: "",
     availableFlag: false,
+    suspendFlag: false,
   };
 }
 

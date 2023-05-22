@@ -14,6 +14,7 @@ export interface Store extends Id {
   name: string;
   description: string;
   availableFlag: boolean;
+  suspendFlag: boolean;
 }
 
 export interface Category extends Id {

@@ -28,7 +28,7 @@
           <span class="text-ellipsis">{{ item.email }}</span>
         </template>
         <template #[`item.stores`]="{ item }">
-          <v-icon v-if="item.stores.length > 0" @click="openSheet(item.stores)">
+          <v-icon v-if="item.stores.length > 0" @click="openSheet(item)">
             mdi-format-list-checkbox
           </v-icon>
         </template>
@@ -38,10 +38,9 @@
               x-small
               outlined
               :color="item.suspendFlag ? 'success' : 'error'"
-              width="50px"
               @click="confirmChangeSuspend(item)"
             >
-              {{ item.suspendFlag ? "활성화" : "정지" }}
+              {{ item.suspendFlag ? "활성화하기" : "정지시키기" }}
             </v-btn>
             <v-btn
               x-small
@@ -60,14 +59,15 @@
     <StoreListSheet
       v-if="optionSheet"
       :sheet.sync="optionSheet"
-      :value="viewItems"
+      :value="viewItem"
+      @change-suspend-flag="fetchList"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import { DataTableHeader } from "vuetify";
-import { MemberForAdmin, Store } from "@/definitions/entities";
+import { MemberForAdmin } from "@/definitions/entities";
 import { useDataTable } from "@/compositions/useDataTable";
 import { getApi, patchApi } from "@/utils/apis";
 import { computed, ref } from "vue";
@@ -85,7 +85,7 @@ import { defaultMemberFilter } from "@/definitions/defaults";
 const { confirm } = useConfirmStore();
 
 const optionSheet = ref(false);
-const viewItems = ref<Store[]>([]);
+const viewItem = ref<MemberForAdmin>();
 const filter = ref<MemberFilters>(defaultMemberFilter());
 
 const { pagination, totalItems, items, loading, changeSuspendFlag } =
@@ -136,14 +136,14 @@ const headers: DataTableHeader[] = [
   },
 ];
 
-function openSheet(items: Store[]) {
-  viewItems.value = items;
+function openSheet(item: MemberForAdmin) {
+  viewItem.value = item;
   optionSheet.value = true;
 }
 
 async function confirmChangeSuspend(item: MemberForAdmin) {
   const message = !item.suspendFlag
-    ? "회원을 정지 시키겠습니까?\n해당 회원의 모든 기능이 비활성화 됩니다."
+    ? "회원을 정지시키겠습니까?\n해당 회원의 모든 기능이 비활성화됩니다."
     : "회원의 정지를 푸시겠습니까?";
   confirm(message, async () => {
     await changeSuspendFlag(item.id, !item.suspendFlag);
