@@ -50,7 +50,7 @@ export const useCustomerSocketStore = defineStore("customerWebSocket", {
           `/topic/store/${currentStore.value.id}`,
           async (message) => {
             if (message.body) {
-              const { toastWarning } = useAlertStore();
+              const { toastSuccess } = useAlertStore();
 
               const response = await getApi<StoreForKiosk>(
                 `kiosk/stores/${currentStore.value.id}`
@@ -58,7 +58,7 @@ export const useCustomerSocketStore = defineStore("customerWebSocket", {
 
               if (response.success) {
                 updateStore(response.result);
-                toastWarning(message.body);
+                toastSuccess(message.body);
               } else {
                 await routerPush("/error/404");
               }

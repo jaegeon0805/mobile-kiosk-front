@@ -5,12 +5,12 @@
     </v-card-title>
     <v-card-text v-if="value.optionGroups.length > 0">
       <div v-for="(optionGroup, index) in value.optionGroups" :key="index">
-        <span>
+        <span class="font-weight-black">
           {{ optionGroup.name }}
           ({{ getTypeName(OptionTypes, optionGroup.type) }}):
         </span>
         <span>
-          {{ optionGroup.options.map((option) => option.name).join(",") }}
+          {{ optionGroup.options.map((option) => option.name).join(", ") }}
         </span>
       </div>
     </v-card-text>

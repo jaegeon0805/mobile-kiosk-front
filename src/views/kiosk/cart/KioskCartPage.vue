@@ -89,6 +89,7 @@ import { postApi } from "@/utils/apis";
 import { PaymentReadyResponse } from "@/definitions/kiosk";
 import { useSpinnerStore } from "@/stores/loadingSpinner";
 import { useRoute } from "vue-router/composables";
+import { useAlertStore } from "@/stores/alert";
 
 const { updateTakeOutInfo, changeQuantity, removeCartItem } = useKioskStore();
 const {
@@ -102,6 +103,7 @@ const {
   customerUuid,
 } = storeToRefs(useKioskStore());
 const { load } = useSpinnerStore();
+const { toastError } = useAlertStore();
 
 async function pay() {
   await load(async () => {
@@ -143,7 +145,12 @@ watch(
 
 onMounted(async () => {
   await load(async () => {
-    const storeId = useRoute().params.storeId;
+    const route = useRoute();
+    const storeId = route.params.storeId;
+
+    if (route.query.fail === "true") {
+      toastError("결제에 문제가 발생하였습니다.\n다시 시도해주세요.");
+    }
 
     if (!currentStore.value.id) {
       await routerPush(`/kiosk/${storeId}`);
