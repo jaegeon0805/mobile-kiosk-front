@@ -22,10 +22,7 @@
 <script setup lang="ts">
 import { OptionForKiosk, OptionGroupForKiosk } from "@/definitions/kiosk";
 import { useVModels } from "@vueuse/core";
-import { useAlertStore } from "@/stores/alert";
 import { toOptionPriceText } from "@/utils/commands";
-
-const { toastWarning } = useAlertStore();
 
 const props = defineProps<{
   disabled: boolean;
@@ -43,10 +40,7 @@ function clickOption(optionGroup: OptionGroupForKiosk, event) {
   if (optionGroup.maxSelections && optionGroup.id) {
     if (event.length > optionGroup.maxSelections) {
       selectedOptionalOptions.value[optionGroup.id].pop();
-      toastWarning(
-        `최대 ${optionGroup.maxSelections}개만 선택이 가능합니다.`,
-        3_000
-      );
+      alert(`최대 ${optionGroup.maxSelections}개만 선택이 가능합니다.`);
     }
   }
 }

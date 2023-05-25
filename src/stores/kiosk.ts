@@ -7,7 +7,6 @@ import {
 import { CartItem, MenuForKiosk, StoreForKiosk } from "@/definitions/kiosk";
 import { Option, Order } from "@/definitions/entities";
 import { isEquals, routerPush } from "@/utils/commands";
-import { useAlertStore } from "@/stores/alert";
 import { v4 as uuidV4 } from "uuid";
 import { getApi } from "@/utils/apis";
 
@@ -113,10 +112,8 @@ export const useKioskStore = defineStore("kiosk", {
           this.$state.cart[index].quantity += newItem.quantity;
           await routerPush(`/kiosk/${this.$state.currentStore.id}`);
         } else {
-          const { toastWarning } = useAlertStore();
-          toastWarning(
-            "메뉴별로 최대 100개 까지 주문하실 수 있습니다. 수량을 변경해주세요.",
-            3_000
+          alert(
+            "메뉴별로 최대 100개 까지 주문하실 수 있습니다. 수량을 변경해주세요."
           );
         }
       }

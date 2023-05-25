@@ -20,17 +20,17 @@
 import { useKioskStore } from "@/stores/kiosk";
 import { storeToRefs } from "pinia";
 import { routerPush } from "@/utils/commands";
-import { useConfirmStore } from "@/stores/confirm";
 
 const { currentStore, isNotEmptyCart } = storeToRefs(useKioskStore());
 const { clearCart } = useKioskStore();
-const { confirm } = useConfirmStore();
 
 function clear() {
   if (isNotEmptyCart.value) {
-    confirm("주문 메뉴를 모두 삭제하시겠어요?", () => {
+    const result = confirm("장바구니를 모두 비우시겠습니까?");
+
+    if (result) {
       clearCart();
-    });
+    }
   }
 }
 </script>
