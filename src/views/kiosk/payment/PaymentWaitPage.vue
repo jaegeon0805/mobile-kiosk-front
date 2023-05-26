@@ -31,8 +31,11 @@ onMounted(async () => {
 
     const response = await patchApi(
       `kiosk-orders/${orderId}/approve?customerUuid=${customerUuid.value}&pgToken=${pgToken}`,
-      null
+      null,
+      false
     );
+
+    alert(response.message);
 
     if (response.success) {
       clearCart();
