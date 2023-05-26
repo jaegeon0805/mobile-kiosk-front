@@ -31,7 +31,8 @@ export const useStoreStore = defineStore("store", {
         }) || defaultStore();
 
       if (!this.isStoreEmpty && !this.isSelectedStore) {
-        this.$state.selectedStore = this.$state.storeList[0];
+        this.$state.selectedStore =
+          this.$state.storeList[this.$state.storeList.length - 1];
       }
     },
     selectStore(store: Store): void {
