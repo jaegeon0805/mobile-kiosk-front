@@ -159,6 +159,14 @@ const routes = (): RouteConfig[] => {
         layout: "auth",
       },
     },
+    {
+      path: "/oauth/redirect",
+      beforeEnter: requiredUnauthenticated(),
+      component: () => import("@/views/sign/OAuthRedirectPage.vue"),
+      meta: {
+        layout: "auth",
+      },
+    },
   ];
 
   return [
