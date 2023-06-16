@@ -15,6 +15,11 @@
         :items="SuspendTypes"
         name="정지 여부"
       />
+      <CheckBoxFilter
+        v-model="value.providerType"
+        :items="ProviderTypes"
+        name="회원 타입"
+      />
       <DateTimeRangeFilter
         :fromDateTime.sync="value.fromDateTime"
         :toDateTime.sync="value.toDateTime"
@@ -33,7 +38,7 @@ import { useVModel } from "@vueuse/core";
 import FilterResetButton from "@/components/filter/FilterResetButton.vue";
 import { defaultMemberFilter } from "@/definitions/defaults";
 import DateTimeRangeFilter from "@/components/filter/DateTimeRangeFilter.vue";
-import { SuspendTypes } from "@/definitions/enums";
+import { ProviderTypes, SuspendTypes } from "@/definitions/enums";
 import SearchBar from "@/components/filter/SearchBar.vue";
 import FilterChip from "@/components/filter/FilterChip.vue";
 

@@ -13,6 +13,11 @@
         <template #[`item.createdAt`]="{ item }">
           <span>{{ formatDateTime(item.createdAt) }}</span>
         </template>
+        <template #[`item.providerType`]="{ item }">
+          <span>
+            {{ getTypeName(ProviderTypes, item.providerType) }}
+          </span>
+        </template>
         <template #[`item.suspendFlag`]="{ item }">
           <span
             :class="item.suspendFlag ? 'error--text' : 'success--text'"
@@ -42,15 +47,6 @@
             >
               {{ item.suspendFlag ? "활성화하기" : "정지시키기" }}
             </v-btn>
-            <v-btn
-              x-small
-              outlined
-              color="error"
-              class="ml-2"
-              @click="resetPassword(item)"
-            >
-              비밀번호 초기화
-            </v-btn>
           </div>
         </template>
       </v-data-table>
@@ -69,7 +65,7 @@
 import { DataTableHeader } from "vuetify";
 import { MemberForAdmin } from "@/definitions/entities";
 import { useDataTable } from "@/compositions/useDataTable";
-import { getApi, patchApi } from "@/utils/apis";
+import { getApi } from "@/utils/apis";
 import { computed, ref } from "vue";
 import { stringify } from "qs";
 import { PageResponse } from "@/definitions/types";
@@ -81,6 +77,8 @@ import StoreListSheet from "@/views/management/member/StoreListSheet.vue";
 import MemberFilter from "@/views/management/member/MemberFilter.vue";
 import { MemberFilters } from "@/definitions/filters";
 import { defaultMemberFilter } from "@/definitions/defaults";
+import { getTypeName } from "@/utils/commands";
+import { ProviderTypes } from "@/definitions/enums";
 
 const { confirm } = useConfirmStore();
 
@@ -102,6 +100,12 @@ const headers: DataTableHeader[] = [
     align: "start",
     value: "createdAt",
     width: "11rem",
+  },
+  {
+    text: "회원 타입",
+    align: "start",
+    value: "providerType",
+    width: "6rem",
   },
   {
     text: "닉네임",
@@ -148,28 +152,6 @@ async function confirmChangeSuspend(item: MemberForAdmin) {
   confirm(message, async () => {
     await changeSuspendFlag(item.id, !item.suspendFlag);
   });
-}
-
-async function resetPassword(member: MemberForAdmin) {
-  confirm(
-    "비밀번호를 초기화하겠습니까?\n(000000으로 초기화됩니다.)",
-    async () => {
-      const response = await patchApi<MemberForAdmin>(
-        `members/${member.id}/reset-password`,
-        null
-      );
-
-      if (response.success) {
-        items.value = items.value.map((item) => {
-          if (item.id === member.id) {
-            return response.result;
-          } else {
-            return item;
-          }
-        });
-      }
-    }
-  );
 }
 
 async function fetchList(): Promise<void> {

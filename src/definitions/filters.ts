@@ -12,6 +12,7 @@ export interface OrderFilters {
 
 export interface MemberFilters {
   search: string;
+  providerType: string[];
   suspendFlag: boolean | null;
   fromDateTime: Date | string;
   toDateTime: Date | string;
