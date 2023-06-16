@@ -17,7 +17,7 @@
         <v-list-item @click="openProfileSheet = true">
           <v-list-item-title>프로필</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="openPasswordSheet = true">
+        <v-list-item v-if="isLocalMember" @click="openPasswordSheet = true">
           <v-list-item-title>비밀번호 변경</v-list-item-title>
         </v-list-item>
         <v-list-item @click="signOut">
@@ -42,7 +42,7 @@ import { ref } from "vue";
 import ProfileEditSheet from "@/views/components/sheet/ProfileEditSheet.vue";
 import PasswordEditSheet from "@/views/components/sheet/PasswordEditSheet.vue";
 
-const { member } = storeToRefs(useMemberStore());
+const { member, isLocalMember } = storeToRefs(useMemberStore());
 
 const openProfileSheet = ref(false);
 const openPasswordSheet = ref(false);

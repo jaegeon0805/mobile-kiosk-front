@@ -8,6 +8,7 @@ export interface Member extends Id {
   email: string;
   name: string;
   role: "ROLE_ADMIN" | "ROLE_USER";
+  providerType: string;
 }
 
 export interface Store extends Id {
@@ -64,4 +65,5 @@ export interface MemberForAdmin extends Id {
   suspendFlag: boolean;
   createdAt: Date;
   stores: Store[];
+  providerType: string;
 }

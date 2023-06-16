@@ -44,3 +44,15 @@ export const AvailableTypes: TypeItem<boolean>[] = [
   { value: true, text: "활성" },
   { value: false, text: "비활성" },
 ];
+
+export const PROVIDER_TYPE = {
+  LOCAL: "LOCAL",
+  GOOGLE: "GOOGLE",
+  NAVER: "NAVER",
+};
+
+export const ProviderTypes: TypeItem[] = [
+  { value: PROVIDER_TYPE.LOCAL, text: "로컬" },
+  { value: PROVIDER_TYPE.GOOGLE, text: "구글" },
+  { value: PROVIDER_TYPE.NAVER, text: "네이버" },
+];

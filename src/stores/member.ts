@@ -20,6 +20,9 @@ export const useMemberStore = defineStore("member", {
     isAdmin(): boolean {
       return this.member.role === "ROLE_ADMIN";
     },
+    isLocalMember(): boolean {
+      return this.member.providerType === "LOCAL";
+    },
   },
   actions: {
     async saveToken(tokens: Token): Promise<void> {

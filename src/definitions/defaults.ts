@@ -28,6 +28,7 @@ export function defaultMember(): Member {
     email: "",
     name: "",
     role: "ROLE_USER",
+    providerType: "LOCAL",
   };
 }
 
@@ -116,6 +117,7 @@ export function defaultOrderFilter(): OrderFilters {
 export function defaultMemberFilter(): MemberFilters {
   return {
     search: "",
+    providerType: [],
     suspendFlag: null,
     fromDateTime: "",
     toDateTime: "",
