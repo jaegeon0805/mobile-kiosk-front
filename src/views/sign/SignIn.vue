@@ -129,7 +129,11 @@ async function submit(): Promise<void> {
 }
 
 function socialLogin(providerType: string) {
-  window.location.href = `${envs.API_HOST}oauth2/authorization/${providerType}?redirect_uri=${envs.FRONT_URL}oauth/redirect`;
+  window.location.href = `${
+    envs.API_HOST
+  }oauth2/authorization/${providerType.toLowerCase()}?redirect_uri=${
+    envs.FRONT_URL
+  }oauth/redirect`;
 }
 
 const observer = ref();
