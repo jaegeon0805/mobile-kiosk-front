@@ -60,6 +60,20 @@
             >
           </validation-observer>
         </v-form>
+        <span class="font-weight-black hr-sect">간편 로그인</span>
+        <div class="d-flex justify-center">
+          <v-img
+            src="/src/assets/img/google-logo.png"
+            class="social-button mr-2"
+            @click="socialLogin(PROVIDER_TYPE.GOOGLE)"
+          />
+
+          <v-img
+            src="/src/assets/img/naver-logo.png"
+            class="social-button"
+            @click="socialLogin(PROVIDER_TYPE.NAVER)"
+          />
+        </div>
       </v-card-text>
     </v-card-text>
   </v-card>
@@ -73,6 +87,8 @@ import { useMemberStore } from "@/stores/member";
 import { routerReplace } from "@/utils/commands";
 import { useAlertStore } from "@/stores/alert";
 import { useStoreStore } from "@/stores/store";
+import { PROVIDER_TYPE } from "@/definitions/enums";
+import envs from "@/constants/envs";
 
 const { saveToken } = useMemberStore();
 const { fetchStoreList } = useStoreStore();
@@ -111,6 +127,10 @@ async function submit(): Promise<void> {
   } finally {
     loading.value = false;
   }
+}
+
+function socialLogin(providerType: string) {
+  window.location.href = `${envs.API_HOST}oauth2/authorization/${providerType}?redirect_uri=${envs.FRONT_URL}oauth/redirect`;
 }
 
 const observer = ref();
