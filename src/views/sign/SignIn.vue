@@ -63,13 +63,12 @@
         <span class="font-weight-black hr-sect">간편 로그인</span>
         <div class="d-flex justify-center">
           <v-img
-            src="/src/assets/img/google-logo.png"
+            :src="require('/src/assets/img/google-logo.png')"
             class="social-button mr-2"
             @click="socialLogin(PROVIDER_TYPE.GOOGLE)"
           />
-
           <v-img
-            src="/src/assets/img/naver-logo.png"
+            :src="require('/src/assets/img/naver-logo.png')"
             class="social-button"
             @click="socialLogin(PROVIDER_TYPE.NAVER)"
           />
